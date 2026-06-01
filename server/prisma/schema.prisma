@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Provider {
+  email
+  google
+  github
+}
+
+enum Memetype {
+  image
+  video
+  audio
+  other
+}
+
+enum ReviewStatus {
+  scheduled
+  attempted
+  completed
+  missed
+}
+
+enum reviewRememberStatus {
+  easy
+  partial
+  forgot
+}
+
+model User {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  name        String
+  password    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  provider    Provider @default(email)
+  profile_url String?
+  topics      Topic[]
+}
+
+model Topic {
+  id         String   @id @default(uuid())
+  title      String
+  user_id    String
+  user       User     @relation(fields: [user_id], references: [id])
+  source_url String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  notes      Note[]
+  reviews    review[]
+}
+
+model Note {
+  id        String     @id @default(uuid())
+  content   String
+  topic_id  String
+  topic     Topic      @relation(fields: [topic_id], references: [id])
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  documents Document[]
+  reviews   review[]
+}
+
+model Document {
+  id        String    @id @default(uuid())
+  notes_id  String
+  notes     Note      @relation(fields: [notes_id], references: [id])
+  url       String?
+  memetype  Memetype?
+  content   String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model review {
+  id             String               @id @default(uuid())
+  notes_id       String
+  topic_id       String
+  scheduled_date DateTime
+  status         ReviewStatus         @default(scheduled)
+  is_completed   Boolean              @default(false)
+  review_results reviewRememberStatus @default(partial)
+  notes          Note                 @relation(fields: [notes_id], references: [id])
+  topic          Topic                @relation(fields: [topic_id], references: [id])
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+}
