@@ -1,0 +1,52 @@
+import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
+import fs from "fs";
+import {
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_NAME,
+  CLOUDINARY_SECRET,
+} from "./env.config.js";
+
+cloudinary.config({
+  cloud_name: CLOUDINARY_NAME,
+  api_key: CLOUDINARY_API_KEY,
+  api_secret: CLOUDINARY_SECRET,
+});
+
+type CloudinaryUploadResult = {
+  success: boolean;
+  message: string;
+  url: string | null;
+};
+
+export const handleSingleUpload = async (
+  filePath: string,
+): Promise<CloudinaryUploadResult> => {
+  try {
+    if (!filePath) {
+      return {
+        success: false,
+        message: "No file uploaded",
+        url: null,
+      };
+    }
+    const data: UploadApiResponse = await cloudinary.uploader.upload(filePath, {
+      folder: "topics",
+      resource_type: "auto",
+    });
+    return {
+      success: true,
+      message: "File uploaded successfully",
+      url: data.secure_url,
+    };
+  } catch (e) {
+    console.error("Cloudinary upload error:", e);
+
+    return {
+      success: false,
+      message: "Failed to upload file",
+      url: null,
+    };
+  } finally {
+    await fs.promises.unlink(filePath);
+  }
+};
