@@ -21,7 +21,7 @@ export const createTopic = async (
     }
     const user_id = req.user?.id;
     const topicData = result.data;
-    const file = req.file as Express.Multer.File | unknown;
+    const file = req.file as Express.Multer.File | undefined;
     if (!user_id) {
       return res.status(401).json({ message: "Unauthorized", success: false });
     }
