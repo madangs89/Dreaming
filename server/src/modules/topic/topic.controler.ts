@@ -11,6 +11,12 @@ export const createTopic = async (
   res: Response<TopicResponse<TopicData>>,
 ) => {
   try {
+    const user_id = req.user?.id;
+
+    if (!user_id) {
+      return res.status(401).json({ message: "Unauthorized", success: false });
+    }
+
     const result = TopicCreateSchema.safeParse(req.body);
     if (!result.success) {
       return res.status(400).json({
@@ -19,16 +25,12 @@ export const createTopic = async (
         success: false,
       });
     }
-    const user_id = req.user?.id;
     const topicData = result.data;
     const file = req.file as Express.Multer.File | undefined;
-    if (!user_id) {
-      return res.status(401).json({ message: "Unauthorized", success: false });
-    }
 
     let sourceUrl: string | null = null;
     if (file) {
-      let path = file.path!;
+      const path = file.path!;
       const uploadResult = await handleSingleUpload(path);
       if (!uploadResult.success) {
         return res.status(400).json({
@@ -36,9 +38,8 @@ export const createTopic = async (
           success: false,
         });
       }
-      if (uploadResult.success) {
-        sourceUrl = uploadResult.url;
-      }
+
+      sourceUrl = uploadResult.url;
     }
 
     const newTopic = await prisma.topic.create({
