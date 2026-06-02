@@ -3,10 +3,12 @@ import {
   AuthUserSchema,
   JwtUserSchema,
   RegisterRequestSchema,
+  LoginRequestSchema
 } from "./auth.zod.js";
 
 export type AuthUser = z.infer<typeof AuthUserSchema>;
 export type RegisterRequest = z.infer<typeof RegisterRequestSchema>;
+export type LoginRequest = z.infer<typeof LoginRequestSchema>;
 
 export type JwtPayload = z.infer<typeof JwtUserSchema>;
 

@@ -13,6 +13,11 @@ export const RegisterRequestSchema = z.object({
   name: z.string().optional(),
 });
 
+export const LoginRequestSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+});
+
 export const JwtUserSchema = z.object({
   id: z.string(),
   email: z.string().email(),

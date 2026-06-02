@@ -5,18 +5,20 @@ import {
   AuthResponseFailure,
   AuthResponseSuccess,
   AuthUser,
+  JwtPayload,
+  LoginRequest,
   RegisterRequest,
 } from "./auth.types.js";
-import { RegisterRequestSchema } from "./auth.zod.js";
+import { LoginRequestSchema, RegisterRequestSchema } from "./auth.zod.js";
 import { prisma, prismaErrorHandler } from "../../configs/prisma.js";
 import { JWT_SECRET, NODE_ENV } from "../../configs/env.config.js";
 import { Prisma } from "../../generated/prisma/client.js";
 
-const createJwtToken = (user: AuthUser): string => {
+const createJwtToken = (user: JwtPayload): string => {
   return jwt.sign(
     {
-      id: user?.id,
-      email: user?.email,
+      id: user.id,
+      email: user.email,
     },
     JWT_SECRET as string,
     {
@@ -82,13 +84,12 @@ export const register = async (
         email,
         name,
         password: hashedPassword,
+        provider: "email",
       },
     });
     const token = createJwtToken({
       id: newUser.id,
       email: newUser.email,
-      name: newUser.name,
-      profile_url: newUser.profile_url ?? null,
     });
     addCookiesToResponse(res, token);
     return res.status(201).json({
@@ -111,7 +112,85 @@ export const register = async (
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      errors: error instanceof Error ? error?.message : error,
+      errors: error,
+    });
+  }
+};
+
+export const login = async (
+  req: Request<{}, {}, LoginRequest>,
+  res: Response<AuthResponseSuccess<AuthUser> | AuthResponseFailure>,
+) => {
+  try {
+    const result = LoginRequestSchema.safeParse(req.body);
+
+    if (!result.success) {
+      return res.status(400).json({
+        success: false,
+        message: "Validation failed",
+        errors: result.error,
+      });
+    }
+
+    const { email, password } = result.data;
+
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password",
+        errors: null,
+      });
+    }
+
+    if (!user.password) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password",
+        errors: null,
+      });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password",
+        errors: null,
+      });
+    }
+    const token = createJwtToken({
+      id: user?.id,
+      email: user?.email,
+    });
+    addCookiesToResponse(res, token);
+    return res.status(200).json({
+      success: true,
+      message: "Login successful",
+      data: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        profile_url: user.profile_url ?? null,
+      },
+    });
+  } catch (error) {
+    console.log("Login error:", error);
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      prismaErrorHandler(req, res, error);
+      return;
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      errors: error,
     });
   }
 };
