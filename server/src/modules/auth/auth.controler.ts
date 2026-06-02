@@ -9,7 +9,11 @@ import {
   LoginRequest,
   RegisterRequest,
 } from "./auth.types.js";
-import { LoginRequestSchema, RegisterRequestSchema } from "./auth.zod.js";
+import {
+  JwtUserSchema,
+  LoginRequestSchema,
+  RegisterRequestSchema,
+} from "./auth.zod.js";
 import { prisma, prismaErrorHandler } from "../../configs/prisma.js";
 import { JWT_SECRET, NODE_ENV } from "../../configs/env.config.js";
 import { Prisma } from "../../generated/prisma/client.js";
@@ -187,6 +191,91 @@ export const login = async (
       return;
     }
 
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      errors: error,
+    });
+  }
+};
+
+export const logout = (
+  req: Request,
+  res: Response<AuthResponseSuccess<AuthUser> | AuthResponseFailure>,
+) => {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: NODE_ENV === "production",
+      sameSite: "strict",
+    });
+    return res.status(200).json({
+      success: true,
+      message: "Logout successful",
+    });
+  } catch (error) {
+    console.log("Logout error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      errors: error,
+    });
+  }
+};
+
+export const me = async (
+  req: Request,
+  res: Response<AuthResponseSuccess<AuthUser> | AuthResponseFailure>,
+) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+        errors: null,
+      });
+    }
+
+    const result = JwtUserSchema.safeParse(user);
+    if (!result.success) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid token payload",
+        errors: result.error,
+      });
+    }
+
+    const { id } = result.data;
+
+    const userData = await prisma.user.findUnique({
+      where: {
+        id,
+      },
+      omit: {
+        password: true,
+      },
+    });
+
+    if (!userData) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+        errors: null,
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "User data retrieved successfully",
+      data: userData,
+    });
+  } catch (error) {
+    console.log("Me error:", error);
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      prismaErrorHandler(req, res, error);
+      return;
+    }
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",

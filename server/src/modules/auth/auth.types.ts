@@ -3,7 +3,7 @@ import {
   AuthUserSchema,
   JwtUserSchema,
   RegisterRequestSchema,
-  LoginRequestSchema
+  LoginRequestSchema,
 } from "./auth.zod.js";
 
 export type AuthUser = z.infer<typeof AuthUserSchema>;
