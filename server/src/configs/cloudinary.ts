@@ -47,6 +47,8 @@ export const handleSingleUpload = async (
       url: null,
     };
   } finally {
-    await fs.promises.unlink(filePath);
+    if (fs.existsSync(filePath)) {
+      await fs.promises.unlink(filePath);
+    }
   }
 };
