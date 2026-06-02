@@ -33,6 +33,7 @@ export type UserMinAggregateOutputType = {
   updatedAt: Date | null
   provider: $Enums.Provider | null
   profile_url: string | null
+  public_id: string | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -44,6 +45,7 @@ export type UserMaxAggregateOutputType = {
   updatedAt: Date | null
   provider: $Enums.Provider | null
   profile_url: string | null
+  public_id: string | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -55,6 +57,7 @@ export type UserCountAggregateOutputType = {
   updatedAt: number
   provider: number
   profile_url: number
+  public_id: number
   _all: number
 }
 
@@ -68,6 +71,7 @@ export type UserMinAggregateInputType = {
   updatedAt?: true
   provider?: true
   profile_url?: true
+  public_id?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -79,6 +83,7 @@ export type UserMaxAggregateInputType = {
   updatedAt?: true
   provider?: true
   profile_url?: true
+  public_id?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -90,6 +95,7 @@ export type UserCountAggregateInputType = {
   updatedAt?: true
   provider?: true
   profile_url?: true
+  public_id?: true
   _all?: true
 }
 
@@ -174,6 +180,7 @@ export type UserGroupByOutputType = {
   updatedAt: Date
   provider: $Enums.Provider
   profile_url: string | null
+  public_id: string | null
   _count: UserCountAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
@@ -206,6 +213,7 @@ export type UserWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   provider?: Prisma.EnumProviderFilter<"User"> | $Enums.Provider
   profile_url?: Prisma.StringNullableFilter<"User"> | string | null
+  public_id?: Prisma.StringNullableFilter<"User"> | string | null
   topics?: Prisma.TopicListRelationFilter
 }
 
@@ -218,6 +226,7 @@ export type UserOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   provider?: Prisma.SortOrder
   profile_url?: Prisma.SortOrderInput | Prisma.SortOrder
+  public_id?: Prisma.SortOrderInput | Prisma.SortOrder
   topics?: Prisma.TopicOrderByRelationAggregateInput
 }
 
@@ -233,6 +242,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   provider?: Prisma.EnumProviderFilter<"User"> | $Enums.Provider
   profile_url?: Prisma.StringNullableFilter<"User"> | string | null
+  public_id?: Prisma.StringNullableFilter<"User"> | string | null
   topics?: Prisma.TopicListRelationFilter
 }, "id" | "email">
 
@@ -245,6 +255,7 @@ export type UserOrderByWithAggregationInput = {
   updatedAt?: Prisma.SortOrder
   provider?: Prisma.SortOrder
   profile_url?: Prisma.SortOrderInput | Prisma.SortOrder
+  public_id?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
@@ -262,6 +273,7 @@ export type UserScalarWhereWithAggregatesInput = {
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   provider?: Prisma.EnumProviderWithAggregatesFilter<"User"> | $Enums.Provider
   profile_url?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  public_id?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
 }
 
 export type UserCreateInput = {
@@ -273,6 +285,7 @@ export type UserCreateInput = {
   updatedAt?: Date | string
   provider?: $Enums.Provider
   profile_url?: string | null
+  public_id?: string | null
   topics?: Prisma.TopicCreateNestedManyWithoutUserInput
 }
 
@@ -285,6 +298,7 @@ export type UserUncheckedCreateInput = {
   updatedAt?: Date | string
   provider?: $Enums.Provider
   profile_url?: string | null
+  public_id?: string | null
   topics?: Prisma.TopicUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -297,6 +311,7 @@ export type UserUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   provider?: Prisma.EnumProviderFieldUpdateOperationsInput | $Enums.Provider
   profile_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   topics?: Prisma.TopicUpdateManyWithoutUserNestedInput
 }
 
@@ -309,6 +324,7 @@ export type UserUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   provider?: Prisma.EnumProviderFieldUpdateOperationsInput | $Enums.Provider
   profile_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   topics?: Prisma.TopicUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -321,6 +337,7 @@ export type UserCreateManyInput = {
   updatedAt?: Date | string
   provider?: $Enums.Provider
   profile_url?: string | null
+  public_id?: string | null
 }
 
 export type UserUpdateManyMutationInput = {
@@ -332,6 +349,7 @@ export type UserUpdateManyMutationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   provider?: Prisma.EnumProviderFieldUpdateOperationsInput | $Enums.Provider
   profile_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -343,6 +361,7 @@ export type UserUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   provider?: Prisma.EnumProviderFieldUpdateOperationsInput | $Enums.Provider
   profile_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -354,6 +373,7 @@ export type UserCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   provider?: Prisma.SortOrder
   profile_url?: Prisma.SortOrder
+  public_id?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -365,6 +385,7 @@ export type UserMaxOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   provider?: Prisma.SortOrder
   profile_url?: Prisma.SortOrder
+  public_id?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -376,6 +397,7 @@ export type UserMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   provider?: Prisma.SortOrder
   profile_url?: Prisma.SortOrder
+  public_id?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -422,6 +444,7 @@ export type UserCreateWithoutTopicsInput = {
   updatedAt?: Date | string
   provider?: $Enums.Provider
   profile_url?: string | null
+  public_id?: string | null
 }
 
 export type UserUncheckedCreateWithoutTopicsInput = {
@@ -433,6 +456,7 @@ export type UserUncheckedCreateWithoutTopicsInput = {
   updatedAt?: Date | string
   provider?: $Enums.Provider
   profile_url?: string | null
+  public_id?: string | null
 }
 
 export type UserCreateOrConnectWithoutTopicsInput = {
@@ -460,6 +484,7 @@ export type UserUpdateWithoutTopicsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   provider?: Prisma.EnumProviderFieldUpdateOperationsInput | $Enums.Provider
   profile_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserUncheckedUpdateWithoutTopicsInput = {
@@ -471,6 +496,7 @@ export type UserUncheckedUpdateWithoutTopicsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   provider?: Prisma.EnumProviderFieldUpdateOperationsInput | $Enums.Provider
   profile_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -513,6 +539,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   provider?: boolean
   profile_url?: boolean
+  public_id?: boolean
   topics?: boolean | Prisma.User$topicsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
@@ -526,6 +553,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   updatedAt?: boolean
   provider?: boolean
   profile_url?: boolean
+  public_id?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -537,6 +565,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   updatedAt?: boolean
   provider?: boolean
   profile_url?: boolean
+  public_id?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -548,9 +577,10 @@ export type UserSelectScalar = {
   updatedAt?: boolean
   provider?: boolean
   profile_url?: boolean
+  public_id?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "password" | "createdAt" | "updatedAt" | "provider" | "profile_url", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "password" | "createdAt" | "updatedAt" | "provider" | "profile_url" | "public_id", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   topics?: boolean | Prisma.User$topicsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -572,6 +602,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     updatedAt: Date
     provider: $Enums.Provider
     profile_url: string | null
+    public_id: string | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -1004,6 +1035,7 @@ export interface UserFieldRefs {
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly provider: Prisma.FieldRef<"User", 'Provider'>
   readonly profile_url: Prisma.FieldRef<"User", 'String'>
+  readonly public_id: Prisma.FieldRef<"User", 'String'>
 }
     
 

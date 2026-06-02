@@ -15,7 +15,10 @@ cloudinary.config({
 type CloudinaryUploadResult = {
   success: boolean;
   message: string;
-  url: string | null;
+  url: {
+    secure_url: string;
+    public_id: string;
+  } | null;
 };
 
 export const handleSingleUpload = async (
@@ -36,7 +39,10 @@ export const handleSingleUpload = async (
     return {
       success: true,
       message: "File uploaded successfully",
-      url: data.secure_url,
+      url: {
+        secure_url: data.secure_url,
+        public_id: data.public_id,
+      },
     };
   } catch (e) {
     console.error("Cloudinary upload error:", e);

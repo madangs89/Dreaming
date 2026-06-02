@@ -42,6 +42,7 @@ model User {
   updatedAt   DateTime @updatedAt
   provider    Provider @default(email)
   profile_url String?
+  public_id   String?
   topics      Topic[]
 }
 
@@ -51,6 +52,7 @@ model Topic {
   user_id    String
   user       User     @relation(fields: [user_id], references: [id])
   source_url String?
+  public_id   String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   notes      Note[]
@@ -75,6 +77,7 @@ model Document {
   url       String?
   memetype  Memetype?
   content   String?
+  public_id String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }

@@ -237,16 +237,7 @@ export const me = async (
       });
     }
 
-    const result = JwtUserSchema.safeParse(user);
-    if (!result.success) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid token payload",
-        errors: result.error,
-      });
-    }
-
-    const { id } = result.data;
+    const { id } = user;
 
     const userData = await prisma.user.findUnique({
       where: {

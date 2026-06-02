@@ -825,7 +825,8 @@ export const UserScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   provider: 'provider',
-  profile_url: 'profile_url'
+  profile_url: 'profile_url',
+  public_id: 'public_id'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -836,6 +837,7 @@ export const TopicScalarFieldEnum = {
   title: 'title',
   user_id: 'user_id',
   source_url: 'source_url',
+  public_id: 'public_id',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -860,6 +862,7 @@ export const DocumentScalarFieldEnum = {
   url: 'url',
   memetype: 'memetype',
   content: 'content',
+  public_id: 'public_id',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

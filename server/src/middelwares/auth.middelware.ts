@@ -20,7 +20,7 @@ export const authenticate = (
         message: "Unauthorized: No token provided",
       });
     }
-    const decoded = jwt.verify(token, JWT_SECRET as string);
+    const decoded = jwt.verify(token, JWT_SECRET);
 
     const result = JwtUserSchema.safeParse(decoded);
     if (!result.success) {
