@@ -12,6 +12,8 @@ export const authenticate = (
     const token =
       req.cookies?.token || req.headers?.authorization?.split(" ")[1];
 
+    console.log("Token from middleware:", token);
+
     if (!token) {
       return res.status(401).json({
         success: false,

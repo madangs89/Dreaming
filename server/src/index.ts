@@ -3,11 +3,13 @@ import cors from "cors";
 import { PORT } from "./configs/env.config.js";
 import { topicRouter } from "./modules/topic/topic.routes.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(cors());
 
 let port = PORT || 3000;
