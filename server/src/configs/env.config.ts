@@ -6,7 +6,7 @@ const DATABASE_URL = process.env.DATABASE_URL;
 const CLOUDINARY_NAME = process.env.CLOUDINARY_NAME;
 const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
 const CLOUDINARY_SECRET = process.env.CLOUDINARY_SECRET;
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = String(process.env.JWT_SECRET);
 const NODE_ENV = process.env.NODE_ENV;
 
 if (!JWT_SECRET) {

@@ -24,7 +24,7 @@ const createJwtToken = (user: JwtPayload): string => {
       id: user.id,
       email: user.email,
     },
-    JWT_SECRET as string,
+    JWT_SECRET,
     {
       expiresIn: "7d",
     },
