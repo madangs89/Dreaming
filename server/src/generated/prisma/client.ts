@@ -46,3 +46,23 @@ export { Prisma }
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model Topic
+ * 
+ */
+export type Topic = Prisma.TopicModel
+/**
+ * Model Note
+ * 
+ */
+export type Note = Prisma.NoteModel
+/**
+ * Model Document
+ * 
+ */
+export type Document = Prisma.DocumentModel
+/**
+ * Model review
+ * 
+ */
+export type review = Prisma.reviewModel

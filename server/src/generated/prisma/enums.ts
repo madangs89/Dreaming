@@ -9,7 +9,39 @@
 * 🟢 You can import this file directly.
 */
 
+export const Provider = {
+  email: 'email',
+  google: 'google',
+  github: 'github'
+} as const
+
+export type Provider = (typeof Provider)[keyof typeof Provider]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const Memetype = {
+  image: 'image',
+  video: 'video',
+  audio: 'audio',
+  other: 'other'
+} as const
+
+export type Memetype = (typeof Memetype)[keyof typeof Memetype]
+
+
+export const ReviewStatus = {
+  scheduled: 'scheduled',
+  attempted: 'attempted',
+  completed: 'completed',
+  missed: 'missed'
+} as const
+
+export type ReviewStatus = (typeof ReviewStatus)[keyof typeof ReviewStatus]
+
+
+export const reviewRememberStatus = {
+  easy: 'easy',
+  partial: 'partial',
+  forgot: 'forgot'
+} as const
+
+export type reviewRememberStatus = (typeof reviewRememberStatus)[keyof typeof reviewRememberStatus]
