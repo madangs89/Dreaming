@@ -22,3 +22,7 @@ export type TopicResponse<Data = unknown> = {
 export type TopicParams = {
   id: string;
 };
+
+export type TopicEdit = {
+  title?: string;
+};

@@ -21,6 +21,11 @@ type CloudinaryUploadResult = {
   } | null;
 };
 
+type CloudinaryDeleteResult = {
+  success: boolean;
+  message: string;
+};
+
 export const handleSingleUpload = async (
   filePath: string,
 ): Promise<CloudinaryUploadResult> => {
@@ -56,5 +61,38 @@ export const handleSingleUpload = async (
     if (fs.existsSync(filePath)) {
       await fs.promises.unlink(filePath);
     }
+  }
+};
+
+export const handleSingleDelete = async (
+  public_id: string,
+): Promise<CloudinaryDeleteResult> => {
+  try {
+    if (!public_id) {
+      console.warn("No public_id provided for deletion");
+      return {
+        success: false,
+        message: "No public_id provided for deletion",
+      };
+    }
+
+    const result = await cloudinary.uploader.destroy(public_id);
+
+    if (result.result !== "ok") {
+      return {
+        success: false,
+        message: "Failed to delete file",
+      };
+    }
+    return {
+      success: true,
+      message: "File deleted successfully",
+    };
+  } catch (error) {
+    console.error("Cloudinary delete error:", error);
+    return {
+      success: false,
+      message: "Failed to delete file",
+    };
   }
 };

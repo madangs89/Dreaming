@@ -847,6 +847,7 @@ export type TopicScalarFieldEnum = (typeof TopicScalarFieldEnum)[keyof typeof To
 
 export const NoteScalarFieldEnum = {
   id: 'id',
+  title: 'title',
   content: 'content',
   topic_id: 'topic_id',
   createdAt: 'createdAt',
@@ -861,7 +862,7 @@ export const DocumentScalarFieldEnum = {
   notes_id: 'notes_id',
   url: 'url',
   memetype: 'memetype',
-  content: 'content',
+  title: 'title',
   public_id: 'public_id',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
