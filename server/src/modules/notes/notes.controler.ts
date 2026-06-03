@@ -158,3 +158,45 @@ export const getAllNotes = async (
     });
   }
 };
+
+export const getSingleNote = async (
+  req: Request<{ id: string }>,
+  res: Response<NoteErrorResponse | NoteSuccessResponse<NoteBody>>,
+) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        message: "Note ID is required",
+        success: false,
+      });
+    }
+    const note = await prisma.note.findUnique({
+      where: { id },
+      include: { documents: true, reviews: true },
+    });
+
+    if (!note) {
+      return res.status(404).json({
+        message: "Note not found",
+        success: false,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Note retrieved successfully",
+      success: true,
+      note,
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      prismaErrorHandler(req, res, error);
+      return;
+    }
+    return res.status(500).json({
+      message: "An unexpected error occurred",
+      success: false,
+    });
+  }
+};
