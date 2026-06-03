@@ -12,4 +12,5 @@ notesRouter.post(
   authenticate,
   upload.array("documents"),
   createNote,
+  
 );
