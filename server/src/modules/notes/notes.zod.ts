@@ -49,3 +49,7 @@ export const NoteSchema = z.object({
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
+
+export const NoteParamSchema = z.object({
+  topic_id: z.string().uuid(),
+});

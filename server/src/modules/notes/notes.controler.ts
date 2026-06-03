@@ -4,9 +4,10 @@ import {
   NoteBody,
   NoteCreateBody,
   NoteErrorResponse,
+  NoteParams,
   NoteSuccessResponse,
 } from "./notes.types.js";
-import { createNoteSchema } from "./notes.zod.js";
+import { createNoteSchema, NoteParamSchema } from "./notes.zod.js";
 import { prisma, prismaErrorHandler } from "../../configs/prisma.js";
 import {
   handleSingleDelete,
@@ -113,6 +114,44 @@ export const createNote = async (
       await handleSingleDelete(uploadedFiles.public_id);
     }
 
+    return res.status(500).json({
+      message: "An unexpected error occurred",
+      success: false,
+    });
+  }
+};
+
+export const getAllNotes = async (
+  req: Request<NoteParams>,
+  res: Response<NoteErrorResponse | NoteSuccessResponse<NoteBody[]>>,
+) => {
+  try {
+    const results = await NoteParamSchema.safeParseAsync(req.params);
+    if (!results.success) {
+      return res.status(400).json({
+        message: "Invalid request parameters",
+        success: false,
+        errors: results.error.format(),
+      });
+    }
+
+    const { topic_id } = results.data;
+
+    const notes = await prisma.note.findMany({
+      where: { topic_id },
+      include: { documents: true, reviews: true },
+    });
+
+    return res.status(200).json({
+      message: "Notes retrieved successfully",
+      success: true,
+      note: notes,
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      prismaErrorHandler(req, res, error);
+      return;
+    }
     return res.status(500).json({
       message: "An unexpected error occurred",
       success: false,

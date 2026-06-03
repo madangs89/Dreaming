@@ -19,6 +19,8 @@ export type TopicResponse<Data = unknown> = {
   topic?: Data;
 };
 
+
+
 export type TopicParams = {
   id: string;
 };
