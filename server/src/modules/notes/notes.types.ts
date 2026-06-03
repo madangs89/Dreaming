@@ -1,5 +1,10 @@
 import * as z from "zod";
-import { createNoteSchema } from "./notes.zod.js";
+import {
+  createNoteSchema,
+  DocumentSchema,
+  NoteSchema,
+  ReviewSchema,
+} from "./notes.zod.js";
 
 export type NoteSuccessResponse<Data = unknown> = {
   message: string;
@@ -14,3 +19,7 @@ export type NoteErrorResponse = {
 };
 
 export type NoteCreateBody = z.infer<typeof createNoteSchema>;
+
+export type NoteBody = z.infer<typeof NoteSchema>;
+export type DocumentBody = z.infer<typeof DocumentSchema>;
+export type ReviewBody = z.infer<typeof ReviewSchema>;

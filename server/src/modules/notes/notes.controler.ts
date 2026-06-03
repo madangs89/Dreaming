@@ -1,20 +1,47 @@
 import { Request, Response } from "express";
-import { Prisma } from "../../generated/prisma/client.js";
+import { Memetype, Prisma } from "../../generated/prisma/client.js";
 import {
+  NoteBody,
   NoteCreateBody,
   NoteErrorResponse,
   NoteSuccessResponse,
 } from "./notes.types.js";
 import { createNoteSchema } from "./notes.zod.js";
-import { prismaErrorHandler } from "../../configs/prisma.js";
+import { prisma, prismaErrorHandler } from "../../configs/prisma.js";
+import {
+  handleSingleDelete,
+  handleSingleUpload,
+} from "../../configs/cloudinary.js";
+import { v4 as uuidv4 } from "uuid";
+function getMemetype(mimetype: string): Memetype {
+  if (mimetype.startsWith("image/")) {
+    return Memetype.image;
+  }
+
+  if (mimetype.startsWith("video/")) {
+    return Memetype.video;
+  }
+
+  if (mimetype.startsWith("audio/")) {
+    return Memetype.audio;
+  }
+
+  return Memetype.other;
+}
 
 export const createNote = async (
   req: Request<{}, {}, NoteCreateBody>,
-  res: Response<NoteErrorResponse | NoteSuccessResponse>,
+  res: Response<NoteErrorResponse | NoteSuccessResponse<NoteBody>>,
 ) => {
-  try {
-    const results = createNoteSchema.safeParse(req.body);
+  const fileData: Prisma.DocumentUncheckedCreateInput[] = [];
 
+  try {
+    const user_id = req.user?.id;
+    if (!user_id) {
+      return res.status(401).json({ message: "Unauthorized", success: false });
+    }
+
+    const results = createNoteSchema.safeParse(req.body);
     if (!results.success) {
       return res.status(400).json({
         message: "Invalid request body",
@@ -22,10 +49,68 @@ export const createNote = async (
         errors: results.error.format(),
       });
     }
+
+    const { title, content, topic_id } = results.data;
+
+    const files = req.files as Express.Multer.File[] | undefined;
+
+    let note_id = uuidv4();
+
+    if (files && files.length > 0) {
+      for (const file of files) {
+        const uploadResult = await handleSingleUpload(file.path);
+        if (!uploadResult.success || !uploadResult.url) {
+          for (const uploadedFiles of fileData) {
+            const deleteResult = await handleSingleDelete(
+              uploadedFiles.public_id,
+            );
+          }
+          return res.status(500).json({
+            message: "Failed to upload file",
+            success: false,
+          });
+        }
+
+        let payload: Prisma.DocumentUncheckedCreateInput = {
+          memetype: getMemetype(file.mimetype),
+          title: file.originalname,
+          url: uploadResult.url.secure_url,
+          public_id: uploadResult.url.public_id,
+          notes_id: note_id,
+        };
+        fileData.push(payload);
+      }
+    }
+
+    const noteData = await prisma.$transaction(async (tx) => {
+      return await tx.note.create({
+        data: {
+          id: note_id,
+          title,
+          content,
+          topic_id,
+          documents: {
+            createMany: { data: fileData.map(({ notes_id, ...rest }) => rest) },
+          },
+        },
+        include: { documents: true, reviews: true },
+      });
+    });
+
+    return res.status(201).json({
+      message: "Note created successfully",
+      success: true,
+      note: noteData,
+    });
   } catch (error) {
+    console.error("Error creating note:", error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       prismaErrorHandler(req, res, error);
       return;
+    }
+
+    for (const uploadedFiles of fileData) {
+      await handleSingleDelete(uploadedFiles.public_id);
     }
 
     return res.status(500).json({

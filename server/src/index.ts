@@ -4,6 +4,7 @@ import { PORT } from "./configs/env.config.js";
 import { topicRouter } from "./modules/topic/topic.routes.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
 import cookieParser from "cookie-parser";
+import { notesRouter } from "./modules/notes/notes.routes.js";
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/topic", topicRouter);
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/notes", notesRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

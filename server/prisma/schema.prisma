@@ -62,7 +62,7 @@ model Topic {
 model Note {
   id        String     @id @default(uuid())
   title     String
-  content   String
+  content   String?
   topic_id  String
   topic     Topic      @relation(fields: [topic_id], references: [id])
   createdAt DateTime   @default(now())
