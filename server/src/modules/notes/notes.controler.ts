@@ -19,7 +19,7 @@ import {
   handleSingleUpload,
 } from "../../configs/cloudinary.js";
 import { v4 as uuidv4 } from "uuid";
-function getMemetype(mimetype: string): Memetype {
+export function getMemetype(mimetype: string): Memetype {
   if (mimetype.startsWith("image/")) {
     return Memetype.image;
   }
@@ -77,7 +77,7 @@ export const createNote = async (
           });
         }
 
-        let payload: Prisma.DocumentUncheckedCreateInput = {
+        let payload: Prisma.DocumentCreateManyInput = {
           memetype: getMemetype(file.mimetype),
           title: file.originalname,
           url: uploadResult.url.secure_url,
