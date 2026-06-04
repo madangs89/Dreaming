@@ -53,3 +53,11 @@ export const NoteSchema = z.object({
 export const NoteParamSchema = z.object({
   topic_id: z.string().uuid(),
 });
+
+export const NoteUpdateSchema = z.object({
+  title: z
+    .string()
+    .max(255, "Title must be less than 255 characters")
+    .optional(),
+  content: z.string().optional(),
+});

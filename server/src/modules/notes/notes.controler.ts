@@ -6,8 +6,13 @@ import {
   NoteErrorResponse,
   NoteParams,
   NoteSuccessResponse,
+  NoteUpdateBody,
 } from "./notes.types.js";
-import { createNoteSchema, NoteParamSchema } from "./notes.zod.js";
+import {
+  createNoteSchema,
+  NoteParamSchema,
+  NoteUpdateSchema,
+} from "./notes.zod.js";
 import { prisma, prismaErrorHandler } from "../../configs/prisma.js";
 import {
   handleSingleDelete,
@@ -188,6 +193,75 @@ export const getSingleNote = async (
       message: "Note retrieved successfully",
       success: true,
       note,
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      prismaErrorHandler(req, res, error);
+      return;
+    }
+    return res.status(500).json({
+      message: "An unexpected error occurred",
+      success: false,
+    });
+  }
+};
+
+export const updateNote = async (
+  req: Request<{ id: string }, {}, NoteUpdateBody>,
+  res: Response<NoteErrorResponse | NoteSuccessResponse<NoteBody>>,
+) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        message: "Note ID is required",
+        success: false,
+      });
+    }
+
+    const results = NoteUpdateSchema.safeParse(req.body);
+    if (!results.success) {
+      return res.status(400).json({
+        message: "Invalid request body",
+        success: false,
+        errors: results.error.format(),
+      });
+    }
+
+    const { title, content } = results.data;
+
+    if (!title && !content) {
+      return res.status(400).json({
+        message:
+          "At least one field (title or content) must be provided for update",
+        success: false,
+      });
+    }
+
+    const note = await prisma.note.findUnique({ where: { id } });
+
+    if (!note) {
+      return res.status(404).json({
+        message: "Note not found",
+        success: false,
+      });
+    }
+
+    const payload: Prisma.NoteUpdateInput = {
+      title: title ? title : note.title,
+      content: content ? content : note.content,
+    };
+
+    const updatedNote = await prisma.note.update({
+      where: { id },
+      data: payload,
+      include: { documents: true, reviews: true },
+    });
+    return res.status(200).json({
+      message: "Note updated successfully",
+      success: true,
+      note: updatedNote,
     });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
