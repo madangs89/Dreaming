@@ -156,11 +156,11 @@ export type BoolFilter<$PrismaModel = never> = {
   not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean
 }
 
-export type EnumreviewRememberStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.reviewRememberStatus | Prisma.EnumreviewRememberStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.reviewRememberStatus[] | Prisma.ListEnumreviewRememberStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.reviewRememberStatus[] | Prisma.ListEnumreviewRememberStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumreviewRememberStatusFilter<$PrismaModel> | $Enums.reviewRememberStatus
+export type EnumreviewRememberStatusNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.reviewRememberStatus | Prisma.EnumreviewRememberStatusFieldRefInput<$PrismaModel> | null
+  in?: $Enums.reviewRememberStatus[] | Prisma.ListEnumreviewRememberStatusFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.reviewRememberStatus[] | Prisma.ListEnumreviewRememberStatusFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumreviewRememberStatusNullableFilter<$PrismaModel> | $Enums.reviewRememberStatus | null
 }
 
 export type EnumReviewStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -181,14 +181,14 @@ export type BoolWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
 }
 
-export type EnumreviewRememberStatusWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.reviewRememberStatus | Prisma.EnumreviewRememberStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.reviewRememberStatus[] | Prisma.ListEnumreviewRememberStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.reviewRememberStatus[] | Prisma.ListEnumreviewRememberStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumreviewRememberStatusWithAggregatesFilter<$PrismaModel> | $Enums.reviewRememberStatus
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumreviewRememberStatusFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumreviewRememberStatusFilter<$PrismaModel>
+export type EnumreviewRememberStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.reviewRememberStatus | Prisma.EnumreviewRememberStatusFieldRefInput<$PrismaModel> | null
+  in?: $Enums.reviewRememberStatus[] | Prisma.ListEnumreviewRememberStatusFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.reviewRememberStatus[] | Prisma.ListEnumreviewRememberStatusFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumreviewRememberStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.reviewRememberStatus | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumreviewRememberStatusNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumreviewRememberStatusNullableFilter<$PrismaModel>
 }
 
 export type NestedStringFilter<$PrismaModel = never> = {
@@ -346,11 +346,11 @@ export type NestedBoolFilter<$PrismaModel = never> = {
   not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean
 }
 
-export type NestedEnumreviewRememberStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.reviewRememberStatus | Prisma.EnumreviewRememberStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.reviewRememberStatus[] | Prisma.ListEnumreviewRememberStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.reviewRememberStatus[] | Prisma.ListEnumreviewRememberStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumreviewRememberStatusFilter<$PrismaModel> | $Enums.reviewRememberStatus
+export type NestedEnumreviewRememberStatusNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.reviewRememberStatus | Prisma.EnumreviewRememberStatusFieldRefInput<$PrismaModel> | null
+  in?: $Enums.reviewRememberStatus[] | Prisma.ListEnumreviewRememberStatusFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.reviewRememberStatus[] | Prisma.ListEnumreviewRememberStatusFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumreviewRememberStatusNullableFilter<$PrismaModel> | $Enums.reviewRememberStatus | null
 }
 
 export type NestedEnumReviewStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -371,14 +371,14 @@ export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
 }
 
-export type NestedEnumreviewRememberStatusWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.reviewRememberStatus | Prisma.EnumreviewRememberStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.reviewRememberStatus[] | Prisma.ListEnumreviewRememberStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.reviewRememberStatus[] | Prisma.ListEnumreviewRememberStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumreviewRememberStatusWithAggregatesFilter<$PrismaModel> | $Enums.reviewRememberStatus
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumreviewRememberStatusFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumreviewRememberStatusFilter<$PrismaModel>
+export type NestedEnumreviewRememberStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.reviewRememberStatus | Prisma.EnumreviewRememberStatusFieldRefInput<$PrismaModel> | null
+  in?: $Enums.reviewRememberStatus[] | Prisma.ListEnumreviewRememberStatusFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.reviewRememberStatus[] | Prisma.ListEnumreviewRememberStatusFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumreviewRememberStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.reviewRememberStatus | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumreviewRememberStatusNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumreviewRememberStatusNullableFilter<$PrismaModel>
 }
 
 

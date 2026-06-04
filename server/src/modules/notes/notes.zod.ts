@@ -34,7 +34,9 @@ export const ReviewSchema = z.object({
   is_completed: z.boolean().default(false),
   review_results: z
     .nativeEnum(reviewRememberStatus)
+    .nullable()
     .default(reviewRememberStatus.easy),
+  is_revision_enough: z.boolean().default(false),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });

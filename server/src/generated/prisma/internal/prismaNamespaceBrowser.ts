@@ -136,6 +136,7 @@ export const ReviewScalarFieldEnum = {
   status: 'status',
   is_completed: 'is_completed',
   review_results: 'review_results',
+  is_revision_enough: 'is_revision_enough',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

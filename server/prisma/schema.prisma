@@ -84,15 +84,16 @@ model Document {
 }
 
 model review {
-  id             String               @id @default(uuid())
-  notes_id       String
-  topic_id       String
-  scheduled_date DateTime
-  status         ReviewStatus         @default(scheduled)
-  is_completed   Boolean              @default(false)
-  review_results reviewRememberStatus @default(partial)
-  notes          Note                 @relation(fields: [notes_id], references: [id])
-  topic          Topic                @relation(fields: [topic_id], references: [id])
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @updatedAt
+  id                 String                @id @default(uuid())
+  notes_id           String
+  topic_id           String
+  scheduled_date     DateTime
+  status             ReviewStatus          @default(scheduled)
+  is_completed       Boolean               @default(false)
+  review_results     reviewRememberStatus?
+  is_revision_enough Boolean               @default(false)
+  notes              Note                  @relation(fields: [notes_id], references: [id])
+  topic              Topic                 @relation(fields: [topic_id], references: [id])
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
 }
