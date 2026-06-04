@@ -1,0 +1,222 @@
+import { ThinkingLevel } from "@google/genai/web";
+import { prisma } from "../../configs/prisma.js";
+import { QuestionHistoryBody } from "../../modules/questionHistory/question.types.js";
+import { ReviewBody } from "../../modules/review/review.types.js";
+import { ai } from "../../configs/google.js";
+import { scheduleReviewInstruction } from "../../ai/systemInstruction/instruction.js";
+import { zodToJsonSchema } from "zod-to-json-schema";
+import * as z from "zod";
+
+import { LLMQuestionSchema } from "./review.job.type.js";
+import { DocumentBody } from "../../modules/notes/notes.types.js";
+import mime from "mime-types";
+
+// Add explicitMimeType as a parameter
+async function fileToGenerativePart(url: string, explicitMimeType?: string) {
+  // Look up by URL first. If that fails, fallback to the explicit type from your DB.
+  const determinedMimeType = mime.lookup(url) || "application/octet-stream";
+
+  let targetUrl = url;
+
+  if (url.includes("cloudinary.com")) {
+    // Check both the determined mime type AND the URL string as a safety net
+    if (
+      determinedMimeType === "application/pdf" ||
+      url.toLowerCase().includes(".pdf")
+    ) {
+      targetUrl = url.replace("/upload/", "/upload/fl_attachment/");
+    }
+  }
+
+  const response = await fetch(targetUrl);
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch document from source: ${response.statusText} (${response.status})`,
+    );
+  }
+
+  const arrayBuffer = await response.arrayBuffer();
+  const base64Data = Buffer.from(arrayBuffer).toString("base64");
+
+  // If mime lookup failed completely, default to a safe standard image type
+  // so Gemini doesn't reject an 'application/octet-stream'
+  const finalMimeType =
+    determinedMimeType === "application/octet-stream"
+      ? "image/jpeg"
+      : determinedMimeType;
+
+  return {
+    inlineData: {
+      data: base64Data,
+      mimeType: finalMimeType,
+    },
+  };
+}
+
+export const getReviewDetails = async (
+  review_id: string,
+): Promise<ReviewBody> => {
+  const review = await prisma.review.findUnique({
+    where: { id: review_id },
+    include: {
+      topic: true,
+      notes: true,
+    },
+  });
+
+  if (!review) {
+    throw new Error("Review not found");
+  }
+  return review;
+};
+
+export const getReviewQuestionHistory = async (
+  review_id: string,
+): Promise<QuestionHistoryBody[]> => {
+  const questionHistory = await prisma.questionHistory.findMany({
+    where: { review_id },
+    take: 20,
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return questionHistory;
+};
+
+export const getDocumentData = async (
+  notes_id: string,
+): Promise<DocumentBody[]> => {
+  const documentData = await prisma.document.findMany({
+    where: { notes_id },
+  });
+  return documentData;
+};
+
+export const llmCreateQuestions = async (
+  reviewDetails: ReviewBody,
+  questionHistory: QuestionHistoryBody[],
+  documentData: DocumentBody[],
+) => {
+  console.log("got the request to generate questions for review:");
+  const processedQuestionHistory = questionHistory.map((question) => ({
+    question: question.question,
+  }));
+
+  const totalReviewCount = reviewDetails.review_count;
+  const weakAreas = reviewDetails.weak_areas;
+  const strongAreas = reviewDetails.strong_areas;
+  const noteContent = reviewDetails.notes.content;
+
+  const prompt = `
+Review Count: ${totalReviewCount}
+
+Strong Areas:
+${strongAreas?.join("\n") || "None"}
+
+Weak Areas:
+${weakAreas?.join("\n") || "None"}
+
+Study Notes:
+${noteContent || "No notes available"}
+
+Previously Asked Questions:
+${
+  processedQuestionHistory.length > 0
+    ? processedQuestionHistory.map((q) => `- ${q.question}`).join("\n")
+    : "No previous questions"
+}
+`;
+
+  const contents: any[] = [{ text: prompt }];
+
+  if (documentData.length > 0) {
+    const fileParts = await Promise.allSettled(
+      documentData.map((document) =>
+        fileToGenerativePart(document.url, document.memetype),
+      ),
+    );
+
+    contents.push(
+      ...fileParts
+        .filter(
+          (result): result is PromiseFulfilledResult<any> =>
+            result.status === "fulfilled",
+        )
+        .map((result) => result.value),
+    );
+  }
+
+  const arraySchema = z.array(LLMQuestionSchema);
+  const jsonSchema = zodToJsonSchema(arraySchema as any);
+
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents,
+        config: {
+          systemInstruction: scheduleReviewInstruction,
+          // thinkingConfig: {
+          //   thinkingLevel: ThinkingLevel.HIGH,
+          // },
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: "ARRAY",
+            items: {
+              type: "OBJECT",
+              properties: {
+                question: { type: "STRING" },
+                difficulty: {
+                  type: "STRING",
+                  enum: ["easy", "medium", "hard"],
+                },
+                question_type: {
+                  type: "STRING",
+                  enum: ["text", "coding"],
+                },
+                expectedAnswer: {
+                  type: "STRING",
+                },
+              },
+              required: [
+                "question",
+                "difficulty",
+                "question_type",
+                "expectedAnswer",
+              ],
+            },
+          },
+        },
+      });
+
+      if (!response.text) {
+        throw new Error("Empty response from Gemini");
+      }
+
+      const rawData = JSON.parse(response.text);
+
+      const parsedData = z.array(LLMQuestionSchema).safeParse(rawData);
+
+      if (!parsedData.success) {
+        console.error(parsedData.error.flatten());
+        throw new Error("Invalid response schema");
+      }
+
+      console.log("Generated questions successfully:", parsedData.data);
+
+      return parsedData.data;
+    } catch (error) {
+      console.error(
+        `Question generation failed (attempt ${attempt}/3):`,
+        error,
+      );
+
+      if (attempt === 3) {
+        throw error;
+      }
+    }
+  }
+
+  throw new Error("Failed to generate questions");
+};

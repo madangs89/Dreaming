@@ -55,7 +55,8 @@ export const ModelName = {
   Topic: 'Topic',
   Note: 'Note',
   Document: 'Document',
-  review: 'review'
+  review: 'review',
+  QuestionHistory: 'QuestionHistory'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -137,12 +138,30 @@ export const ReviewScalarFieldEnum = {
   status: 'status',
   is_completed: 'is_completed',
   review_results: 'review_results',
+  review_count: 'review_count',
+  strong_areas: 'strong_areas',
+  weak_areas: 'weak_areas',
   is_revision_enough: 'is_revision_enough',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
+
+
+export const QuestionHistoryScalarFieldEnum = {
+  id: 'id',
+  notes_id: 'notes_id',
+  review_id: 'review_id',
+  expectedAnswer: 'expectedAnswer',
+  question_type: 'question_type',
+  difficulty: 'difficulty',
+  question: 'question',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type QuestionHistoryScalarFieldEnum = (typeof QuestionHistoryScalarFieldEnum)[keyof typeof QuestionHistoryScalarFieldEnum]
 
 
 export const SortOrder = {

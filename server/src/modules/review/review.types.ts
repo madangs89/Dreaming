@@ -19,6 +19,9 @@ export type ReviewBody = {
   updatedAt?: Date;
   topic: TopicData;
   notes: Omit<NoteBody, "documents" | "reviews">;
+  weak_areas?: string[] | [];
+  strong_areas?: string[] | [];
+  review_count?: number;
 };
 
 export type ReviewSuccessResponse<T> = {

@@ -25,6 +25,8 @@ import {
 } from "../../configs/cloudinary.js";
 import { v4 as uuidv4 } from "uuid";
 import { getNextReviewDate } from "../../configs/datesfn.js";
+import { reviewQueue } from "../../bull/review/review.queue.js";
+import { scheduleReviewJob } from "../../bull/review/review.jobs.js";
 export function getMemetype(mimetype: string): Memetype {
   if (mimetype.startsWith("image/")) {
     return Memetype.image;
@@ -115,6 +117,10 @@ export const createNote = async (
         },
         include: { documents: true, reviews: true },
       });
+
+      if (n.reviews.length > 0 && n.reviews[0].id) {
+        scheduleReviewJob(n.reviews[0].id, topic_id, user_id);
+      }
       return n;
     });
 

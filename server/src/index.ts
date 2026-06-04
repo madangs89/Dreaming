@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import { notesRouter } from "./modules/notes/notes.routes.js";
 import { documentRouter } from "./modules/document/documents.routes.js";
 import { reviewRouter } from "./modules/review/review.routes.js";
+import { bullRedis } from "./configs/redis.js";
 
 const app = express();
 

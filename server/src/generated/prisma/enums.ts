@@ -45,3 +45,20 @@ export const reviewRememberStatus = {
 } as const
 
 export type reviewRememberStatus = (typeof reviewRememberStatus)[keyof typeof reviewRememberStatus]
+
+
+export const question_type = {
+  coding: 'coding',
+  text: 'text'
+} as const
+
+export type question_type = (typeof question_type)[keyof typeof question_type]
+
+
+export const difficulty = {
+  easy: 'easy',
+  medium: 'medium',
+  hard: 'hard'
+} as const
+
+export type difficulty = (typeof difficulty)[keyof typeof difficulty]

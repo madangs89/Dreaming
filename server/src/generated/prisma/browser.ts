@@ -42,3 +42,8 @@ export type Document = Prisma.DocumentModel
  * 
  */
 export type review = Prisma.reviewModel
+/**
+ * Model QuestionHistory
+ * 
+ */
+export type QuestionHistory = Prisma.QuestionHistoryModel

@@ -388,7 +388,8 @@ export const ModelName = {
   Topic: 'Topic',
   Note: 'Note',
   Document: 'Document',
-  review: 'review'
+  review: 'review',
+  QuestionHistory: 'QuestionHistory'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -404,7 +405,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "topic" | "note" | "document" | "review"
+    modelProps: "user" | "topic" | "note" | "document" | "review" | "questionHistory"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -778,6 +779,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    QuestionHistory: {
+      payload: Prisma.$QuestionHistoryPayload<ExtArgs>
+      fields: Prisma.QuestionHistoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.QuestionHistoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionHistoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.QuestionHistoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionHistoryPayload>
+        }
+        findFirst: {
+          args: Prisma.QuestionHistoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionHistoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.QuestionHistoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionHistoryPayload>
+        }
+        findMany: {
+          args: Prisma.QuestionHistoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionHistoryPayload>[]
+        }
+        create: {
+          args: Prisma.QuestionHistoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionHistoryPayload>
+        }
+        createMany: {
+          args: Prisma.QuestionHistoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.QuestionHistoryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionHistoryPayload>[]
+        }
+        delete: {
+          args: Prisma.QuestionHistoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionHistoryPayload>
+        }
+        update: {
+          args: Prisma.QuestionHistoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionHistoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.QuestionHistoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.QuestionHistoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.QuestionHistoryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionHistoryPayload>[]
+        }
+        upsert: {
+          args: Prisma.QuestionHistoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionHistoryPayload>
+        }
+        aggregate: {
+          args: Prisma.QuestionHistoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQuestionHistory>
+        }
+        groupBy: {
+          args: Prisma.QuestionHistoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QuestionHistoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.QuestionHistoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QuestionHistoryCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -880,12 +955,30 @@ export const ReviewScalarFieldEnum = {
   status: 'status',
   is_completed: 'is_completed',
   review_results: 'review_results',
+  review_count: 'review_count',
+  strong_areas: 'strong_areas',
+  weak_areas: 'weak_areas',
   is_revision_enough: 'is_revision_enough',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
+
+
+export const QuestionHistoryScalarFieldEnum = {
+  id: 'id',
+  notes_id: 'notes_id',
+  review_id: 'review_id',
+  expectedAnswer: 'expectedAnswer',
+  question_type: 'question_type',
+  difficulty: 'difficulty',
+  question: 'question',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type QuestionHistoryScalarFieldEnum = (typeof QuestionHistoryScalarFieldEnum)[keyof typeof QuestionHistoryScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1022,6 +1115,48 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
+
+/**
+ * Reference to a field of type 'question_type'
+ */
+export type Enumquestion_typeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'question_type'>
+    
+
+
+/**
+ * Reference to a field of type 'question_type[]'
+ */
+export type ListEnumquestion_typeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'question_type[]'>
+    
+
+
+/**
+ * Reference to a field of type 'difficulty'
+ */
+export type EnumdifficultyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'difficulty'>
+    
+
+
+/**
+ * Reference to a field of type 'difficulty[]'
+ */
+export type ListEnumdifficultyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'difficulty[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -1137,6 +1272,7 @@ export type GlobalOmitConfig = {
   note?: Prisma.NoteOmit
   document?: Prisma.DocumentOmit
   review?: Prisma.reviewOmit
+  questionHistory?: Prisma.QuestionHistoryOmit
 }
 
 /* Types for Logging */

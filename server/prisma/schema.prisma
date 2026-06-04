@@ -33,6 +33,17 @@ enum reviewRememberStatus {
   forgot
 }
 
+enum question_type {
+  coding
+  text
+}
+
+enum difficulty {
+  easy
+  medium
+  hard
+}
+
 model User {
   id          String   @id @default(uuid())
   email       String   @unique
@@ -61,15 +72,16 @@ model Topic {
 }
 
 model Note {
-  id        String     @id @default(uuid())
-  title     String
-  content   String?
-  topic_id  String
-  topic     Topic      @relation(fields: [topic_id], references: [id])
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  documents Document[]
-  reviews   review[]
+  id                String            @id @default(uuid())
+  title             String
+  content           String?
+  topic_id          String
+  topic             Topic             @relation(fields: [topic_id], references: [id])
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  documents         Document[]
+  reviews           review[]
+  questionHistories QuestionHistory[]
 }
 
 model Document {
@@ -94,9 +106,27 @@ model review {
   status             ReviewStatus          @default(scheduled)
   is_completed       Boolean               @default(false)
   review_results     reviewRememberStatus?
+  review_count       Int                   @default(1)
+  strong_areas       String[]              @default([])
+  weak_areas         String[]              @default([])
   is_revision_enough Boolean               @default(false)
   notes              Note                  @relation(fields: [notes_id], references: [id])
   topic              Topic                 @relation(fields: [topic_id], references: [id])
   createdAt          DateTime              @default(now())
   updatedAt          DateTime              @updatedAt
+  questionHistories  QuestionHistory[]
+}
+
+model QuestionHistory {
+  id             String        @id @default(uuid())
+  notes_id       String
+  notes          Note          @relation(fields: [notes_id], references: [id])
+  review_id      String
+  review         review        @relation(fields: [review_id], references: [id])
+  expectedAnswer String
+  question_type  question_type @default(text)
+  difficulty     difficulty    @default(easy)
+  question       String
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 }
