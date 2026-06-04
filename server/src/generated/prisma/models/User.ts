@@ -215,6 +215,7 @@ export type UserWhereInput = {
   profile_url?: Prisma.StringNullableFilter<"User"> | string | null
   public_id?: Prisma.StringNullableFilter<"User"> | string | null
   topics?: Prisma.TopicListRelationFilter
+  reviews?: Prisma.ReviewListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -228,6 +229,7 @@ export type UserOrderByWithRelationInput = {
   profile_url?: Prisma.SortOrderInput | Prisma.SortOrder
   public_id?: Prisma.SortOrderInput | Prisma.SortOrder
   topics?: Prisma.TopicOrderByRelationAggregateInput
+  reviews?: Prisma.reviewOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -244,6 +246,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   profile_url?: Prisma.StringNullableFilter<"User"> | string | null
   public_id?: Prisma.StringNullableFilter<"User"> | string | null
   topics?: Prisma.TopicListRelationFilter
+  reviews?: Prisma.ReviewListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -287,6 +290,7 @@ export type UserCreateInput = {
   profile_url?: string | null
   public_id?: string | null
   topics?: Prisma.TopicCreateNestedManyWithoutUserInput
+  reviews?: Prisma.reviewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -300,6 +304,7 @@ export type UserUncheckedCreateInput = {
   profile_url?: string | null
   public_id?: string | null
   topics?: Prisma.TopicUncheckedCreateNestedManyWithoutUserInput
+  reviews?: Prisma.reviewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -313,6 +318,7 @@ export type UserUpdateInput = {
   profile_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   topics?: Prisma.TopicUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.reviewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -326,6 +332,7 @@ export type UserUncheckedUpdateInput = {
   profile_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   topics?: Prisma.TopicUncheckedUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.reviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -435,6 +442,20 @@ export type UserUpdateOneRequiredWithoutTopicsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTopicsInput, Prisma.UserUpdateWithoutTopicsInput>, Prisma.UserUncheckedUpdateWithoutTopicsInput>
 }
 
+export type UserCreateNestedOneWithoutReviewsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewsInput, Prisma.UserUncheckedCreateWithoutReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutReviewsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewsInput, Prisma.UserUncheckedCreateWithoutReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewsInput
+  upsert?: Prisma.UserUpsertWithoutReviewsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReviewsInput, Prisma.UserUpdateWithoutReviewsInput>, Prisma.UserUncheckedUpdateWithoutReviewsInput>
+}
+
 export type UserCreateWithoutTopicsInput = {
   id?: string
   email: string
@@ -445,6 +466,7 @@ export type UserCreateWithoutTopicsInput = {
   provider?: $Enums.Provider
   profile_url?: string | null
   public_id?: string | null
+  reviews?: Prisma.reviewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTopicsInput = {
@@ -457,6 +479,7 @@ export type UserUncheckedCreateWithoutTopicsInput = {
   provider?: $Enums.Provider
   profile_url?: string | null
   public_id?: string | null
+  reviews?: Prisma.reviewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTopicsInput = {
@@ -485,6 +508,7 @@ export type UserUpdateWithoutTopicsInput = {
   provider?: Prisma.EnumProviderFieldUpdateOperationsInput | $Enums.Provider
   profile_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviews?: Prisma.reviewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTopicsInput = {
@@ -497,6 +521,75 @@ export type UserUncheckedUpdateWithoutTopicsInput = {
   provider?: Prisma.EnumProviderFieldUpdateOperationsInput | $Enums.Provider
   profile_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviews?: Prisma.reviewUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutReviewsInput = {
+  id?: string
+  email: string
+  name: string
+  password?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  provider?: $Enums.Provider
+  profile_url?: string | null
+  public_id?: string | null
+  topics?: Prisma.TopicCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutReviewsInput = {
+  id?: string
+  email: string
+  name: string
+  password?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  provider?: $Enums.Provider
+  profile_url?: string | null
+  public_id?: string | null
+  topics?: Prisma.TopicUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutReviewsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewsInput, Prisma.UserUncheckedCreateWithoutReviewsInput>
+}
+
+export type UserUpsertWithoutReviewsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReviewsInput, Prisma.UserUncheckedUpdateWithoutReviewsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewsInput, Prisma.UserUncheckedCreateWithoutReviewsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReviewsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReviewsInput, Prisma.UserUncheckedUpdateWithoutReviewsInput>
+}
+
+export type UserUpdateWithoutReviewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  provider?: Prisma.EnumProviderFieldUpdateOperationsInput | $Enums.Provider
+  profile_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  topics?: Prisma.TopicUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReviewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  provider?: Prisma.EnumProviderFieldUpdateOperationsInput | $Enums.Provider
+  profile_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  topics?: Prisma.TopicUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -506,10 +599,12 @@ export type UserUncheckedUpdateWithoutTopicsInput = {
 
 export type UserCountOutputType = {
   topics: number
+  reviews: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   topics?: boolean | UserCountOutputTypeCountTopicsArgs
+  reviews?: boolean | UserCountOutputTypeCountReviewsArgs
 }
 
 /**
@@ -529,6 +624,13 @@ export type UserCountOutputTypeCountTopicsArgs<ExtArgs extends runtime.Types.Ext
   where?: Prisma.TopicWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.reviewWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -541,6 +643,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   profile_url?: boolean
   public_id?: boolean
   topics?: boolean | Prisma.User$topicsArgs<ExtArgs>
+  reviews?: boolean | Prisma.User$reviewsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -583,6 +686,7 @@ export type UserSelectScalar = {
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "password" | "createdAt" | "updatedAt" | "provider" | "profile_url" | "public_id", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   topics?: boolean | Prisma.User$topicsArgs<ExtArgs>
+  reviews?: boolean | Prisma.User$reviewsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -592,6 +696,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "User"
   objects: {
     topics: Prisma.$TopicPayload<ExtArgs>[]
+    reviews: Prisma.$reviewPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -998,6 +1103,7 @@ readonly fields: UserFieldRefs;
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   topics<T extends Prisma.User$topicsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$topicsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TopicPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reviews<T extends Prisma.User$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$reviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1450,6 +1556,30 @@ export type User$topicsArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   distinct?: Prisma.TopicScalarFieldEnum | Prisma.TopicScalarFieldEnum[]
+}
+
+/**
+ * User.reviews
+ */
+export type User$reviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the review
+   */
+  select?: Prisma.reviewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the review
+   */
+  omit?: Prisma.reviewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.reviewInclude<ExtArgs> | null
+  where?: Prisma.reviewWhereInput
+  orderBy?: Prisma.reviewOrderByWithRelationInput | Prisma.reviewOrderByWithRelationInput[]
+  cursor?: Prisma.reviewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReviewScalarFieldEnum | Prisma.ReviewScalarFieldEnum[]
 }
 
 /**

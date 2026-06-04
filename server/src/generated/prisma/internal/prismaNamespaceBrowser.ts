@@ -130,6 +130,7 @@ export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typ
 
 export const ReviewScalarFieldEnum = {
   id: 'id',
+  user_id: 'user_id',
   notes_id: 'notes_id',
   topic_id: 'topic_id',
   scheduled_date: 'scheduled_date',

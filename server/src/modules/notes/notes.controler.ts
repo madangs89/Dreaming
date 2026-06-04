@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
-import { Memetype, Prisma } from "../../generated/prisma/client.js";
+import {
+  Memetype,
+  Prisma,
+  reviewRememberStatus,
+  ReviewStatus,
+} from "../../generated/prisma/client.js";
 import {
   NoteBody,
   NoteCreateBody,
@@ -19,6 +24,7 @@ import {
   handleSingleUpload,
 } from "../../configs/cloudinary.js";
 import { v4 as uuidv4 } from "uuid";
+import { getNextReviewDate } from "../../configs/datesfn.js";
 export function getMemetype(mimetype: string): Memetype {
   if (mimetype.startsWith("image/")) {
     return Memetype.image;
@@ -89,7 +95,7 @@ export const createNote = async (
     }
 
     const noteData = await prisma.$transaction(async (tx) => {
-      return await tx.note.create({
+      let n = await tx.note.create({
         data: {
           id: note_id,
           title,
@@ -98,9 +104,18 @@ export const createNote = async (
           documents: {
             createMany: { data: fileData.map(({ notes_id, ...rest }) => rest) },
           },
+          reviews: {
+            create: {
+              topic_id: topic_id,
+              scheduled_date: getNextReviewDate(reviewRememberStatus.forgot),
+              status: ReviewStatus.scheduled,
+              user_id,
+            },
+          },
         },
         include: { documents: true, reviews: true },
       });
+      return n;
     });
 
     return res.status(201).json({
