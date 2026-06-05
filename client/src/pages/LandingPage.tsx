@@ -1,61 +1,31 @@
 import React from "react";
 
 import HeroImage from "../assets/heroimage.png";
+import HeroVedio from "../assets/herovedio.mp4";
 
 const LandingPage = () => {
   return (
-    <div className="w-full relative h-full  overflow-hidden px-12 p-7 ">
-      <div
-        style={{
-          zIndex: 90,
-        }}
-        className="w-1/2 absolute right-0 top-0 p-12 h-full  "
-      >
-        <img
-          src={HeroImage}
-          alt="Hero"
-          className="w-full h-full object-cover  rounded-lg shadow-lg"
-        />
-      </div>
-      <div
+    <div className="w-full relative h-full flex items-center   overflow-hidden lg:px-12 p-7 ">
+      <nav
         style={{
           fontFamily: "helveticRoman",
           zIndex: 100,
         }}
-        className="w-full relative h-fit mt-28"
+        className="w-full h-fit flex overflow-hidden lg:px-12 items-center justify-between absolute top-3 right-0 px-2"
       >
-        <p
-          style={{
-            letterSpacing: "-0.288rem",
-            color: "#0c0c0c",
-          }}
-          className="text-7xl w-1/2 flex flex-col "
-        >
-          <span
-            style={{
-              letterSpacing: "-0.112rem",
-              color: "#666",
-            }}
-          >
-            Ai fashion models
-          </span>{" "}
-          trusted by world-class
-          <br /> fashion brands
-        </p>
+        <div className="flex items-center justify-center gap-3">
+          <h3 className="font-bold  text-black text-2xl">BOTIKA</h3>
+          {["Home", "Features", "Pricing", "Contact"].map((item) => (
+            <span
+              key={item}
+              className="ml-8 :block hidden text-[15px] text-[#0c0c0c] hover:text-[#666] transition-colors duration-300 cursor-pointer"
+            >
+              {item}
+            </span>
+          ))}
+        </div>
 
-        <p
-          className="my-6 w-2/5 text-[15px]"
-          style={{
-            fontFamily: "helveticRoman",
-            letterSpacing: "0.1rem",
-            color: "#666",
-          }}
-        >
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident
-          earum nihil, error quas magnam rerum quam.
-        </p>
-
-        <div className="flex items-center gap-4 mt-6">
+        <div className="flex items-center gap-4">
           <button
             className="px-8 py-3 bg-[#313131]
                       tracking-[0.1rem]
@@ -64,14 +34,80 @@ const LandingPage = () => {
           >
             Get Started
           </button>
-          <button
-            className="px-8 py-3 bg-[#dbdbdb]
+        </div>
+      </nav>
+
+      <div
+        style={{
+          fontFamily: "helveticRoman",
+          zIndex: 100,
+        }}
+        className="w-full flex md:h-[500px] h-fit my-5 relative h-fit "
+      >
+        <div className="flex-1 my-auto flex-shrink-0">
+          {" "}
+          <p
+            style={{
+              letterSpacing: "-0.288rem",
+              color: "#0c0c0c",
+            }}
+            className="text-7xl  w-full flex flex-col "
+          >
+            <span
+              style={{
+                letterSpacing: "-0.112rem",
+                color: "#666",
+              }}
+            >
+              Ai fashion models
+            </span>{" "}
+            trusted by world-class
+            <br /> fashion brands
+          </p>
+          <p
+            className="my-6 w-full text-[15px]"
+            style={{
+              fontFamily: "helveticRoman",
+              letterSpacing: "0.1rem",
+              color: "#666",
+            }}
+          >
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident
+            earum nihil, error quas magnam rerum quam.
+          </p>
+          <div className="flex items-center gap-4 mt-6">
+            <button
+              className="px-8 py-3 bg-[#313131]
+                      tracking-[0.1rem]
+          font-semibold
+          text-white rounded-md text-[14px]  hover:bg-[#424242] transition-colors duration-300"
+            >
+              Get Started
+            </button>
+            <button
+              className="px-8 py-3 bg-[#dbdbdb]
             tracking-[0.1rem]
           font-[600]
           text-black rounded-md text-[14px]  hover:bg-[#BFBFBF] transition-colors duration-300"
-          >
-            Get Started
-          </button>
+            >
+              Get Started
+            </button>
+          </div>
+        </div>
+
+        <div
+          style={{
+            zIndex: 90,
+          }}
+          className="w-1/2 h-full lg:block hidden"
+        >
+          <video
+            src={HeroVedio}
+            autoPlay
+            loop
+            muted
+            className="w-full h-[450px] object-cover rounded-lg shadow-lg"
+          />
         </div>
       </div>
     </div>
