@@ -15,11 +15,6 @@ const reviewWorker = new Worker<ReviewJobData>(
       switch (job.name) {
         case "schedule_review":
           const { review_id, topic_id, user_id } = job.data;
-
-          // const reviewDetails = await getReviewDetails(review_id);
-
-          // const questionHistory = await getReviewQuestionHistory(review_id);
-
           const [reviewDetails, questionHistory] = await Promise.all([
             getReviewDetails(review_id),
             getReviewQuestionHistory(review_id),
@@ -49,9 +44,6 @@ const reviewWorker = new Worker<ReviewJobData>(
           const saveQuestions = await prisma.questionHistory.createMany({
             data: questionPayload,
           });
-
-          console.log(saveQuestions);
-
           return {
             review_id,
             topic_id,
