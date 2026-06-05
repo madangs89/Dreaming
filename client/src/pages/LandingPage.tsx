@@ -59,10 +59,10 @@ const LandingPage = () => {
                 color: "#666",
               }}
             >
-              Ai fashion models
+              You learn it.
             </span>{" "}
-            trusted by world-class
-            <br /> fashion brands
+            We make sure you
+            <br /> remember it.
           </p>
           <p
             className="my-6 w-full text-[15px]"
@@ -72,8 +72,7 @@ const LandingPage = () => {
               color: "#666",
             }}
           >
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident
-            earum nihil, error quas magnam rerum quam.
+          Every article you read, every video you watch, every course you take — most of it disappears within days. We captures everything you learn, builds your revision schedule, and makes sure it actually sticks."
           </p>
           <div className="flex items-center gap-4 mt-6">
             <button
