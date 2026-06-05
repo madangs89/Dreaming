@@ -7,7 +7,7 @@ import { scheduleReviewInstruction } from "../../ai/systemInstruction/instructio
 import { zodToJsonSchema } from "zod-to-json-schema";
 import * as z from "zod";
 
-import { LLMQuestionSchema } from "./review.job.type.js";
+import { LLMQuestionData, LLMQuestionSchema } from "./review.job.type.js";
 import { DocumentBody } from "../../modules/notes/notes.types.js";
 import mime from "mime-types";
 
@@ -97,7 +97,7 @@ export const llmCreateQuestions = async (
   reviewDetails: ReviewBody,
   questionHistory: QuestionHistoryBody[],
   documentData: DocumentBody[],
-) => {
+): Promise<LLMQuestionData[]> => {
   console.log("got the request to generate questions for review:");
   const processedQuestionHistory = questionHistory.map((question) => ({
     question: question.question,
@@ -202,9 +202,6 @@ ${
         console.error(parsedData.error.flatten());
         throw new Error("Invalid response schema");
       }
-
-      console.log("Generated questions successfully:", parsedData.data);
-
       return parsedData.data;
     } catch (error) {
       console.error(

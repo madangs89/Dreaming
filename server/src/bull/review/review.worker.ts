@@ -9,6 +9,7 @@ import {
 } from "./review.helpers.js";
 import { QuestionHistoryBody } from "../../modules/questionHistory/question.types.js";
 import { ReviewBody } from "../../modules/review/review.types.js";
+import { prisma } from "../../configs/prisma.js";
 const reviewWorker = new Worker<ReviewJobData>(
   "reviewQueue",
   async (job: Job<ReviewJobData>) => {
@@ -27,12 +28,32 @@ const reviewWorker = new Worker<ReviewJobData>(
           questionHistory,
           documentData,
         );
-        // Handling ai call for question generation
+
+        const notes_id = reviewDetails.notes_id;
+
+        const questionPayload = llmRes.map((q) => {
+          return {
+            review_id,
+            notes_id,
+            question: q.question,
+            difficulty: q.difficulty,
+            question_type: q.question_type,
+            expectedAnswer: q.expectedAnswer,
+          };
+        });
+
+        const saveQuestions = await prisma.questionHistory.createMany({
+          data: questionPayload,
+        });
+
+        console.log(saveQuestions);
+
         return {
           review_id,
           topic_id,
           user_id,
           reviewDetails,
+          saveQuestions,
         };
         break;
 
