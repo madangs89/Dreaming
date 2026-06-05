@@ -13,52 +13,57 @@ import { prisma } from "../../configs/prisma.js";
 const reviewWorker = new Worker<ReviewJobData>(
   "reviewQueue",
   async (job: Job<ReviewJobData>) => {
-    switch (job.name) {
-      case "schedule_review":
-        const { review_id, topic_id, user_id } = job.data;
+    try {
+      switch (job.name) {
+        case "schedule_review":
+          const { review_id, topic_id, user_id } = job.data;
 
-        const reviewDetails = await getReviewDetails(review_id);
+          const reviewDetails = await getReviewDetails(review_id);
 
-        const questionHistory = await getReviewQuestionHistory(review_id);
+          const questionHistory = await getReviewQuestionHistory(review_id);
 
-        const documentData = await getDocumentData(reviewDetails.notes_id);
+          const documentData = await getDocumentData(reviewDetails.notes_id);
 
-        const llmRes = await llmCreateQuestions(
-          reviewDetails,
-          questionHistory,
-          documentData,
-        );
+          const llmRes = await llmCreateQuestions(
+            reviewDetails,
+            questionHistory,
+            documentData,
+          );
 
-        const notes_id = reviewDetails.notes_id;
+          const notes_id = reviewDetails.notes_id;
 
-        const questionPayload = llmRes.map((q) => {
+          const questionPayload = llmRes.map((q) => {
+            return {
+              review_id,
+              notes_id,
+              question: q.question,
+              difficulty: q.difficulty,
+              question_type: q.question_type,
+              expectedAnswer: q.expectedAnswer,
+            };
+          });
+
+          const saveQuestions = await prisma.questionHistory.createMany({
+            data: questionPayload,
+          });
+
+          console.log(saveQuestions);
+
           return {
             review_id,
-            notes_id,
-            question: q.question,
-            difficulty: q.difficulty,
-            question_type: q.question_type,
-            expectedAnswer: q.expectedAnswer,
+            topic_id,
+            user_id,
+            reviewDetails,
+            saveQuestions,
           };
-        });
+          break;
 
-        const saveQuestions = await prisma.questionHistory.createMany({
-          data: questionPayload,
-        });
-
-        console.log(saveQuestions);
-
-        return {
-          review_id,
-          topic_id,
-          user_id,
-          reviewDetails,
-          saveQuestions,
-        };
-        break;
-
-      default:
-        break;
+        default:
+          break;
+      }
+    } catch (error) {
+      console.error("Error processing job:", error);
+      throw error;
     }
   },
   {
