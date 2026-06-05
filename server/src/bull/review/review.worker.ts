@@ -7,8 +7,6 @@ import {
   getReviewQuestionHistory,
   llmCreateQuestions,
 } from "./review.helpers.js";
-import { QuestionHistoryBody } from "../../modules/questionHistory/question.types.js";
-import { ReviewBody } from "../../modules/review/review.types.js";
 import { prisma } from "../../configs/prisma.js";
 const reviewWorker = new Worker<ReviewJobData>(
   "reviewQueue",
@@ -18,9 +16,14 @@ const reviewWorker = new Worker<ReviewJobData>(
         case "schedule_review":
           const { review_id, topic_id, user_id } = job.data;
 
-          const reviewDetails = await getReviewDetails(review_id);
+          // const reviewDetails = await getReviewDetails(review_id);
 
-          const questionHistory = await getReviewQuestionHistory(review_id);
+          // const questionHistory = await getReviewQuestionHistory(review_id);
+
+          const [reviewDetails, questionHistory] = await Promise.all([
+            getReviewDetails(review_id),
+            getReviewQuestionHistory(review_id),
+          ]);
 
           const documentData = await getDocumentData(reviewDetails.notes_id);
 
