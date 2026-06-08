@@ -1,9 +1,11 @@
-import React from "react";
-
+import { useState } from "react";
 import HeroImage from "../assets/heroimage.png";
 import HeroVedio from "../assets/herovedio.mp4";
+import LoginPage from "./LoginPage";
 
 const LandingPage = () => {
+  const [open, setOpen] = useState<boolean>(false);
+
   return (
     <div className="w-full relative h-full flex items-center   overflow-hidden lg:px-12 p-7 ">
       <nav
@@ -25,7 +27,7 @@ const LandingPage = () => {
           ))}
         </div>
 
-        <div className="flex items-center gap-4">
+        <div onClick={() => setOpen(true)} className="flex items-center gap-4">
           <button
             className="px-8 py-3 bg-[#313131]
                       tracking-[0.1rem]
@@ -42,9 +44,9 @@ const LandingPage = () => {
           fontFamily: "helveticRoman",
           zIndex: 100,
         }}
-        className="w-full flex md:h-[500px] h-fit my-5 relative h-fit "
+        className="w-full flex md:h-[500px] my-5 relative h-fit md:mt-10"
       >
-        <div className="flex-1 my-auto flex-shrink-0">
+        <div className="flex-1 my-auto flex-shrink-0 mt-12 lg:mt-8">
           {" "}
           <p
             style={{
@@ -65,14 +67,17 @@ const LandingPage = () => {
             <br /> remember it.
           </p>
           <p
-            className="my-6 w-full text-[15px]"
+            className="my-6 w-full lg:text-[15px] text-[10px]"
             style={{
               fontFamily: "helveticRoman",
               letterSpacing: "0.1rem",
               color: "#666",
             }}
           >
-          Every article you read, every video you watch, every course you take — most of it disappears within days. We captures everything you learn, builds your revision schedule, and makes sure it actually sticks."
+            Every article you read, every video you watch, every course you take
+            — most of it disappears within days. We captures everything you
+            learn, builds your revision schedule, and makes sure it actually
+            sticks."
           </p>
           <div className="flex items-center gap-4 mt-6">
             <button
@@ -109,6 +114,8 @@ const LandingPage = () => {
           />
         </div>
       </div>
+
+      <LoginPage open={open} onClose={() => setOpen(false)} />
     </div>
   );
 };

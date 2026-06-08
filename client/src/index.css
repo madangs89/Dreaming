@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @font-face {
   font-family: "deckRegular";
   src: url("../src/assets/fonts/66fa6cd92a834cd16ff8fa9a_Canela\ Deck-Regular\ Italic-Web.woff2")
@@ -19,3 +18,8 @@
     format("woff2");
 }
 
+body {
+  font-family: "helveticRoman", sans-serif;
+  margin: 0;
+  padding: 0;
+}
