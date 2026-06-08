@@ -45,30 +45,33 @@ const Topic = () => {
   ];
 
   return (
-    <div className="lg:px-12 p-4  h-screen overflow-x-hidden w-full overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 content-start gap-2">
-      {topics.map((topic) => {
-        return (
-          <div className="w-full bg-white p-3 h-72 rounded-xl border border-[#DFE2E9] overflow-hidden flex flex-col gap-3">
-            <img
-              src={topic.source_url}
-              alt={topic.title}
-              className="w-full h-[85%] object-cover rounded-xl"
-            />
-            <div className="flex justify-between items-center lg:flex-row flex-col">
-              <p className="font-semibold  text-xl">{topic.title}</p>
+    <div className="lg:px-12 p-4  h-screen overflow-x-hidden w-full">
+      <h1 className="text-xl my-3 font-semibold">Start Learning</h1>
+      <div className=" w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 content-start gap-2">
+        {topics.map((topic) => {
+          return (
+            <div className="w-full bg-white p-3 h-72 rounded-xl border border-[#DFE2E9] overflow-hidden flex flex-col gap-3">
+              <img
+                src={topic.source_url}
+                alt={topic.title}
+                className="w-full h-[85%] object-cover rounded-xl"
+              />
+              <div className="flex justify-between items-center lg:flex-row flex-col">
+                <p className="font-semibold  text-xl">{topic.title}</p>
 
-              <button
-                className="px-4 py-1.5 bg-[#313131] hidden lg:block
+                <button
+                  className="px-4 py-1.5 bg-[#313131] hidden lg:block
                       tracking-[0.1rem]
           font-semibold
           text-white rounded-md text-[12px]  hover:bg-[#424242] transition-colors duration-300"
-              >
-                Get Started
-              </button>
+                >
+                  Get Started
+                </button>
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 };
