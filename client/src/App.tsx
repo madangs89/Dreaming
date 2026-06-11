@@ -1,17 +1,18 @@
-import React, { useEffect } from "react";
-import LandingPage from "./pages/LandingPage";
-import LoginPage from "./pages/LoginPage";
-import Dashboard from "./pages/Dashboard";
+import React, { lazy, Suspense, useEffect } from "react";
+
+const LandingPage = lazy(() => import("./pages/LandingPage"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Topic = lazy(() => import("./modules/topic/Topic"));
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Protected from "./ProtectedRoutes/Protected";
-import Topic from "./modules/topic/Topic";
+
 import { useQuery } from "@tanstack/react-query";
 import { me } from "./modules/auth/auth.api";
-import type { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import type { User } from "./modules/user/user.types";
 import { useAppDispatch } from "./app/hook";
 import { clearAuthenticated, setAuthenticated } from "./app/slice/authSlice";
+import Spinner from "./components/Spinner";
 
 const App = () => {
   const navigate = useNavigate();
@@ -38,21 +39,37 @@ const App = () => {
     }
   }, [authQuery.isError, authQuery.isSuccess]);
 
+  if (authQuery.isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spinner />
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white h-screen w-screen overflow-hidden">
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center h-screen">
+            <Spinner />
+          </div>
+        }
+      >
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
 
-        <Route
-          element={
-            <Protected>
-              <Dashboard />
-            </Protected>
-          }
-        >
-          <Route path="/dashboard" element={<Topic />} />
-        </Route>
-      </Routes>
+          <Route
+            element={
+              <Protected>
+                <Dashboard />
+              </Protected>
+            }
+          >
+            <Route path="/dashboard" element={<Topic />} />
+          </Route>
+        </Routes>
+      </Suspense>
     </div>
   );
 };
