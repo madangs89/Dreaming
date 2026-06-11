@@ -9,8 +9,14 @@ const CLOUDINARY_SECRET = process.env.CLOUDINARY_SECRET;
 const JWT_SECRET = String(process.env.JWT_SECRET);
 const NODE_ENV = process.env.NODE_ENV;
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
 const REDIS_URL = process.env.REDIS_URL;
+
+if (!FRONTEND_URL) {
+  console.error("Error: FRONTEND_URL environment variable is not set");
+  process.exit(1);
+}
 
 if (!GOOGLE_API_KEY) {
   console.error("Error: GOOGLE_API_KEY environment variable is not set");
@@ -54,5 +60,6 @@ export {
   JWT_SECRET,
   NODE_ENV,
   REDIS_URL,
-  GOOGLE_API_KEY
+  GOOGLE_API_KEY,
+  FRONTEND_URL,
 };

@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { PORT } from "./configs/env.config.js";
+import { FRONTEND_URL, PORT } from "./configs/env.config.js";
 import { topicRouter } from "./modules/topic/topic.routes.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
 import cookieParser from "cookie-parser";
@@ -14,7 +14,14 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors());
+app.use(
+  cors({
+    origin: FRONTEND_URL,
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  }),
+);
 
 let port = PORT || 3000;
 

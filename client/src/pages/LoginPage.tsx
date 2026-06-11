@@ -1,4 +1,14 @@
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
+import { login, register } from "../modules/auth/auth.api";
+import type { RegisterPayload } from "../modules/auth/auth.types";
+import type { User } from "../modules/user/user.types";
+import { useAppDispatch } from "../app/hook";
+import { setAuthenticated } from "../app/slice/authSlice";
+import { useNavigate } from "react-router-dom";
+import type { AxiosError } from "axios";
+import Spinner from "../components/Spinner";
+import toast from "react-hot-toast";
 
 type LoginPageProps = {
   open: boolean;
@@ -8,6 +18,74 @@ type LoginPageProps = {
 const LoginPage = ({ open = false, onClose = () => {} }: LoginPageProps) => {
   const [isSignup, setIsSignup] = useState<boolean>(false);
 
+  const dispatch = useAppDispatch();
+
+  const navigate = useNavigate();
+  const [authData, setAuthData] = useState<{
+    email: string;
+    password: string;
+    name: string;
+  }>({
+    email: "",
+    password: "",
+    name: "",
+  });
+
+  const LoginMutaion = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      toast.success("Login successful!");
+      handleLoginSuccessState(data);
+    },
+    onError: (error: AxiosError<{ message: string }>) => {
+      toast.error(
+        error.response?.data?.message || "Login failed. Please try again.",
+      );
+    },
+  });
+
+  const RegisterMutaion = useMutation({
+    mutationFn: register,
+    onSuccess: (data) => {
+      toast.success("Registration successful!");
+      handleLoginSuccessState(data);
+    },
+    onError: (error: AxiosError<{ message: string }>) => {
+      toast.error(
+        error.response?.data?.message ||
+          "Registration failed. Please try again.",
+      );
+    },
+  });
+
+  const handleSubmitAuth = async () => {
+    if (isSignup) {
+      if (!authData.name || !authData.email || !authData.password) {
+        alert("Please fill all fields");
+        return;
+      }
+
+      RegisterMutaion.mutate({
+        email: authData.email,
+        password: authData.password,
+        name: authData.name,
+      });
+    } else {
+      if (!authData.email || !authData.password) {
+        alert("Please fill all fields");
+        return;
+      }
+      LoginMutaion.mutate({
+        email: authData.email,
+        password: authData.password,
+      });
+    }
+  };
+
+  const handleLoginSuccessState = (data: User) => {
+    dispatch(setAuthenticated(data));
+    navigate("/dashboard");
+  };
   if (!open) return null;
 
   return (
@@ -71,6 +149,10 @@ const LoginPage = ({ open = false, onClose = () => {} }: LoginPageProps) => {
             type="text"
             placeholder="Full name"
             className="w-full h-12 rounded-xl border border-gray-300 px-4 mb-3 outline-none focus:border-black"
+            value={authData.name}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setAuthData({ ...authData, name: e.target.value })
+            }
           />
         )}
 
@@ -79,20 +161,35 @@ const LoginPage = ({ open = false, onClose = () => {} }: LoginPageProps) => {
           type="email"
           placeholder="Enter your email"
           className="w-full h-12 rounded-xl border border-gray-300 px-4 outline-none focus:border-black"
+          value={authData.email}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setAuthData({ ...authData, email: e.target.value })
+          }
         />
 
-        {/* Password for signup */}
-        {isSignup && (
-          <input
-            type="password"
-            placeholder="Create password"
-            className="w-full h-12 rounded-xl border border-gray-300 px-4 mt-3 outline-none focus:border-black"
-          />
-        )}
+        <input
+          type="password"
+          placeholder={isSignup ? "Create a password" : "Enter your password"}
+          className="w-full h-12 rounded-xl border border-gray-300 px-4 mt-3 outline-none focus:border-black"
+          value={authData.password}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setAuthData({ ...authData, password: e.target.value })
+          }
+        />
 
         {/* Continue */}
-        <button className="w-full h-12 rounded-xl bg-black text-white font-medium mt-4 hover:opacity-90 transition">
-          {isSignup ? "Create Account" : "Continue"}
+        <button
+          disabled={LoginMutaion.isLoading || RegisterMutaion.isLoading}
+          onClick={handleSubmitAuth}
+          className="w-full h-12 rounded-xl bg-black text-white font-medium mt-4 hover:opacity-90 transition flex items-center justify-center"
+        >
+          {LoginMutaion.isLoading || RegisterMutaion.isLoading ? (
+            <Spinner />
+          ) : isSignup ? (
+            "Create Account"
+          ) : (
+            "Continue"
+          )}
         </button>
 
         {/* Divider */}

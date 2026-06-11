@@ -1,13 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../../app/store";
-
-interface User {
-  id: string;
-  email: string;
-  name?: string;
-  profile_url?: string | null;
-}
+import type { User } from "../../modules/user/user.types";
 
 interface authState {
   isAuthenticated: boolean;
