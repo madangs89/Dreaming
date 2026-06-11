@@ -5,7 +5,6 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Topic = lazy(() => import("./modules/topic/Topic"));
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Protected from "./ProtectedRoutes/Protected";
-
 import { useQuery } from "@tanstack/react-query";
 import { me } from "./modules/auth/auth.api";
 import toast from "react-hot-toast";
