@@ -10,6 +10,9 @@ export type TopicData = {
   user_id: string;
   updatedAt: Date;
   createdAt: Date;
+  _count?: {
+    notes: number;
+  };
 };
 
 export type TopicResponse<Data = unknown> = {
@@ -18,8 +21,6 @@ export type TopicResponse<Data = unknown> = {
   errors?: unknown;
   topic?: Data;
 };
-
-
 
 export type TopicParams = {
   id: string;

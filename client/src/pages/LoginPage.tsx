@@ -1,7 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { login, register } from "../modules/auth/auth.api";
-import type { RegisterPayload } from "../modules/auth/auth.types";
 import type { User } from "../modules/user/user.types";
 import { useAppDispatch } from "../app/hook";
 import { setAuthenticated } from "../app/slice/authSlice";

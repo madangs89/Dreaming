@@ -91,6 +91,13 @@ export const getAllTopics = async (
       where: {
         user_id: id,
       },
+      include: {
+        _count: {
+          select: {
+            notes: true,
+          },
+        },
+      },
     });
     return res.status(200).json({
       message: "Topics retrieved successfully",
@@ -125,6 +132,13 @@ export const getSingleTopic = async (
     const topic = await prisma.topic.findUnique({
       where: {
         id,
+      },
+      include: {
+        _count: {
+          select: {
+            notes: true,
+          },
+        },
       },
     });
     if (!topic) {
