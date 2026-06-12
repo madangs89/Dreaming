@@ -1,6 +1,10 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 
 const MainNavbar = () => {
+  const location = useLocation();
+
+  const isDashboard = location.pathname === "/dashboard";
   return (
     <nav className="w-screen bg-white h-fit flex flex-col overflow-hidden  fixed top-0  right-0">
       <div className="w-full flex items-center justify-between lg:py-3 px-2 lg:px-12">
@@ -34,12 +38,14 @@ const MainNavbar = () => {
         </div>
       </div>
 
-      <div className="bg-[#F3EBFF] w-full h-9 flex items-center justify-center">
-        <p className="text-[16px] text-[#0c0c0c] font-medium">
-          Welcome Back, Madana! Explore new topics and enhance your skills with
-          our personalized learning platform.
-        </p>
-      </div>
+      {isDashboard && (
+        <div className="bg-[#F3EBFF] w-full h-9 flex items-center justify-center">
+          <p className="text-[16px] text-[#0c0c0c] font-medium">
+            Welcome Back, Madana! Explore new topics and enhance your skills
+            with our personalized learning platform.
+          </p>
+        </div>
+      )}
     </nav>
   );
 };

@@ -6,9 +6,12 @@ import { useAppSelector } from "../../app/hook";
 import toast from "react-hot-toast";
 import { TopicSkeleton } from "./Components/TopicSkeleton";
 import TopicModal from "./modal/TopicModal";
+import { useNavigate } from "react-router-dom";
 
 const Topic = () => {
   const [open, setOpen] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   const authSliceDetails = useAppSelector((state) => state.auth);
   const topicQuery = useQuery({
@@ -34,19 +37,6 @@ const Topic = () => {
 
   return (
     <div className="lg:px-12 p-4 w-full h-[calc(100vh-90px)] overflow-y-auto">
-      {/* Welcome Banner */}
-      {/* <div className="bg-[#F5F3FF] border border-[#E9E4FF] rounded-xl p-5 mb-6">
-        <h2 className="text-xl font-semibold">
-          👋 Welcome Back, Madan
-        </h2>
-
-        <p className="text-gray-600 mt-1">
-          Continue your learning journey and stay consistent
-          with your revision schedule.
-        </p>
-      </div> */}
-
-      {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Start Learning</h1>
 
@@ -102,6 +92,7 @@ const Topic = () => {
                 </p>
 
                 <button
+                  onClick={() => navigate(`/notes/${topic?.id}`)}
                   className="
               mt-4
               w-full

@@ -12,6 +12,7 @@ import type { User } from "./modules/user/user.types";
 import { useAppDispatch } from "./app/hook";
 import { clearAuthenticated, setAuthenticated } from "./app/slice/authSlice";
 import Spinner from "./components/Spinner";
+import Notes from "./modules/notes/Notes";
 
 const App = () => {
   const navigate = useNavigate();
@@ -67,6 +68,14 @@ const App = () => {
           >
             <Route path="/dashboard" element={<Topic />} />
           </Route>
+          <Route
+            path="/notes/:topicId"
+            element={
+              <Protected>
+                <Notes />
+              </Protected>
+            }
+          />
         </Routes>
       </Suspense>
     </div>
