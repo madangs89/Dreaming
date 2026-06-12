@@ -1,12 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import type { TopicData } from "./topic.types";
 import { useQuery } from "@tanstack/react-query";
 import { fetchTopics } from "./topic.api";
 import { useAppSelector } from "../../app/hook";
 import toast from "react-hot-toast";
 import { TopicSkeleton } from "./Components/TopicSkeleton";
+import TopicModal from "./modal/TopicModal";
 
 const Topic = () => {
+  const [open, setOpen] = useState<boolean>(false);
+
   const authSliceDetails = useAppSelector((state) => state.auth);
   const topicQuery = useQuery({
     queryKey: ["topics"],
@@ -58,6 +61,7 @@ const Topic = () => {
             hover:bg-zinc-800
             transition
           "
+          onClick={() => setOpen(true)}
         >
           + New Topic
         </button>
@@ -124,6 +128,9 @@ const Topic = () => {
           </h2>
         </div>
       )}
+
+      {/* Modal */}
+      <TopicModal open={open} onClose={() => setOpen(false)} />
     </div>
   );
 };
