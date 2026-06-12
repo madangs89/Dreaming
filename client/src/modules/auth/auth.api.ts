@@ -29,5 +29,5 @@ export const me = async (): Promise<User | undefined> => {
   });
 
   console.log("Me response:", response.data);
-  return response.data;
+  return response.data.data;
 };
