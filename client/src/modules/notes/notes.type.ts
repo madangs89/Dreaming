@@ -38,3 +38,9 @@ export type NoteSuccessResponse<T> = {
   note: T;
   message: string;
 };
+
+export type NoteErrorResponse = {
+  success: boolean;
+  message: string;
+  errors?: unknown;
+};

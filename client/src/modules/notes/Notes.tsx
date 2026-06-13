@@ -1,16 +1,17 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
 
 import { BlockNoteView } from "@blocknote/mantine";
 import { useCreateBlockNote } from "@blocknote/react";
-import { useQuery } from "@tanstack/react-query";
-import { fetchAllNotes } from "./notes.api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createNoteOnlyTitle, fetchAllNotes, getSingleNote } from "./notes.api";
 import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Notes = () => {
-  const editor = useCreateBlockNote();
+  const queryClient = useQueryClient();
 
   const { topicId } = useParams<{ topicId: string }>();
 
@@ -18,11 +19,24 @@ const Notes = () => {
 
   const debounceTimerRef = useRef<number | null>(null);
 
-  const [currentNoteId, setCurrentNoteId] = useState<string>("new");
+  const [currentNoteId, setCurrentNoteId] = useState<string>(() => {
+    try {
+      const storedNoteIds = JSON.parse(
+        localStorage.getItem("currentNoteId") ?? "{}",
+      );
+
+      return storedNoteIds[topicId!] ?? "new";
+    } catch {
+      return "new";
+    }
+  });
 
   const [currentNoteTitle, setCurrentNoteTitle] = useState<string>("");
 
-  
+  const editor = useCreateBlockNote({
+    autofocus: "start",
+  });
+
   const notesQuery = useQuery({
     queryKey: ["notes", topicId],
     queryFn: () => fetchAllNotes({ id: topicId! }),
@@ -34,6 +48,69 @@ const Notes = () => {
   });
 
   const notesList = notesQuery.data || [];
+
+  useEffect(() => {
+    if (notesQuery.isError) {
+      toast.error("Failed to fetch notes! Please try again.");
+    }
+  }, [notesQuery.isError]);
+
+  const singleNoteQuery = useQuery({
+    queryKey: ["note", currentNoteId],
+    queryFn: () => getSingleNote({ id: currentNoteId }),
+    enabled: currentNoteId !== "new" && !!currentNoteId,
+    retry: 3,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+  });
+
+  useEffect(() => {
+    if (singleNoteQuery.isError) {
+      toast.error("Failed to fetch the note! Please try again.");
+    }
+  }, [singleNoteQuery.isError]);
+  useEffect(() => {
+    if (singleNoteQuery.isSuccess && singleNoteQuery.data) {
+      setCurrentNoteTitle(singleNoteQuery.data.title);
+      editor.replaceBlocks(
+        editor.document,
+        JSON.parse(singleNoteQuery.data.content || "[]"),
+      );
+    }
+  }, [singleNoteQuery.isSuccess, singleNoteQuery.data]);
+
+  const handleSaveToLocalStorage = (noteId: string, topicId: string) => {
+    const storedNoteIds = JSON.parse(
+      localStorage.getItem("currentNoteId") ?? "{}",
+    );
+
+    storedNoteIds[topicId!] = noteId;
+
+    localStorage.setItem("currentNoteId", JSON.stringify(storedNoteIds));
+  };
+
+  const createNewNoteTitle = useMutation({
+    mutationFn: createNoteOnlyTitle,
+    onSuccess: (data) => {
+      if (
+        currentNoteId === "new" ||
+        currentNoteId === "" ||
+        currentNoteId !== data.id
+      ) {
+        setCurrentNoteId(data.id);
+        handleSaveToLocalStorage(data.id, topicId!);
+      }
+      setCurrentNoteTitle(data.title);
+      queryClient.invalidateQueries({ queryKey: ["notes", topicId] });
+      toast.success(
+        "Note created with title '" + data.title + "' successfully!",
+      );
+    },
+    onError: () => {
+      toast.error("Failed to create note! Please try again.");
+    },
+  });
+
   const handleDebouncedTitleChange = (
     newTitle: string,
     delay: number = 1000,
@@ -42,7 +119,13 @@ const Notes = () => {
       clearTimeout(debounceTimerRef.current);
     }
     debounceTimerRef.current = setTimeout(() => {
-      console.log("Saving title:", newTitle);
+      if (currentNoteId === "new") {
+        createNewNoteTitle.mutate({
+          title: newTitle,
+          topic_id: topicId!,
+          timeStamp: new Date(),
+        });
+      }
     }, delay);
   };
 
@@ -116,7 +199,9 @@ const Notes = () => {
             <h2 className="text-lg font-semibold text-white">Notes</h2>
 
             <button
-              onClick={() => setIsNotesOpen(false)}
+              onClick={() => {
+                setIsNotesOpen(false);
+              }}
               className="
                 text-zinc-400
                 hover:text-white
@@ -130,6 +215,11 @@ const Notes = () => {
           {/* Create Note */}
           <div className="p-3">
             <button
+              onClick={() => {
+                setCurrentNoteId("new");
+                setCurrentNoteTitle("");
+                setIsNotesOpen(false);
+              }}
               className="
                 w-full
                 rounded-lg
@@ -146,24 +236,63 @@ const Notes = () => {
 
           {/* Notes List */}
           <div className="flex-1 overflow-y-auto px-2 pb-2">
-            {notesList.map((note) => (
-              <button
-                key={note.id}
-                className="
-                  mb-1
-                  w-full
-                  rounded-lg
-                  p-3
-                  text-left
-                  hover:bg-zinc-800
-                  transition
-                "
-              >
-                <h3 className="font-medium text-white">{note.title}</h3>
+            {notesList && notesList.length > 0 ? (
+              notesList.map((note) => (
+                <button
+                  key={note.id}
+                  onClick={() => {
+                    setCurrentNoteId(note.id);
+                    handleSaveToLocalStorage(note.id, topicId!);
+                    setIsNotesOpen(false);
+                  }}
+                  className={`
+    mb-1
+    w-full
+    rounded-lg
+    p-3
+    text-left
+    transition-all
+    duration-200
+    border
 
-                <p className="mt-1 text-xs text-zinc-400">{note.updatedAt}</p>
-              </button>
-            ))}
+    ${
+      currentNoteId === note.id
+        ? `
+          bg-zinc-800
+          border-zinc-600
+          shadow-sm
+        `
+        : `
+          bg-transparent
+          border-transparent
+          hover:bg-zinc-900
+          hover:border-zinc-800
+        `
+    }
+  `}
+                >
+                  <h3
+                    className={`font-medium ${
+                      currentNoteId === note.id ? "text-white" : "text-zinc-300"
+                    }`}
+                  >
+                    {note.title}
+                  </h3>
+
+                  <p
+                    className={`mt-1 text-xs ${
+                      currentNoteId === note.id
+                        ? "text-zinc-400"
+                        : "text-zinc-500"
+                    }`}
+                  >
+                    {new Date(note.updatedAt).toLocaleString()}
+                  </p>
+                </button>
+              ))
+            ) : (
+              <p className="text-zinc-400">No notes found.</p>
+            )}
           </div>
         </div>
       </aside>

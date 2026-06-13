@@ -169,7 +169,7 @@ export const createNoteOnlyTitle = async (
       data: {
         title,
         topic_id,
-        content: "",
+        content: "[]",
         titleTimeStamp: timeStamp,
         contentTimeStamp: timeStamp,
       },
@@ -347,6 +347,7 @@ export const getAllNotes = async (
     const notes = await prisma.note.findMany({
       where: { topic_id },
       include: { documents: true, reviews: true },
+      orderBy: { createdAt: "desc" },
     });
 
     return res.status(200).json({
