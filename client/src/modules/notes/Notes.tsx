@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { format } from "date-fns";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
+import Switch from "react-switch";
 
 import { BlockNoteView } from "@blocknote/mantine";
 import { useCreateBlockNote } from "@blocknote/react";
@@ -25,6 +26,7 @@ import {
 import Spinner from "../../components/Spinner";
 import axios from "axios";
 import type { DocumentBody } from "./notes.type";
+import { Trash } from "lucide-react";
 
 const Notes = () => {
   const queryClient = useQueryClient();
@@ -32,6 +34,11 @@ const Notes = () => {
   const { topicId } = useParams<{ topicId: string }>();
 
   const [isNotesOpen, setIsNotesOpen] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  };
 
   const debounceTimerRef = useRef<number | null>(null);
 
@@ -342,7 +349,12 @@ const Notes = () => {
   };
 
   return (
-    <div className="relative h-screen bg-[#1F1F1F] overflow-hidden">
+    <div
+      style={{
+        backgroundColor: theme == "dark" ? "#1F1F1F" : "white",
+      }}
+      className="relative h-screen  overflow-hidden"
+    >
       {/* Backdrop */}
       {isNotesOpen && (
         <div
@@ -525,13 +537,33 @@ const Notes = () => {
           ) : (
             <>
               <div className="ml-12 border-b border-zinc-800 w-[calc(100%-3rem)] mb-6 pb-6">
-                <input
-                  type="text"
-                  value={currentNoteTitle}
-                  placeholder="Untitled"
-                  onChange={handleInputChange}
-                  className="bg-[#1F1F1F] text-white placeholder:text-[#373737] font-bold text-5xl border-none outline-none "
-                />
+                <div className="w-full flex items-center justify-between">
+                  <input
+                    type="text"
+                    value={currentNoteTitle}
+                    placeholder="Untitled"
+                    onChange={handleInputChange}
+                    className="bg-[#1F1F1F] text-white placeholder:text-[#373737] font-bold text-5xl border-none outline-none "
+                  />
+                  <div className="flex items-center justify-center gap-3">
+                    <Switch
+                      checked={theme === "dark"}
+                      onChange={toggleTheme}
+                      height={15}
+                      width={42}
+                      handleDiameter={8}
+                      offColor="#e4e4e7"
+                      onColor="#27272a"
+                      offHandleColor="#ffffff"
+                      onHandleColor="#ffffff"
+                      uncheckedIcon={false}
+                      checkedIcon={false}
+                    />
+                    <button className="group p-2 rounded-md transition-all duration-200 hover:bg-red-500/10">
+                      <Trash className="h-4 w-4 text-gray-400 transition-colors duration-200 group-hover:text-red-500" />
+                    </button>
+                  </div>
+                </div>
 
                 {singleNoteQuery.data && singleNoteQuery.data.createdAt && (
                   <div className="flex w-1/2 items-center justify-between mt-2">
@@ -550,7 +582,7 @@ const Notes = () => {
                 onChange={handleContentChange}
                 className="p-0 mt-6"
                 editor={editor}
-                theme="dark"
+                theme={theme === "dark" ? "dark" : "light"}
               />
             </>
           )}
