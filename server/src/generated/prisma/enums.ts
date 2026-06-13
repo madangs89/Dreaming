@@ -22,6 +22,16 @@ export const Memetype = {
   image: 'image',
   video: 'video',
   audio: 'audio',
+  pdf: 'pdf',
+  document: 'document',
+  spreadsheet: 'spreadsheet',
+  presentation: 'presentation',
+  text: 'text',
+  archive: 'archive',
+  code: 'code',
+  font: 'font',
+  executable: 'executable',
+  model: 'model',
   other: 'other'
 } as const
 

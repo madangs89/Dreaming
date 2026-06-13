@@ -31,6 +31,8 @@ export type NoteData = {
   updatedAt: Date | string;
   documents: DocumentData[] | [];
   reviews: ReviewData[] | [];
+  contentTimeStamp: Date | string;
+  titleTimeStamp: Date | string;
 };
 
 export type NoteSuccessResponse<T> = {
@@ -43,4 +45,15 @@ export type NoteErrorResponse = {
   success: boolean;
   message: string;
   errors?: unknown;
+};
+
+export type DocumentBody = {
+  id: string;
+  notes_id: string;
+  url: string;
+  memetype: string;
+  title: string;
+  public_id: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 };

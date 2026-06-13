@@ -40,9 +40,52 @@ export function getMemetype(mimetype: string): Memetype {
     return Memetype.audio;
   }
 
+  if (mimetype === "application/pdf") {
+    return Memetype.pdf;
+  }
+
+  if (
+    mimetype.includes("word") ||
+    mimetype === "application/msword" ||
+    mimetype ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  ) {
+    return Memetype.document;
+  }
+
+  if (
+    mimetype.includes("spreadsheet") ||
+    mimetype.includes("excel") ||
+    mimetype === "text/csv"
+  ) {
+    return Memetype.spreadsheet;
+  }
+
+  if (
+    mimetype.includes("presentation") ||
+    mimetype.includes("powerpoint")
+  ) {
+    return Memetype.presentation;
+  }
+
+  if (
+    mimetype.startsWith("text/") ||
+    mimetype === "application/json"
+  ) {
+    return Memetype.text;
+  }
+
+  if (
+    mimetype.includes("zip") ||
+    mimetype.includes("rar") ||
+    mimetype.includes("7z") ||
+    mimetype.includes("tar")
+  ) {
+    return Memetype.archive;
+  }
+
   return Memetype.other;
 }
-
 export const createNote = async (
   req: Request<{}, {}, NoteCreateBody>,
   res: Response<NoteErrorResponse | NoteSuccessResponse<NoteBody>>,

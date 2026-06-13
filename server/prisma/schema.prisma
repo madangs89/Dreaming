@@ -17,6 +17,16 @@ enum Memetype {
   image
   video
   audio
+  pdf
+  document
+  spreadsheet
+  presentation
+  text
+  archive
+  code
+  font
+  executable
+  model
   other
 }
 

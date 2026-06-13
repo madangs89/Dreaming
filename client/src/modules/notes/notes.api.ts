@@ -39,3 +39,40 @@ export const createNoteOnlyTitle = async ({
   );
   return response.data.note;
 };
+
+export const updateNoteTitle = async ({
+  id,
+  title,
+  timeStamp = new Date(),
+}: {
+  id: string;
+  title: string;
+  timeStamp: Date;
+}) => {
+  const response = await axios.patch<NoteSuccessResponse<NoteData>>(
+    `${API_URL}/api/v1/notes/title/${id}`,
+    { title, timeStamp },
+    {
+      withCredentials: true,
+    },
+  );
+  return response.data.note;
+};
+export const updateNoteContent = async ({
+  id,
+  content,
+  timeStamp = new Date(),
+}: {
+  id: string;
+  content: string;
+  timeStamp: Date;
+}) => {
+  const response = await axios.patch<NoteSuccessResponse<NoteData>>(
+    `${API_URL}/api/v1/notes/content/${id}`,
+    { content, timeStamp },
+    {
+      withCredentials: true,
+    },
+  );
+  return response.data.note;
+};
