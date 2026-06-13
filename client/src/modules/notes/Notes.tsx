@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
+import Switch from "react-switch";
 import { format } from "date-fns";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
-import Switch from "react-switch";
 
 import { BlockNoteView } from "@blocknote/mantine";
 import { useCreateBlockNote } from "@blocknote/react";
@@ -27,6 +27,7 @@ import Spinner from "../../components/Spinner";
 import axios from "axios";
 import type { DocumentBody } from "./notes.type";
 import { Trash, Files } from "lucide-react";
+import { NoteEditor } from "./NoteEditor";
 
 // Random files data for the files sidebar
 const MOCK_FILES = [
@@ -236,7 +237,7 @@ const Notes = () => {
   });
   console.log("t", editor._tiptapEditor.extensionStorage);
 
-  console.log("dd" , editor._tiptapEditor.state);
+  console.log("dd", editor._tiptapEditor.state);
 
   const notesQuery = useQuery({
     queryKey: ["notes", topicId],
