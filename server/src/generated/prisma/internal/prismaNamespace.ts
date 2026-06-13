@@ -926,7 +926,9 @@ export const NoteScalarFieldEnum = {
   content: 'content',
   topic_id: 'topic_id',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  titleTimeStamp: 'titleTimeStamp',
+  contentTimeStamp: 'contentTimeStamp'
 } as const
 
 export type NoteScalarFieldEnum = (typeof NoteScalarFieldEnum)[keyof typeof NoteScalarFieldEnum]

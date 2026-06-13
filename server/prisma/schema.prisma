@@ -79,6 +79,8 @@ model Note {
   topic             Topic             @relation(fields: [topic_id], references: [id])
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
+  titleTimeStamp    DateTime          @default(now())
+  contentTimeStamp  DateTime          @default(now())
   documents         Document[]
   reviews           review[]
   questionHistories QuestionHistory[]

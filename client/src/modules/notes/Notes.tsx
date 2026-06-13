@@ -1,33 +1,55 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
 
 import { BlockNoteView } from "@blocknote/mantine";
 import { useCreateBlockNote } from "@blocknote/react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchAllNotes } from "./notes.api";
+import { useParams } from "react-router-dom";
 
 const Notes = () => {
   const editor = useCreateBlockNote();
 
+  const { topicId } = useParams<{ topicId: string }>();
+
   const [isNotesOpen, setIsNotesOpen] = useState(false);
 
-  const notesList = [
-    {
-      id: "1",
-      title: "React Basics",
-      lastEdited: "2024-06-01",
-    },
-    {
-      id: "2",
-      title: "JavaScript ES6 Features",
-      lastEdited: "2024-06-02",
-    },
-    {
-      id: "3",
-      title: "CSS Flexbox and Grid",
-      lastEdited: "2024-06-03",
-    },
-  ];
+  const debounceTimerRef = useRef<number | null>(null);
+
+  const [currentNoteId, setCurrentNoteId] = useState<string>("new");
+
+  const [currentNoteTitle, setCurrentNoteTitle] = useState<string>("");
+
+  
+  const notesQuery = useQuery({
+    queryKey: ["notes", topicId],
+    queryFn: () => fetchAllNotes({ id: topicId! }),
+    enabled: !!topicId,
+    retry: 3,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    refetchOnReconnect: true,
+  });
+
+  const notesList = notesQuery.data || [];
+  const handleDebouncedTitleChange = (
+    newTitle: string,
+    delay: number = 1000,
+  ) => {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    debounceTimerRef.current = setTimeout(() => {
+      console.log("Saving title:", newTitle);
+    }, delay);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrentNoteTitle(e.target.value);
+    handleDebouncedTitleChange(e.target.value);
+  };
 
   return (
     <div className="relative h-screen bg-[#1F1F1F] overflow-hidden">
@@ -139,7 +161,7 @@ const Notes = () => {
               >
                 <h3 className="font-medium text-white">{note.title}</h3>
 
-                <p className="mt-1 text-xs text-zinc-400">{note.lastEdited}</p>
+                <p className="mt-1 text-xs text-zinc-400">{note.updatedAt}</p>
               </button>
             ))}
           </div>
@@ -152,8 +174,10 @@ const Notes = () => {
           <div className="ml-12 border-b border-zinc-800 w-[calc(100%-3rem)] mb-6 pb-6">
             <input
               type="text"
-              value={"New Note"}
-              className="bg-[#1F1F1F] text-[#373737] font-bold text-5xl border-none outline-none "
+              value={currentNoteTitle}
+              placeholder="Untitled"
+              onChange={handleInputChange}
+              className="bg-[#1F1F1F] text-white placeholder:text-[#373737] font-bold text-5xl border-none outline-none "
             />
           </div>
           <BlockNoteView className="p-0 mt-6" editor={editor} theme="dark" />

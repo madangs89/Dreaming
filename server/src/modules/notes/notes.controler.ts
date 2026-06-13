@@ -147,6 +147,187 @@ export const createNote = async (
   }
 };
 
+export const createNoteOnlyTitle = async (
+  req: Request<{}, {}, { title: string; topic_id: string; timeStamp?: Date }>,
+  res: Response<NoteErrorResponse | NoteSuccessResponse<NoteBody>>,
+) => {
+  try {
+    const user_id = req.user?.id;
+    if (!user_id) {
+      return res.status(401).json({ message: "Unauthorized", success: false });
+    }
+    const { title, topic_id, timeStamp = new Date() } = req.body;
+
+    if (!title || !topic_id) {
+      return res.status(400).json({
+        message: "Title and topic_id are required",
+        success: false,
+      });
+    }
+
+    const note = await prisma.note.create({
+      data: {
+        title,
+        topic_id,
+        content: "",
+        titleTimeStamp: timeStamp,
+        contentTimeStamp: timeStamp,
+      },
+    });
+    return res.status(201).json({
+      message: "Note created successfully",
+      success: true,
+      note,
+    });
+  } catch (error) {
+    console.error("Error creating note:", error);
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      prismaErrorHandler(req, res, error);
+      return;
+    }
+    return res.status(500).json({
+      message: "An unexpected error occurred",
+      success: false,
+    });
+  }
+};
+
+export const updateNoteTitle = async (
+  req: Request<{ id: string }, {}, { title: string; timeStamp?: Date }>,
+  res: Response<NoteErrorResponse | NoteSuccessResponse<NoteBody>>,
+) => {
+  try {
+    const user_id = req.user?.id;
+    if (!user_id) {
+      return res.status(401).json({ message: "Unauthorized", success: false });
+    }
+
+    const { id } = req.params;
+    const { title, timeStamp = new Date() } = req.body;
+
+    if (!id) {
+      return res.status(400).json({
+        message: "Note ID is required",
+        success: false,
+      });
+    }
+
+    const oldData = await prisma.note.findUnique({ where: { id } });
+
+    if (!oldData) {
+      return res.status(404).json({
+        message: "Note not found",
+        success: false,
+      });
+    }
+
+    if (oldData.title === title) {
+      return res.status(200).json({
+        message: "Note title updated successfully",
+        success: true,
+        note: oldData,
+      });
+    }
+
+    if (!title || title.trim() === "") {
+      return res.status(400).json({
+        message: "Title cannot be empty",
+        success: false,
+      });
+    }
+
+    const note = await prisma.note.update({
+      where: { id },
+      data: {
+        title,
+        titleTimeStamp: timeStamp,
+      },
+      include: { documents: true, reviews: true },
+    });
+    return res.status(200).json({
+      message: "Note title updated successfully",
+      success: true,
+      note,
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      prismaErrorHandler(req, res, error);
+      return;
+    }
+    console.error("Error updating note title:", error);
+    return res.status(500).json({
+      message: "An unexpected error occurred",
+      success: false,
+    });
+  }
+};
+
+export const updateNoteContent = async (
+  req: Request<{ id: string }, {}, { content: string; timeStamp?: Date }>,
+  res: Response<NoteErrorResponse | NoteSuccessResponse<NoteBody>>,
+) => {
+  try {
+    const user_id = req.user?.id;
+    if (!user_id) {
+      return res.status(401).json({ message: "Unauthorized", success: false });
+    }
+    const { id } = req.params;
+    const { content, timeStamp = new Date() } = req.body;
+
+    if (!id) {
+      return res.status(400).json({
+        message: "Note ID is required",
+        success: false,
+      });
+    }
+    const oldData = await prisma.note.findUnique({ where: { id } });
+
+    if (!oldData) {
+      return res.status(404).json({
+        message: "Note not found",
+        success: false,
+      });
+    }
+    if (oldData.content === content) {
+      return res.status(200).json({
+        message: "Note content updated successfully",
+        success: true,
+        note: oldData,
+      });
+    }
+
+    if (!content || content.trim() === "") {
+      return res.status(400).json({
+        message: "Content cannot be empty",
+        success: false,
+      });
+    }
+    const note = await prisma.note.update({
+      where: { id },
+      data: {
+        content,
+        contentTimeStamp: timeStamp,
+      },
+      include: { documents: true, reviews: true },
+    });
+    return res.status(200).json({
+      message: "Note content updated successfully",
+      success: true,
+      note,
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      prismaErrorHandler(req, res, error);
+      return;
+    }
+    console.error("Error updating note content:", error);
+    return res.status(500).json({
+      message: "An unexpected error occurred",
+      success: false,
+    });
+  }
+};
+
 export const getAllNotes = async (
   req: Request<NoteParams>,
   res: Response<NoteErrorResponse | NoteSuccessResponse<NoteBody[]>>,

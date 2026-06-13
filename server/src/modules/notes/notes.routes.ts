@@ -2,9 +2,12 @@ import express from "express";
 import { authenticate } from "../../middelwares/auth.middelware.js";
 import {
   createNote,
+  createNoteOnlyTitle,
   getAllNotes,
   getSingleNote,
   updateNote,
+  updateNoteContent,
+  updateNoteTitle,
 } from "./notes.controler.js";
 import { upload } from "../../configs/multer.js";
 
@@ -19,3 +22,6 @@ notesRouter.post(
   upload.array("documents"),
   createNote,
 );
+notesRouter.post("/create/title", authenticate, createNoteOnlyTitle);
+notesRouter.patch("/title/:id", authenticate, updateNoteTitle);
+notesRouter.patch("/content/:id", authenticate, updateNoteContent);

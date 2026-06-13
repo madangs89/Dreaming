@@ -39,6 +39,8 @@ const App = () => {
     }
   }, [authQuery.isError, authQuery.isSuccess]);
 
+
+
   if (authQuery.isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
