@@ -76,3 +76,13 @@ export const updateNoteContent = async ({
   );
   return response.data.note;
 };
+
+export const deleteNote = async ({ id }: { id: string }) => {
+  const response = await axios.delete<NoteSuccessResponse<null>>(
+    `${API_URL}/api/v1/notes/${id}`,
+    {
+      withCredentials: true,
+    },
+  );
+  return response.data;
+};

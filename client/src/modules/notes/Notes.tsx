@@ -9,6 +9,7 @@ import { useCreateBlockNote } from "@blocknote/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createNoteOnlyTitle,
+  deleteNote,
   fetchAllNotes,
   getSingleNote,
   updateNoteContent,
@@ -18,6 +19,7 @@ import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import {
   createNote,
+  deleteNoteIndexDb,
   getNote,
   retryWrapper,
   updateNoteContentIndexDB,
@@ -27,7 +29,6 @@ import Spinner from "../../components/Spinner";
 import axios from "axios";
 import type { DocumentBody } from "./notes.type";
 import { Trash, Files } from "lucide-react";
-import { NoteEditor } from "./NoteEditor";
 
 // Random files data for the files sidebar
 const MOCK_FILES = [
@@ -179,12 +180,19 @@ const Notes = () => {
 
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [isFilesOpen, setIsFilesOpen] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    const storedTheme = localStorage.getItem("theme");
+    return storedTheme === "dark" ? "dark" : "light";
+  });
 
   const isDark = theme === "dark";
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+    setTheme((prev) => {
+      const newTheme = prev === "light" ? "dark" : "light";
+      localStorage.setItem("theme", newTheme);
+      return newTheme;
+    });
   };
 
   const debounceTimerRef = useRef<number | null>(null);
@@ -324,6 +332,39 @@ const Notes = () => {
     },
     onError: () => {
       toast.error("Failed to update note content! Please try again.");
+    },
+  });
+
+  const makeEveryThingNew = () => {
+    setCurrentNoteId("new");
+    setCurrentNoteTitle("");
+    setIsNotesOpen(false);
+    isLoadingNoteRef.current = true;
+    editor.replaceBlocks(editor.document, []);
+    setTimeout(() => {
+      isLoadingNoteRef.current = false;
+    }, 100);
+  };
+
+  const deleteNoteMutation = useMutation({
+    mutationFn: deleteNote,
+    onSuccess: async () => {
+      // need to remove localStorage
+      const storedNoteIds = JSON.parse(
+        localStorage.getItem("currentNoteId") ?? "{}",
+      );
+      if (storedNoteIds[topicId!] == currentNoteId) {
+        delete storedNoteIds[topicId!];
+      }
+      localStorage.setItem("currentNoteId", JSON.stringify(storedNoteIds));
+      // need to remove indexDb
+      await retryWrapper(() => deleteNoteIndexDb(currentNoteId));
+      makeEveryThingNew();
+      queryClient.invalidateQueries({ queryKey: ["notes", topicId] });
+      toast.success("Note deleted successfully!");
+    },
+    onError: () => {
+      toast.error("Failed To Delete Note! Please Try Again");
     },
   });
 
@@ -607,14 +648,7 @@ const Notes = () => {
           <div className="p-3">
             <button
               onClick={() => {
-                setCurrentNoteId("new");
-                setCurrentNoteTitle("");
-                setIsNotesOpen(false);
-                isLoadingNoteRef.current = true;
-                editor.replaceBlocks(editor.document, []);
-                setTimeout(() => {
-                  isLoadingNoteRef.current = false;
-                }, 100);
+                makeEveryThingNew();
               }}
               style={{ backgroundColor: newNoteBtn, color: newNoteBtnText }}
               onMouseEnter={(e) =>

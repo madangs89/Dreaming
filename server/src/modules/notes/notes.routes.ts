@@ -3,6 +3,7 @@ import { authenticate } from "../../middelwares/auth.middelware.js";
 import {
   createNote,
   createNoteOnlyTitle,
+  deleteNote,
   getAllNotes,
   getSingleNote,
   updateNote,
@@ -25,3 +26,4 @@ notesRouter.post(
 notesRouter.post("/create/title", authenticate, createNoteOnlyTitle);
 notesRouter.patch("/title/:id", authenticate, updateNoteTitle);
 notesRouter.patch("/content/:id", authenticate, updateNoteContent);
+notesRouter.delete("/:id", authenticate, deleteNote);

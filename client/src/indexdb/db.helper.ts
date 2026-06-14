@@ -169,7 +169,7 @@ export const updateNoteContentIndexDB = async (
   });
 };
 
-export const deleteNote = async (id: string) => {
+export const deleteNoteIndexDb = async (id: string) => {
   const db = await initIndexDb();
 
   return new Promise<boolean>((resolve, reject) => {

@@ -61,17 +61,11 @@ export function getMemetype(mimetype: string): Memetype {
     return Memetype.spreadsheet;
   }
 
-  if (
-    mimetype.includes("presentation") ||
-    mimetype.includes("powerpoint")
-  ) {
+  if (mimetype.includes("presentation") || mimetype.includes("powerpoint")) {
     return Memetype.presentation;
   }
 
-  if (
-    mimetype.startsWith("text/") ||
-    mimetype === "application/json"
-  ) {
+  if (mimetype.startsWith("text/") || mimetype === "application/json") {
     return Memetype.text;
   }
 
@@ -514,6 +508,98 @@ export const updateNote = async (
       prismaErrorHandler(req, res, error);
       return;
     }
+    return res.status(500).json({
+      message: "An unexpected error occurred",
+      success: false,
+    });
+  }
+};
+
+export const deleteNote = async (
+  req: Request<{ id: string }>,
+  res: Response<NoteErrorResponse | NoteSuccessResponse<null>>,
+) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        message: "Note ID is required",
+        success: false,
+      });
+    }
+
+    const note = await prisma.note.findUnique({
+      where: { id },
+    });
+
+    if (!note) {
+      return res.status(404).json({
+        message: "Note not found",
+        success: false,
+      });
+    }
+
+    // Get all documents
+    const documents = await prisma.document.findMany({
+      where: {
+        notes_id: id,
+      },
+    });
+
+    // Delete files from cloud storage first
+    await Promise.all(
+      documents.map(async (doc) => {
+        const result = await handleSingleDelete(doc.public_id);
+
+        if (!result.success) {
+          throw new Error(
+            `Failed to delete file with public_id: ${doc.public_id}`,
+          );
+        }
+      }),
+    );
+
+    // Delete database records in a transaction
+    await prisma.$transaction(async (tx) => {
+      await tx.questionHistory.deleteMany({
+        where: {
+          notes_id: id,
+        },
+      });
+
+      await tx.review.deleteMany({
+        where: {
+          notes_id: id,
+        },
+      });
+
+      await tx.document.deleteMany({
+        where: {
+          notes_id: id,
+        },
+      });
+
+      await tx.note.delete({
+        where: {
+          id,
+        },
+      });
+    });
+
+    return res.status(200).json({
+      message: "Note deleted successfully",
+      success: true,
+      note: null,
+    });
+  } catch (error) {
+    console.error(error);
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      prismaErrorHandler(req, res, error);
+      return;
+    }
+
     return res.status(500).json({
       message: "An unexpected error occurred",
       success: false,
