@@ -550,7 +550,7 @@ export const deleteNote = async (
     // Delete files from cloud storage first
     await Promise.all(
       documents.map(async (doc) => {
-        const result = await handleSingleDelete(doc.public_id);
+        const result = await handleSingleDelete(doc.public_id, doc.memetype);
 
         if (!result.success) {
           throw new Error(

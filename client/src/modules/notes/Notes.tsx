@@ -496,6 +496,10 @@ const Notes = () => {
     newContent: string,
     delay: number = 1000,
   ) => {
+    if (currentNoteId === "new") {
+      return;
+    }
+
     if (debounceContentTimerRef.current) {
       clearTimeout(debounceContentTimerRef.current);
     }
@@ -854,8 +858,6 @@ const Notes = () => {
                       color: titleColor,
                     }}
                     className="font-bold text-5xl border-none outline-none"
-                    // inline placeholder color via CSS var isn't possible with style prop,
-                    // so we use a className trick below
                   />
                   <div className="flex items-center justify-center gap-3">
                     <Switch
@@ -871,8 +873,20 @@ const Notes = () => {
                       uncheckedIcon={false}
                       checkedIcon={false}
                     />
-                    <button className="group p-2 rounded-md transition-all duration-200 hover:bg-red-500/10">
-                      <Trash className="h-4 w-4 text-gray-400 transition-colors duration-200 group-hover:text-red-500" />
+                    <button
+                      disabled={
+                        currentNoteId === "new" || deleteNoteMutation.isPending
+                      }
+                      onClick={() => {
+                        deleteNoteMutation.mutate({ id: currentNoteId });
+                      }}
+                      className="group p-2 rounded-md transition-all duration-200 hover:bg-red-500/10"
+                    >
+                      {deleteNoteMutation.isPending ? (
+                        <Spinner size={16} />
+                      ) : (
+                        <Trash className="h-4 w-4 text-gray-400 transition-colors duration-200 group-hover:text-red-500" />
+                      )}
                     </button>
                   </div>
                 </div>
