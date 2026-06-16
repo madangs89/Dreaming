@@ -40,6 +40,7 @@ export const handleSingleUpload = async (
     const data: UploadApiResponse = await cloudinary.uploader.upload(filePath, {
       folder: "topics",
       resource_type: "auto",
+      access_mode: "public",
     });
     return {
       success: true,
@@ -126,10 +127,7 @@ export const handleSingleDelete = async (
       message: `Failed to delete file: ${result.result}`,
     };
   } catch (error) {
-    console.error(
-      `Cloudinary delete error for ${public_id}:`,
-      error,
-    );
+    console.error(`Cloudinary delete error for ${public_id}:`, error);
 
     return {
       success: false,

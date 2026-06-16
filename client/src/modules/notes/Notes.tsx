@@ -29,8 +29,8 @@ import {
 import Spinner from "../../components/Spinner";
 import axios from "axios";
 import type { DocumentBody } from "./notes.type";
-import { Trash, Files } from "lucide-react";
-
+import { Trash, Files, Delete } from "lucide-react";
+import FilePreviewModal from "./components/Filepreviewmodal";
 
 const fileIcon = (type: string, isDark: boolean) => {
   const color = isDark ? "#a1a1aa" : "#71717a";
@@ -126,7 +126,7 @@ const Notes = () => {
   const queryClient = useQueryClient();
 
   const { topicId } = useParams<{ topicId: string }>();
-
+  const [previewFile, setPreviewFile] = useState<DocumentBody | null>(null);
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [isFilesOpen, setIsFilesOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">(() => {
@@ -764,6 +764,7 @@ const Notes = () => {
               documentsList.map((file) => (
                 <button
                   key={file.id}
+                  onClick={() => setPreviewFile(file)}
                   style={{
                     backgroundColor: "transparent",
                     borderColor: "transparent",
@@ -788,13 +789,16 @@ const Notes = () => {
                     >
                       {file.title}
                     </h3>
-                    <p
-                      style={{ color: noteItemInactiveDate }}
-                      className="mt-0.5 text-xs"
-                    >
-                      {/* {file.} ·{" "} */}
-                      {new Date(file.createdAt).toLocaleDateString()}
-                    </p>
+                    <div className="flex items-center justify-between">
+                      <p
+                        style={{ color: noteItemInactiveDate }}
+                        className="mt-0.5 text-xs"
+                      >
+                        {/* {file.} ·{" "} */}
+                        {new Date(file.createdAt).toLocaleDateString()}
+                      </p>
+                      <Delete />
+                    </div>
                   </div>
                 </button>
               ))
@@ -899,6 +903,11 @@ const Notes = () => {
         </div>
       </main>
 
+      <FilePreviewModal
+        file={previewFile}
+        onClose={() => setPreviewFile(null)}
+        isDark={isDark}
+      />
       {/* Placeholder color for title input — injected via a style tag */}
       <style>{`
         input::placeholder {
