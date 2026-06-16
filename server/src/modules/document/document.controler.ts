@@ -140,3 +140,41 @@ export const deleteDocument = async (
       .json({ message: "Internal server error", success: false });
   }
 };
+
+export const getAllDocuments = async (
+  req: Request<{ notes_id: string }>,
+  res: Response<
+    DocumentSuccessResponse<DocumentBody[]> | DocumentErrorResponse
+  >,
+) => {
+  try {
+    const { notes_id } = req.params;
+
+    if (!notes_id) {
+      return res.status(400).json({
+        message: "Notes ID is required",
+        success: false,
+      });
+    }
+
+    const documents = await prisma.document.findMany({
+      where: { notes_id },
+    });
+    return res.status(200).json({
+      message: "Documents retrieved successfully",
+      success: true,
+      document: documents,
+    });
+  } catch (error) {
+    console.error("Error retrieving documents:", error);
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      prismaErrorHandler(req, res, error);
+      return;
+    }
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
+  }
+};

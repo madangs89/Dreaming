@@ -11,6 +11,7 @@ import {
   createNoteOnlyTitle,
   deleteNote,
   fetchAllNotes,
+  getAllDocuments,
   getSingleNote,
   updateNoteContent,
   updateNoteTitle,
@@ -30,58 +31,6 @@ import axios from "axios";
 import type { DocumentBody } from "./notes.type";
 import { Trash, Files } from "lucide-react";
 
-// Random files data for the files sidebar
-const MOCK_FILES = [
-  {
-    id: "1",
-    name: "roadmap-v3.pdf",
-    size: "420 KB",
-    type: "pdf",
-    updatedAt: new Date("2026-06-14T10:32:00"),
-  },
-  {
-    id: "2",
-    name: "wireframes.png",
-    size: "1.2 MB",
-    type: "image",
-    updatedAt: new Date("2026-06-13T16:15:00"),
-  },
-  {
-    id: "3",
-    name: "q3-metrics.xlsx",
-    size: "88 KB",
-    type: "sheet",
-    updatedAt: new Date("2026-06-12T09:00:00"),
-  },
-  {
-    id: "4",
-    name: "design-brief.docx",
-    size: "210 KB",
-    type: "doc",
-    updatedAt: new Date("2026-06-10T19:44:00"),
-  },
-  {
-    id: "5",
-    name: "brand-assets.zip",
-    size: "5.6 MB",
-    type: "zip",
-    updatedAt: new Date("2026-06-08T14:03:00"),
-  },
-  {
-    id: "6",
-    name: "contract-draft.pdf",
-    size: "340 KB",
-    type: "pdf",
-    updatedAt: new Date("2026-06-07T11:20:00"),
-  },
-  {
-    id: "7",
-    name: "user-research.xlsx",
-    size: "150 KB",
-    type: "sheet",
-    updatedAt: new Date("2026-06-05T08:55:00"),
-  },
-];
 
 const fileIcon = (type: string, isDark: boolean) => {
   const color = isDark ? "#a1a1aa" : "#71717a";
@@ -210,11 +159,14 @@ const Notes = () => {
     }
   });
 
+  const currentNoteIdRef = useRef<string>(currentNoteId);
+
   const [currentNoteTitle, setCurrentNoteTitle] = useState<string>("");
 
   const editor = useCreateBlockNote({
     uploadFile: async (file: File, blockId?: string) => {
       try {
+        const currentNoteId = currentNoteIdRef.current;
         if (!currentNoteId || currentNoteId === "new") {
           const message = "Please save the note before uploading a file.";
           toast.error(message);
@@ -235,6 +187,10 @@ const Notes = () => {
           throw new Error("No file URL returned from server.");
         }
 
+        toast.success("File uploaded successfully!");
+        queryClient.invalidateQueries({
+          queryKey: ["documents", currentNoteId],
+        });
         return response.data.document.url;
       } catch (error) {
         console.error("Error uploading file:", error);
@@ -285,6 +241,7 @@ const Notes = () => {
         currentNoteId === "" ||
         currentNoteId !== data.id
       ) {
+        currentNoteIdRef.current = data.id;
         setCurrentNoteId(data.id);
         handleSaveToLocalStorage(data.id, topicId!);
       }
@@ -313,6 +270,7 @@ const Notes = () => {
         currentNoteId === "" ||
         currentNoteId !== data.id
       ) {
+        currentNoteIdRef.current = data.id;
         setCurrentNoteId(data.id);
         handleSaveToLocalStorage(data.id, topicId!);
       }
@@ -527,6 +485,15 @@ const Notes = () => {
     handleDebouncedContentChange(JSON.stringify(editor.document));
   };
 
+  const documentQuery = useQuery({
+    queryKey: ["documents", currentNoteId],
+    queryFn: () => getAllDocuments({ notes_id: currentNoteId }),
+    enabled: currentNoteId !== "new" && !!currentNoteId,
+    retry: 3,
+  });
+
+  const documentsList: DocumentBody[] = documentQuery.data || [];
+
   const bg = isDark ? "#1F1F1F" : "#ffffff";
   const sidebarBg = isDark ? "#252525" : "#f9f9f8";
   const sidebarBorder = isDark ? "#3f3f46" : "#e4e4e7";
@@ -592,8 +559,9 @@ const Notes = () => {
       )}
 
       {/* Right open button */}
-      {!isFilesOpen && (
+      {!isFilesOpen && currentNoteId && currentNoteId !== "new" && (
         <button
+          disabled={documentQuery.isLoading}
           onClick={() => setIsFilesOpen(true)}
           style={{ backgroundColor: menuBtnBg, color: menuBtnText }}
           onMouseEnter={(e) =>
@@ -604,7 +572,13 @@ const Notes = () => {
           }
           className="absolute top-4 right-4 z-50 h-10 w-10 rounded-lg shadow-lg transition-all flex items-center justify-center"
         >
-          <Files className="h-4 w-4" />
+          {documentQuery.isLoading &&
+          currentNoteId &&
+          currentNoteId !== "new" ? (
+            <Spinner size={12} />
+          ) : (
+            <Files className="h-4 w-4" />
+          )}
         </button>
       )}
 
@@ -782,43 +756,51 @@ const Notes = () => {
 
           {/* Files List */}
           <div className="flex-1 overflow-y-auto px-2 pb-2 pt-2">
-            {MOCK_FILES.map((file) => (
-              <button
-                key={file.id}
-                style={{
-                  backgroundColor: "transparent",
-                  borderColor: "transparent",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = noteItemHoverBg;
-                  e.currentTarget.style.borderColor = noteItemHoverBorder;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                  e.currentTarget.style.borderColor = "transparent";
-                }}
-                className="mb-1 w-full rounded-lg p-3 text-left transition-all duration-200 border flex items-center gap-3"
-              >
-                <span className="flex-shrink-0">
-                  {fileIcon(file.type, isDark)}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <h3
-                    style={{ color: noteItemInactiveTitle }}
-                    className="font-medium text-sm truncate"
-                  >
-                    {file.name}
-                  </h3>
-                  <p
-                    style={{ color: noteItemInactiveDate }}
-                    className="mt-0.5 text-xs"
-                  >
-                    {file.size} ·{" "}
-                    {new Date(file.updatedAt).toLocaleDateString()}
-                  </p>
-                </div>
-              </button>
-            ))}
+            {documentQuery.isLoading ? (
+              <div className="flex-1 justify-center items-center flex">
+                <Spinner />
+              </div>
+            ) : documentsList && documentsList.length > 0 ? (
+              documentsList.map((file) => (
+                <button
+                  key={file.id}
+                  style={{
+                    backgroundColor: "transparent",
+                    borderColor: "transparent",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = noteItemHoverBg;
+                    e.currentTarget.style.borderColor = noteItemHoverBorder;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                    e.currentTarget.style.borderColor = "transparent";
+                  }}
+                  className="mb-1 w-full rounded-lg p-3 text-left transition-all duration-200 border flex items-center gap-3"
+                >
+                  <span className="flex-shrink-0">
+                    {fileIcon(file.memetype, isDark)}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <h3
+                      style={{ color: noteItemInactiveTitle }}
+                      className="font-medium text-sm truncate"
+                    >
+                      {file.title}
+                    </h3>
+                    <p
+                      style={{ color: noteItemInactiveDate }}
+                      className="mt-0.5 text-xs"
+                    >
+                      {/* {file.} ·{" "} */}
+                      {new Date(file.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                </button>
+              ))
+            ) : (
+              <p style={{ color: noNotesText }}>No files found.</p>
+            )}
           </div>
         </div>
       </aside>

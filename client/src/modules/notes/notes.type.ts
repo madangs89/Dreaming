@@ -54,6 +54,6 @@ export type DocumentBody = {
   memetype: string;
   title: string;
   public_id: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 };
