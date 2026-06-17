@@ -99,7 +99,6 @@ const reviewWorker = new Worker<ReviewJobData>(
           }
 
           // Need to handle if new Content become empty then we need to delete the review and questions
-
           if (reviewData && isNoteEmpty(newBlocks)) {
             console.log("New notes content is empty, deleting review.");
             // 1 Deleting Review
@@ -121,7 +120,10 @@ const reviewWorker = new Worker<ReviewJobData>(
           }
 
           // If review Exists and need to check difference
-          if (!old_notes_content || old_notes_content.length < 2) {
+          if (
+            !old_notes_content ||
+            isNoteEmpty(JSON.parse(old_notes_content) as BlockNoteBlock[])
+          ) {
             console.log(
               "Old notes content is empty or too short, skipping diff check.",
             );
