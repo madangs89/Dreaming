@@ -15,3 +15,17 @@ export const getNextReviewDate = (
     return addDays(currentDate, 2);
   }
 };
+
+export const getQuestionDelayTime = (scheduled_date: Date): number => {
+  const reviewTime = scheduled_date.getTime();
+
+  const questionGenerationTime = reviewTime - 30 * 60 * 1000;
+
+  const delay = questionGenerationTime - Date.now();
+  return Math.max(0, delay);
+};
+
+export const returnTomorrowDate = (oldScheduled_date: Date): Date => {
+  const tomorrow = new Date(oldScheduled_date);
+  return addDays(tomorrow, 1);
+};

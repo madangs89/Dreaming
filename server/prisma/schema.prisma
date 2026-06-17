@@ -112,13 +112,14 @@ model review {
   id                 String                @id @default(uuid())
   user_id            String
   user               User                  @relation(fields: [user_id], references: [id])
-  notes_id           String
+  notes_id           String                 @unique
   topic_id           String
   scheduled_date     DateTime
   status             ReviewStatus          @default(scheduled)
   is_completed       Boolean               @default(false)
   review_results     reviewRememberStatus?
   review_count       Int                   @default(1)
+  generation_count   Int                   @default(1)
   strong_areas       String[]              @default([])
   weak_areas         String[]              @default([])
   is_revision_enough Boolean               @default(false)
@@ -130,15 +131,16 @@ model review {
 }
 
 model QuestionHistory {
-  id             String        @id @default(uuid())
-  notes_id       String
-  notes          Note          @relation(fields: [notes_id], references: [id])
-  review_id      String
-  review         review        @relation(fields: [review_id], references: [id])
-  expectedAnswer String
-  question_type  question_type @default(text)
-  difficulty     difficulty    @default(easy)
-  question       String
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  id               String        @id @default(uuid())
+  generation_count Int           @default(1)
+  notes_id         String
+  notes            Note          @relation(fields: [notes_id], references: [id])
+  review_id        String
+  review           review        @relation(fields: [review_id], references: [id])
+  expectedAnswer   String
+  question_type    question_type @default(text)
+  difficulty       difficulty    @default(easy)
+  question         String
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 }

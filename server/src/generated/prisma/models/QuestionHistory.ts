@@ -20,12 +20,23 @@ export type QuestionHistoryModel = runtime.Types.Result.DefaultSelection<Prisma.
 
 export type AggregateQuestionHistory = {
   _count: QuestionHistoryCountAggregateOutputType | null
+  _avg: QuestionHistoryAvgAggregateOutputType | null
+  _sum: QuestionHistorySumAggregateOutputType | null
   _min: QuestionHistoryMinAggregateOutputType | null
   _max: QuestionHistoryMaxAggregateOutputType | null
 }
 
+export type QuestionHistoryAvgAggregateOutputType = {
+  generation_count: number | null
+}
+
+export type QuestionHistorySumAggregateOutputType = {
+  generation_count: number | null
+}
+
 export type QuestionHistoryMinAggregateOutputType = {
   id: string | null
+  generation_count: number | null
   notes_id: string | null
   review_id: string | null
   expectedAnswer: string | null
@@ -38,6 +49,7 @@ export type QuestionHistoryMinAggregateOutputType = {
 
 export type QuestionHistoryMaxAggregateOutputType = {
   id: string | null
+  generation_count: number | null
   notes_id: string | null
   review_id: string | null
   expectedAnswer: string | null
@@ -50,6 +62,7 @@ export type QuestionHistoryMaxAggregateOutputType = {
 
 export type QuestionHistoryCountAggregateOutputType = {
   id: number
+  generation_count: number
   notes_id: number
   review_id: number
   expectedAnswer: number
@@ -62,8 +75,17 @@ export type QuestionHistoryCountAggregateOutputType = {
 }
 
 
+export type QuestionHistoryAvgAggregateInputType = {
+  generation_count?: true
+}
+
+export type QuestionHistorySumAggregateInputType = {
+  generation_count?: true
+}
+
 export type QuestionHistoryMinAggregateInputType = {
   id?: true
+  generation_count?: true
   notes_id?: true
   review_id?: true
   expectedAnswer?: true
@@ -76,6 +98,7 @@ export type QuestionHistoryMinAggregateInputType = {
 
 export type QuestionHistoryMaxAggregateInputType = {
   id?: true
+  generation_count?: true
   notes_id?: true
   review_id?: true
   expectedAnswer?: true
@@ -88,6 +111,7 @@ export type QuestionHistoryMaxAggregateInputType = {
 
 export type QuestionHistoryCountAggregateInputType = {
   id?: true
+  generation_count?: true
   notes_id?: true
   review_id?: true
   expectedAnswer?: true
@@ -137,6 +161,18 @@ export type QuestionHistoryAggregateArgs<ExtArgs extends runtime.Types.Extension
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: QuestionHistoryAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: QuestionHistorySumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: QuestionHistoryMinAggregateInputType
@@ -167,12 +203,15 @@ export type QuestionHistoryGroupByArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   _count?: QuestionHistoryCountAggregateInputType | true
+  _avg?: QuestionHistoryAvgAggregateInputType
+  _sum?: QuestionHistorySumAggregateInputType
   _min?: QuestionHistoryMinAggregateInputType
   _max?: QuestionHistoryMaxAggregateInputType
 }
 
 export type QuestionHistoryGroupByOutputType = {
   id: string
+  generation_count: number
   notes_id: string
   review_id: string
   expectedAnswer: string
@@ -182,6 +221,8 @@ export type QuestionHistoryGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   _count: QuestionHistoryCountAggregateOutputType | null
+  _avg: QuestionHistoryAvgAggregateOutputType | null
+  _sum: QuestionHistorySumAggregateOutputType | null
   _min: QuestionHistoryMinAggregateOutputType | null
   _max: QuestionHistoryMaxAggregateOutputType | null
 }
@@ -206,6 +247,7 @@ export type QuestionHistoryWhereInput = {
   OR?: Prisma.QuestionHistoryWhereInput[]
   NOT?: Prisma.QuestionHistoryWhereInput | Prisma.QuestionHistoryWhereInput[]
   id?: Prisma.StringFilter<"QuestionHistory"> | string
+  generation_count?: Prisma.IntFilter<"QuestionHistory"> | number
   notes_id?: Prisma.StringFilter<"QuestionHistory"> | string
   review_id?: Prisma.StringFilter<"QuestionHistory"> | string
   expectedAnswer?: Prisma.StringFilter<"QuestionHistory"> | string
@@ -220,6 +262,7 @@ export type QuestionHistoryWhereInput = {
 
 export type QuestionHistoryOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  generation_count?: Prisma.SortOrder
   notes_id?: Prisma.SortOrder
   review_id?: Prisma.SortOrder
   expectedAnswer?: Prisma.SortOrder
@@ -237,6 +280,7 @@ export type QuestionHistoryWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.QuestionHistoryWhereInput | Prisma.QuestionHistoryWhereInput[]
   OR?: Prisma.QuestionHistoryWhereInput[]
   NOT?: Prisma.QuestionHistoryWhereInput | Prisma.QuestionHistoryWhereInput[]
+  generation_count?: Prisma.IntFilter<"QuestionHistory"> | number
   notes_id?: Prisma.StringFilter<"QuestionHistory"> | string
   review_id?: Prisma.StringFilter<"QuestionHistory"> | string
   expectedAnswer?: Prisma.StringFilter<"QuestionHistory"> | string
@@ -251,6 +295,7 @@ export type QuestionHistoryWhereUniqueInput = Prisma.AtLeast<{
 
 export type QuestionHistoryOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  generation_count?: Prisma.SortOrder
   notes_id?: Prisma.SortOrder
   review_id?: Prisma.SortOrder
   expectedAnswer?: Prisma.SortOrder
@@ -260,8 +305,10 @@ export type QuestionHistoryOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.QuestionHistoryCountOrderByAggregateInput
+  _avg?: Prisma.QuestionHistoryAvgOrderByAggregateInput
   _max?: Prisma.QuestionHistoryMaxOrderByAggregateInput
   _min?: Prisma.QuestionHistoryMinOrderByAggregateInput
+  _sum?: Prisma.QuestionHistorySumOrderByAggregateInput
 }
 
 export type QuestionHistoryScalarWhereWithAggregatesInput = {
@@ -269,6 +316,7 @@ export type QuestionHistoryScalarWhereWithAggregatesInput = {
   OR?: Prisma.QuestionHistoryScalarWhereWithAggregatesInput[]
   NOT?: Prisma.QuestionHistoryScalarWhereWithAggregatesInput | Prisma.QuestionHistoryScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"QuestionHistory"> | string
+  generation_count?: Prisma.IntWithAggregatesFilter<"QuestionHistory"> | number
   notes_id?: Prisma.StringWithAggregatesFilter<"QuestionHistory"> | string
   review_id?: Prisma.StringWithAggregatesFilter<"QuestionHistory"> | string
   expectedAnswer?: Prisma.StringWithAggregatesFilter<"QuestionHistory"> | string
@@ -281,6 +329,7 @@ export type QuestionHistoryScalarWhereWithAggregatesInput = {
 
 export type QuestionHistoryCreateInput = {
   id?: string
+  generation_count?: number
   expectedAnswer: string
   question_type?: $Enums.question_type
   difficulty?: $Enums.difficulty
@@ -293,6 +342,7 @@ export type QuestionHistoryCreateInput = {
 
 export type QuestionHistoryUncheckedCreateInput = {
   id?: string
+  generation_count?: number
   notes_id: string
   review_id: string
   expectedAnswer: string
@@ -305,6 +355,7 @@ export type QuestionHistoryUncheckedCreateInput = {
 
 export type QuestionHistoryUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
   expectedAnswer?: Prisma.StringFieldUpdateOperationsInput | string
   question_type?: Prisma.Enumquestion_typeFieldUpdateOperationsInput | $Enums.question_type
   difficulty?: Prisma.EnumdifficultyFieldUpdateOperationsInput | $Enums.difficulty
@@ -317,6 +368,7 @@ export type QuestionHistoryUpdateInput = {
 
 export type QuestionHistoryUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
   notes_id?: Prisma.StringFieldUpdateOperationsInput | string
   review_id?: Prisma.StringFieldUpdateOperationsInput | string
   expectedAnswer?: Prisma.StringFieldUpdateOperationsInput | string
@@ -329,6 +381,7 @@ export type QuestionHistoryUncheckedUpdateInput = {
 
 export type QuestionHistoryCreateManyInput = {
   id?: string
+  generation_count?: number
   notes_id: string
   review_id: string
   expectedAnswer: string
@@ -341,6 +394,7 @@ export type QuestionHistoryCreateManyInput = {
 
 export type QuestionHistoryUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
   expectedAnswer?: Prisma.StringFieldUpdateOperationsInput | string
   question_type?: Prisma.Enumquestion_typeFieldUpdateOperationsInput | $Enums.question_type
   difficulty?: Prisma.EnumdifficultyFieldUpdateOperationsInput | $Enums.difficulty
@@ -351,6 +405,7 @@ export type QuestionHistoryUpdateManyMutationInput = {
 
 export type QuestionHistoryUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
   notes_id?: Prisma.StringFieldUpdateOperationsInput | string
   review_id?: Prisma.StringFieldUpdateOperationsInput | string
   expectedAnswer?: Prisma.StringFieldUpdateOperationsInput | string
@@ -373,6 +428,7 @@ export type QuestionHistoryOrderByRelationAggregateInput = {
 
 export type QuestionHistoryCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  generation_count?: Prisma.SortOrder
   notes_id?: Prisma.SortOrder
   review_id?: Prisma.SortOrder
   expectedAnswer?: Prisma.SortOrder
@@ -383,8 +439,13 @@ export type QuestionHistoryCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
+export type QuestionHistoryAvgOrderByAggregateInput = {
+  generation_count?: Prisma.SortOrder
+}
+
 export type QuestionHistoryMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  generation_count?: Prisma.SortOrder
   notes_id?: Prisma.SortOrder
   review_id?: Prisma.SortOrder
   expectedAnswer?: Prisma.SortOrder
@@ -397,6 +458,7 @@ export type QuestionHistoryMaxOrderByAggregateInput = {
 
 export type QuestionHistoryMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  generation_count?: Prisma.SortOrder
   notes_id?: Prisma.SortOrder
   review_id?: Prisma.SortOrder
   expectedAnswer?: Prisma.SortOrder
@@ -405,6 +467,10 @@ export type QuestionHistoryMinOrderByAggregateInput = {
   question?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type QuestionHistorySumOrderByAggregateInput = {
+  generation_count?: Prisma.SortOrder
 }
 
 export type QuestionHistoryCreateNestedManyWithoutNotesInput = {
@@ -501,6 +567,7 @@ export type EnumdifficultyFieldUpdateOperationsInput = {
 
 export type QuestionHistoryCreateWithoutNotesInput = {
   id?: string
+  generation_count?: number
   expectedAnswer: string
   question_type?: $Enums.question_type
   difficulty?: $Enums.difficulty
@@ -512,6 +579,7 @@ export type QuestionHistoryCreateWithoutNotesInput = {
 
 export type QuestionHistoryUncheckedCreateWithoutNotesInput = {
   id?: string
+  generation_count?: number
   review_id: string
   expectedAnswer: string
   question_type?: $Enums.question_type
@@ -552,6 +620,7 @@ export type QuestionHistoryScalarWhereInput = {
   OR?: Prisma.QuestionHistoryScalarWhereInput[]
   NOT?: Prisma.QuestionHistoryScalarWhereInput | Prisma.QuestionHistoryScalarWhereInput[]
   id?: Prisma.StringFilter<"QuestionHistory"> | string
+  generation_count?: Prisma.IntFilter<"QuestionHistory"> | number
   notes_id?: Prisma.StringFilter<"QuestionHistory"> | string
   review_id?: Prisma.StringFilter<"QuestionHistory"> | string
   expectedAnswer?: Prisma.StringFilter<"QuestionHistory"> | string
@@ -564,6 +633,7 @@ export type QuestionHistoryScalarWhereInput = {
 
 export type QuestionHistoryCreateWithoutReviewInput = {
   id?: string
+  generation_count?: number
   expectedAnswer: string
   question_type?: $Enums.question_type
   difficulty?: $Enums.difficulty
@@ -575,6 +645,7 @@ export type QuestionHistoryCreateWithoutReviewInput = {
 
 export type QuestionHistoryUncheckedCreateWithoutReviewInput = {
   id?: string
+  generation_count?: number
   notes_id: string
   expectedAnswer: string
   question_type?: $Enums.question_type
@@ -612,6 +683,7 @@ export type QuestionHistoryUpdateManyWithWhereWithoutReviewInput = {
 
 export type QuestionHistoryCreateManyNotesInput = {
   id?: string
+  generation_count?: number
   review_id: string
   expectedAnswer: string
   question_type?: $Enums.question_type
@@ -623,6 +695,7 @@ export type QuestionHistoryCreateManyNotesInput = {
 
 export type QuestionHistoryUpdateWithoutNotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
   expectedAnswer?: Prisma.StringFieldUpdateOperationsInput | string
   question_type?: Prisma.Enumquestion_typeFieldUpdateOperationsInput | $Enums.question_type
   difficulty?: Prisma.EnumdifficultyFieldUpdateOperationsInput | $Enums.difficulty
@@ -634,6 +707,7 @@ export type QuestionHistoryUpdateWithoutNotesInput = {
 
 export type QuestionHistoryUncheckedUpdateWithoutNotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
   review_id?: Prisma.StringFieldUpdateOperationsInput | string
   expectedAnswer?: Prisma.StringFieldUpdateOperationsInput | string
   question_type?: Prisma.Enumquestion_typeFieldUpdateOperationsInput | $Enums.question_type
@@ -645,6 +719,7 @@ export type QuestionHistoryUncheckedUpdateWithoutNotesInput = {
 
 export type QuestionHistoryUncheckedUpdateManyWithoutNotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
   review_id?: Prisma.StringFieldUpdateOperationsInput | string
   expectedAnswer?: Prisma.StringFieldUpdateOperationsInput | string
   question_type?: Prisma.Enumquestion_typeFieldUpdateOperationsInput | $Enums.question_type
@@ -656,6 +731,7 @@ export type QuestionHistoryUncheckedUpdateManyWithoutNotesInput = {
 
 export type QuestionHistoryCreateManyReviewInput = {
   id?: string
+  generation_count?: number
   notes_id: string
   expectedAnswer: string
   question_type?: $Enums.question_type
@@ -667,6 +743,7 @@ export type QuestionHistoryCreateManyReviewInput = {
 
 export type QuestionHistoryUpdateWithoutReviewInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
   expectedAnswer?: Prisma.StringFieldUpdateOperationsInput | string
   question_type?: Prisma.Enumquestion_typeFieldUpdateOperationsInput | $Enums.question_type
   difficulty?: Prisma.EnumdifficultyFieldUpdateOperationsInput | $Enums.difficulty
@@ -678,6 +755,7 @@ export type QuestionHistoryUpdateWithoutReviewInput = {
 
 export type QuestionHistoryUncheckedUpdateWithoutReviewInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
   notes_id?: Prisma.StringFieldUpdateOperationsInput | string
   expectedAnswer?: Prisma.StringFieldUpdateOperationsInput | string
   question_type?: Prisma.Enumquestion_typeFieldUpdateOperationsInput | $Enums.question_type
@@ -689,6 +767,7 @@ export type QuestionHistoryUncheckedUpdateWithoutReviewInput = {
 
 export type QuestionHistoryUncheckedUpdateManyWithoutReviewInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
   notes_id?: Prisma.StringFieldUpdateOperationsInput | string
   expectedAnswer?: Prisma.StringFieldUpdateOperationsInput | string
   question_type?: Prisma.Enumquestion_typeFieldUpdateOperationsInput | $Enums.question_type
@@ -702,6 +781,7 @@ export type QuestionHistoryUncheckedUpdateManyWithoutReviewInput = {
 
 export type QuestionHistorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  generation_count?: boolean
   notes_id?: boolean
   review_id?: boolean
   expectedAnswer?: boolean
@@ -716,6 +796,7 @@ export type QuestionHistorySelect<ExtArgs extends runtime.Types.Extensions.Inter
 
 export type QuestionHistorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  generation_count?: boolean
   notes_id?: boolean
   review_id?: boolean
   expectedAnswer?: boolean
@@ -730,6 +811,7 @@ export type QuestionHistorySelectCreateManyAndReturn<ExtArgs extends runtime.Typ
 
 export type QuestionHistorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  generation_count?: boolean
   notes_id?: boolean
   review_id?: boolean
   expectedAnswer?: boolean
@@ -744,6 +826,7 @@ export type QuestionHistorySelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
 
 export type QuestionHistorySelectScalar = {
   id?: boolean
+  generation_count?: boolean
   notes_id?: boolean
   review_id?: boolean
   expectedAnswer?: boolean
@@ -754,7 +837,7 @@ export type QuestionHistorySelectScalar = {
   updatedAt?: boolean
 }
 
-export type QuestionHistoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "notes_id" | "review_id" | "expectedAnswer" | "question_type" | "difficulty" | "question" | "createdAt" | "updatedAt", ExtArgs["result"]["questionHistory"]>
+export type QuestionHistoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "generation_count" | "notes_id" | "review_id" | "expectedAnswer" | "question_type" | "difficulty" | "question" | "createdAt" | "updatedAt", ExtArgs["result"]["questionHistory"]>
 export type QuestionHistoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   notes?: boolean | Prisma.NoteDefaultArgs<ExtArgs>
   review?: boolean | Prisma.reviewDefaultArgs<ExtArgs>
@@ -776,6 +859,7 @@ export type $QuestionHistoryPayload<ExtArgs extends runtime.Types.Extensions.Int
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    generation_count: number
     notes_id: string
     review_id: string
     expectedAnswer: string
@@ -1210,6 +1294,7 @@ export interface Prisma__QuestionHistoryClient<T, Null = never, ExtArgs extends 
  */
 export interface QuestionHistoryFieldRefs {
   readonly id: Prisma.FieldRef<"QuestionHistory", 'String'>
+  readonly generation_count: Prisma.FieldRef<"QuestionHistory", 'Int'>
   readonly notes_id: Prisma.FieldRef<"QuestionHistory", 'String'>
   readonly review_id: Prisma.FieldRef<"QuestionHistory", 'String'>
   readonly expectedAnswer: Prisma.FieldRef<"QuestionHistory", 'String'>

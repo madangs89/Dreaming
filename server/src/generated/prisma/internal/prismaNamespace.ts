@@ -958,6 +958,7 @@ export const ReviewScalarFieldEnum = {
   is_completed: 'is_completed',
   review_results: 'review_results',
   review_count: 'review_count',
+  generation_count: 'generation_count',
   strong_areas: 'strong_areas',
   weak_areas: 'weak_areas',
   is_revision_enough: 'is_revision_enough',
@@ -970,6 +971,7 @@ export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof 
 
 export const QuestionHistoryScalarFieldEnum = {
   id: 'id',
+  generation_count: 'generation_count',
   notes_id: 'notes_id',
   review_id: 'review_id',
   expectedAnswer: 'expectedAnswer',

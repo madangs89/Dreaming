@@ -143,20 +143,12 @@ export const createNote = async (
           documents: {
             createMany: { data: fileData.map(({ notes_id, ...rest }) => rest) },
           },
-          reviews: {
-            create: {
-              topic_id: topic_id,
-              scheduled_date: getNextReviewDate(reviewRememberStatus.forgot),
-              status: ReviewStatus.scheduled,
-              user_id,
-            },
-          },
         },
         include: { documents: true, reviews: true },
       });
 
-      if (n.reviews.length > 0 && n.reviews[0].id) {
-        scheduleReviewJob(n.reviews[0].id, topic_id, user_id);
+      if (n.content && n.content.length > 2) {
+        scheduleReviewJob(n.id, topic_id, user_id, n.content);
       }
       return n;
     });
@@ -347,6 +339,9 @@ export const updateNoteContent = async (
       },
       include: { documents: true, reviews: true },
     });
+
+    scheduleReviewJob(note.id, note.topic_id, user_id, oldData.content!);
+
     return res.status(200).json({
       message: "Note content updated successfully",
       success: true,

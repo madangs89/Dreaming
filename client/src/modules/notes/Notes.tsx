@@ -10,6 +10,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createNoteOnlyTitle,
   deleteNote,
+  deleteSingleFile,
   fetchAllNotes,
   getAllDocuments,
   getSingleNote,
@@ -323,6 +324,19 @@ const Notes = () => {
     },
     onError: () => {
       toast.error("Failed To Delete Note! Please Try Again");
+    },
+  });
+
+  const deleteFileMutation = useMutation({
+    mutationFn: deleteSingleFile,
+    onSuccess: async () => {
+      toast.success("File deleted successfully!");
+      queryClient.invalidateQueries({
+        queryKey: ["documents", currentNoteId],
+      });
+    },
+    onError: () => {
+      toast.error("Failed to delete file! Please try again.");
     },
   });
 
@@ -764,7 +778,6 @@ const Notes = () => {
               documentsList.map((file) => (
                 <button
                   key={file.id}
-                  onClick={() => setPreviewFile(file)}
                   style={{
                     backgroundColor: "transparent",
                     borderColor: "transparent",
@@ -782,10 +795,14 @@ const Notes = () => {
                   <span className="flex-shrink-0">
                     {fileIcon(file.memetype, isDark)}
                   </span>
-                  <div className="min-w-0 flex-1">
+                  <div className="min-w-0 flex-1 ">
                     <h3
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPreviewFile(file);
+                      }}
                       style={{ color: noteItemInactiveTitle }}
-                      className="font-medium text-sm truncate"
+                      className="font-medium text-sm cursor-pointer truncate"
                     >
                       {file.title}
                     </h3>
@@ -797,7 +814,20 @@ const Notes = () => {
                         {/* {file.} ·{" "} */}
                         {new Date(file.createdAt).toLocaleDateString()}
                       </p>
-                      <Delete />
+
+                      <button
+                        disabled={deleteFileMutation.isPending}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteFileMutation.mutate({ id: file.id });
+                        }}
+                      >
+                        {deleteFileMutation.isPending ? (
+                          <Spinner size={16} />
+                        ) : (
+                          <Trash className="h-4 w-4 text-gray-400 transition-colors duration-200 group-hover:text-red-500" />
+                        )}
+                      </button>
                     </div>
                   </div>
                 </button>

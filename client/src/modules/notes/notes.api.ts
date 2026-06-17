@@ -96,3 +96,13 @@ export const getAllDocuments = async ({ notes_id }: { notes_id: string }) => {
   });
   return response.data.document;
 };
+
+export const deleteSingleFile = async ({ id }: { id: string }) => {
+  const response = await axios.delete<NoteSuccessResponse<null>>(
+    `${API_URL}/api/v1/documents/${id}`,
+    {
+      withCredentials: true,
+    },
+  );
+  return response.data;
+};

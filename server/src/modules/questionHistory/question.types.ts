@@ -8,6 +8,7 @@ export type QuestionHistoryBody = {
   question_type: question_type;
   question: string;
   difficulty: difficulty;
+  generation_count: number;
   createdAt?: Date;
   updatedAt?: Date;
 };

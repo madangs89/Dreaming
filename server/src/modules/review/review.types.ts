@@ -14,6 +14,7 @@ export type ReviewBody = {
   status: ReviewStatus;
   is_completed: boolean;
   review_results: reviewRememberStatus | null;
+  generation_count: number;
   is_revision_enough: boolean;
   createdAt?: Date;
   updatedAt?: Date;
