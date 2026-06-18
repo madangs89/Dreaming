@@ -71,7 +71,9 @@ const reviewWorker = new Worker<ReviewJobData>(
             },
           });
 
-          const newBlocks = JSON.parse(notesData.content!) as BlockNoteBlock[];
+          const newBlocks = JSON.parse(
+            notesData.content ?? "[]",
+          ) as BlockNoteBlock[];
 
           // If not review exists hence we are creating new
           if (!reviewData && !isNoteEmpty(newBlocks)) {
@@ -150,32 +152,123 @@ const reviewWorker = new Worker<ReviewJobData>(
           console.log(
             `Total Words: ${totalWords}, Changed Words: ${changedWords}, Percentage Change: ${percentage.toFixed(2)}%`,
           );
-          if (percentage > 10) {
-            // 1 Updating Review
-            const updatedReview = await prisma.review.update({
-              where: {
-                notes_id: notes_id,
-              },
-              data: {
-                scheduled_date: returnTomorrowDate(reviewData.scheduled_date),
-                generation_count: {
-                  increment: 1,
-                },
-              },
-            });
 
-            console.log(
-              "Review updated due to significant content change:",
-              updatedReview,
+          if (reviewData && reviewData.review_count == 1) {
+            if (percentage > 30) {
+              const updatedReview = await prisma.review.update({
+                where: {
+                  notes_id: notes_id,
+                },
+                data: {
+                  scheduled_date: getNextReviewDate(
+                    reviewRememberStatus.forgot,
+                  ),
+                  generation_count: {
+                    increment: 1,
+                  },
+                },
+              });
+
+              console.log(
+                "Review updated due to significant content change:",
+                updatedReview,
+              );
+              // 2 Pushing To questionGenerationQueue
+              await scheduleQuestionJob({
+                review_id: updatedReview.id,
+                generation_count: updatedReview.generation_count,
+                scheduled_date: updatedReview.scheduled_date,
+              });
+              return updatedReview;
+            } else if (percentage > 10) {
+              // 1 Updating Review
+              const updatedReview = await prisma.review.update({
+                where: {
+                  notes_id: notes_id,
+                },
+                data: {
+                  scheduled_date: returnTomorrowDate(reviewData.scheduled_date),
+                  generation_count: {
+                    increment: 1,
+                  },
+                },
+              });
+
+              console.log(
+                "Review updated due to significant content change:",
+                updatedReview,
+              );
+              // 2 Pushing To questionGenerationQueue
+              await scheduleQuestionJob({
+                review_id: updatedReview.id,
+                generation_count: updatedReview.generation_count,
+                scheduled_date: updatedReview.scheduled_date,
+              });
+              return updatedReview;
+            }
+          } else if (reviewData && reviewData.review_count > 1) {
+            const reviewScheduledDate = new Date(reviewData.scheduled_date);
+            const currentDate = new Date();
+
+            const diffInDays = Math.ceil(
+              (reviewScheduledDate.getTime() - currentDate.getTime()) /
+                (1000 * 60 * 60),
             );
-            // 2 Pushing To questionGenerationQueue
-            await scheduleQuestionJob({
-              review_id: updatedReview.id,
-              generation_count: updatedReview.generation_count,
-              scheduled_date: updatedReview.scheduled_date,
-            });
-            return updatedReview;
+            if (percentage > 30) {
+              const updatedReview = await prisma.review.update({
+                where: {
+                  notes_id: notes_id,
+                },
+                data: {
+                  scheduled_date: getNextReviewDate(
+                    reviewRememberStatus.forgot,
+                  ),
+                  generation_count: {
+                    increment: 1,
+                  },
+                },
+              });
+
+              // 2 Pushing To questionGenerationQueue
+              await scheduleQuestionJob({
+                review_id: updatedReview.id,
+                generation_count: updatedReview.generation_count,
+                scheduled_date: updatedReview.scheduled_date,
+              });
+              return updatedReview;
+            } else if (percentage > 10) {
+              if (diffInDays <= 48) {
+                const updatedReview = await prisma.review.update({
+                  where: {
+                    notes_id: notes_id,
+                  },
+                  data: {
+                    scheduled_date: returnTomorrowDate(
+                      reviewData.scheduled_date,
+                    ),
+                    generation_count: {
+                      increment: 1,
+                    },
+                  },
+                });
+
+                console.log(
+                  "Review updated due to significant content change:",
+                  updatedReview,
+                );
+                // 2 Pushing To questionGenerationQueue
+                await scheduleQuestionJob({
+                  review_id: updatedReview.id,
+                  generation_count: updatedReview.generation_count,
+                  scheduled_date: updatedReview.scheduled_date,
+                });
+                return updatedReview;
+              } else {
+                return reviewData;
+              }
+            }
           }
+
           break;
         default:
           break;
