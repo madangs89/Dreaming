@@ -1,3 +1,6 @@
+import type { NoteData } from "../notes/notes.type";
+import type { TopicData } from "../topic/topic.types";
+
 export type RevisionQuestion = {
   id: string;
   question: string;
@@ -10,6 +13,30 @@ export type RevisionQuestion = {
   updatedAt: Date;
 };
 
-// export type RevisionBody = {
-//   questionHistories: RevisionQuestion[];
-// };
+export type RevisionBody = {
+  id: string;
+  user_id: string;
+  notes_id: string;
+  topic_id: string;
+  scheduled_date: Date;
+  status: string;
+  is_completed: boolean;
+  generation_count: number;
+  is_revision_enough: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+  review_count?: number;
+  notes: Omit<NoteData, "documents" | "reviews">;
+  topic: Omit<TopicData, "_count">;
+};
+
+export type RevisionSuccessRes<T> = {
+  message: string;
+  success: boolean;
+  review?: T;
+};
+export type QuestionSuccessRes<T> = {
+  message: string;
+  success: boolean;
+  questions?: T;
+};

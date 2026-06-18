@@ -8,6 +8,7 @@ import { notesRouter } from "./modules/notes/notes.routes.js";
 import { documentRouter } from "./modules/document/documents.routes.js";
 import { reviewRouter } from "./modules/review/review.routes.js";
 import { bullRedis } from "./configs/redis.js";
+import { questionHistoryRouter } from "./modules/questionHistory/question.routes.js";
 
 const app = express();
 
@@ -19,7 +20,7 @@ app.use(
     origin: FRONTEND_URL,
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS" , "PATCH"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   }),
 );
 
@@ -34,6 +35,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/notes", notesRouter);
 app.use("/api/v1/documents", documentRouter);
 app.use("/api/v1/reviews", reviewRouter);
+app.use("/api/v1/questionhistory", questionHistoryRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

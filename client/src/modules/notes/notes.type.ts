@@ -9,19 +9,6 @@ export type DocumentData = {
   updatedAt: Date | string;
 };
 
-export type ReviewData = {
-  id: string;
-  notes_id: string;
-  topic_id: string;
-  scheduled_date: Date | string;
-  status: string;
-  is_completed: boolean;
-  review_results?: string;
-  is_revision_enough: boolean;
-  createdAt: Date | string;
-  updatedAt: Date | string;
-};
-
 export type NoteData = {
   id: string;
   title: string;
@@ -30,7 +17,6 @@ export type NoteData = {
   createdAt: Date | string;
   updatedAt: Date | string;
   documents: DocumentData[] | [];
-  reviews: ReviewData[] | [];
   contentTimeStamp: Date | string;
   titleTimeStamp: Date | string;
 };

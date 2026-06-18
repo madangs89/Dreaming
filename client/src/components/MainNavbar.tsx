@@ -26,7 +26,10 @@ const MainNavbar = () => {
           ))}
         </div>
 
-        <div className="flex items-center gap-4">
+        <div
+        
+        onClick={()=>navigate("/revision")}
+        className="flex items-center gap-4">
           <button
             className="
         w-11 h-11

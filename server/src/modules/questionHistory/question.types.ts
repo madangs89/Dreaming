@@ -1,4 +1,4 @@
-import { question_type , difficulty } from "../../generated/prisma/enums.js";
+import { question_type, difficulty } from "../../generated/prisma/enums.js";
 
 export type QuestionHistoryBody = {
   id: string;
@@ -11,4 +11,16 @@ export type QuestionHistoryBody = {
   generation_count: number;
   createdAt?: Date;
   updatedAt?: Date;
+};
+
+export type QuestionHistorySuccessResponse<T> = {
+  success: true;
+  message: string;
+  questions?: T;
+};
+
+export type QuestionHistoryErrorResponse = {
+  success: false;
+  message: string;
+  errors?: unknown;
 };

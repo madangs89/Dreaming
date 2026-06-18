@@ -1,50 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../hooks/useTheme";
-
-// ---------------------------------------------------------------------------
-// STATIC / MOCK DATA — replace with your reviews query (GET /reviews?due=today etc.)
-// A user can have multiple reviews due, so this is an array, not a single object.
-// ---------------------------------------------------------------------------
-type ReviewItem = {
-  id: string;
-  topicTitle: string;
-  noteTitle: string;
-  scheduledDate: Date;
-  reviewCount: number;
-};
-
-const MOCK_REVIEWS: ReviewItem[] = [
-  {
-    id: "review_1",
-    topicTitle: "React",
-    noteTitle: "Hooks Deep Dive",
-    scheduledDate: new Date(), // due today
-    reviewCount: 1,
-  },
-  {
-    id: "review_2",
-    topicTitle: "System Design",
-    noteTitle: "Load Balancing Strategies",
-    scheduledDate: new Date(), // due today
-    reviewCount: 2,
-  },
-  {
-    id: "review_3",
-    topicTitle: "DSA",
-    noteTitle: "Binary Search Variants",
-    scheduledDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // due in 2 days
-    reviewCount: 1,
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { getAllTodayRevisions } from "./revision.api";
+import type { RevisionBody } from "./revision.types";
+import Spinner from "../../components/Spinner";
+import toast from "react-hot-toast";
 
 const isDueToday = (date: Date) =>
   new Date(date).toDateString() === new Date().toDateString();
 
-const ReviewCard = ({ review }: { review: ReviewItem }) => {
+const ReviewCard = ({ review }: { review: RevisionBody }) => {
   const navigate = useNavigate();
-
-  // TODO: replace with shared/lifted theme state instead of re-reading localStorage per card
   const [theme] = React.useState<"light" | "dark">(() => {
     const stored = localStorage.getItem("theme");
     return stored === "dark" ? "dark" : "light";
@@ -62,10 +29,10 @@ const ReviewCard = ({ review }: { review: ReviewItem }) => {
     pillText,
   } = useTheme(theme);
 
-  const due = isDueToday(review.scheduledDate);
+  const due = isDueToday(review.scheduled_date);
 
   const handleStart = () => {
-    navigate(`/revision/${review.id}/attempt`);
+    navigate(`/revision/${review.id}/${review.topic.id}/attempt`);
   };
 
   return (
@@ -79,11 +46,11 @@ const ReviewCard = ({ review }: { review: ReviewItem }) => {
           style={{ backgroundColor: pillBg, color: pillText }}
           className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium tracking-wide uppercase"
         >
-          Topic: {review.topicTitle}
+          Topic: {review?.topic?.title}
         </span>
 
         <span style={{ color: subtleText }} className="text-xs font-medium">
-          Review {review.reviewCount}
+          Review {review?.review_count}
         </span>
       </div>
 
@@ -92,7 +59,7 @@ const ReviewCard = ({ review }: { review: ReviewItem }) => {
         style={{ color: titleColor }}
         className="text-2xl sm:text-3xl font-bold leading-snug mb-2"
       >
-        {review.noteTitle}
+        {review?.notes.title}
       </h2>
 
       {/* Status line */}
@@ -100,7 +67,7 @@ const ReviewCard = ({ review }: { review: ReviewItem }) => {
         {due
           ? "Review due today"
           : `Review scheduled for ${new Date(
-              review.scheduledDate,
+              review.scheduled_date,
             ).toLocaleDateString()}`}
       </p>
 
@@ -123,9 +90,13 @@ const ReviewCard = ({ review }: { review: ReviewItem }) => {
 };
 
 const RevisionPage = () => {
+  const revisionQuery = useQuery({
+    queryKey: ["today_revision"],
+    queryFn: getAllTodayRevisions,
+    retry: 3,
+  });
 
-  // const { data: reviews = [] } = useQuery({ queryKey: ["reviews", "due"], queryFn: fetchDueReviews });
-  const reviews: ReviewItem[] = MOCK_REVIEWS;
+  const reviews: RevisionBody[] = revisionQuery.data || [];
 
   const [theme] = React.useState<"light" | "dark">(() => {
     const stored = localStorage.getItem("theme");
@@ -134,12 +105,15 @@ const RevisionPage = () => {
 
   const { bg, subtleText, titleColor } = useTheme(theme);
 
+  useEffect(() => {
+    if (revisionQuery.isError) {
+      toast.error("");
+    }
+  }, [revisionQuery.isError]);
+
   return (
-    <div
-      style={{ backgroundColor: bg }}
-      className="h-screen w-screen px-4 py-10"
-    >
-      <div className="w-full mx-auto">
+    <div style={{ backgroundColor: bg }} className="h-screen w-screen ">
+      <div className="w-full mx-auto lg:px-12 p-4">
         <h1
           style={{ color: titleColor }}
           className="text-xl font-bold mb-6 px-1"
@@ -147,7 +121,11 @@ const RevisionPage = () => {
           Reviews
         </h1>
 
-        {reviews.length === 0 ? (
+        {revisionQuery.isLoading ? (
+          <div className="flex items-center justify-center w-full h-[80vh]">
+            <Spinner />
+          </div>
+        ) : reviews.length === 0 ? (
           <p style={{ color: subtleText }} className="px-1 text-sm">
             No reviews due right now.
           </p>

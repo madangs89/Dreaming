@@ -21,30 +21,28 @@ Requirements:
    * Edge cases
    * Real-world scenarios
 
-5. Generate both text and coding questions when appropriate.
+5. Avoid repeating or closely paraphrasing any previous questions provided in the context.
 
-6. Avoid repeating or closely paraphrasing any previous questions provided in the context.
+6. Focus more heavily on weak concepts when they are provided.
 
-7. Focus more heavily on weak concepts when they are provided.
+7. Do not ask questions whose answers are explicitly copied from the notes.
 
-8. Do not ask questions whose answers are explicitly copied from the notes.
+8. Force the learner to explain concepts in their own words.
 
-9. Force the learner to explain concepts in their own words.
-
-10. Coding questions should be short interview-style exercises, not full LeetCode problems.
+9. Questions should encourage reasoning, explanation, and decision-making rather than recalling definitions.
 
 Question distribution:
 
-* 7 text questions
-* 3 coding questions
+* 10 text questions
 
 Difficulty distribution:
+
 * 3 easy
 * 4 medium
 * 3 hard
 
 Question Type:
-* coding
+
 * text
 
 Return ONLY a JSON array.
@@ -54,7 +52,7 @@ Each question object MUST contain:
 {
   "question": "string",
   "difficulty": "easy | medium | hard",
-  "question_type": "text | coding",
+  "question_type": "text",
   "expectedAnswer": "string"
 }
 

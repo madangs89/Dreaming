@@ -1,58 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { ChevronLeft, Mic, RefreshCcw, Square } from "lucide-react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
-import { Mic, Square, ChevronLeft, FileText, Paperclip } from "lucide-react";
-import { useTheme } from "../../hooks/useTheme";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-
-// ---------------------------------------------------------------------------
-// STATIC / MOCK DATA — replace with real QuestionHistory + Note + Document data
-// ---------------------------------------------------------------------------
-const MOCK_QUESTIONS = [
-  {
-    id: "q1",
-    question: "What problem does useEffect solve in React?",
-    expectedAnswer:
-      "useEffect lets you run side effects (data fetching, subscriptions, DOM mutations) after render, synchronized to specific dependency changes, replacing lifecycle methods from class components.",
-    difficulty: "easy",
-  },
-  {
-    id: "q2",
-    question: "How do props differ from state?",
-    expectedAnswer:
-      "Props are read-only values passed from a parent to configure a child component. State is local, mutable data owned by a component that can change over time and triggers re-renders.",
-    difficulty: "easy",
-  },
-  {
-    id: "q3",
-    question:
-      "When would you reach for useMemo instead of recalculating a value directly?",
-    expectedAnswer:
-      "useMemo caches an expensive computation between renders, recalculating only when its dependencies change — useful for avoiding repeated expensive work, not for general optimization.",
-    difficulty: "medium",
-  },
-  {
-    id: "q4",
-    question: "What is the purpose of useCallback?",
-    expectedAnswer:
-      "useCallback memoizes a function reference so it doesn't get recreated on every render, which matters when passing callbacks to memoized children or as effect dependencies.",
-    difficulty: "medium",
-  },
-];
-
-const MOCK_NOTE_CONTENT = `React Hooks Deep Dive
-
-useEffect runs after the DOM updates and lets you synchronize a component with an external system (subscriptions, fetches, timers). Dependency array controls when it re-runs.
-
-Props flow down from parent to child and are immutable from the child's perspective. State is local and owned by the component itself.
-
-useMemo and useCallback both exist to skip expensive work between renders — useMemo memoizes a value, useCallback memoizes a function.`;
-
-const MOCK_DOCUMENTS = [
-  { id: "d1", title: "react-hooks-cheatsheet.pdf", memetype: "pdf" },
-  { id: "d2", title: "useEffect-diagram.png", memetype: "image" },
-];
+import Spinner from "../../components/Spinner";
+import { useTheme } from "../../hooks/useTheme";
+import { getAllTodayQuestions } from "./revision.api";
 
 // Mock result — TODO: replace with real AI evaluation response
 const MOCK_RESULT = {
@@ -61,11 +17,14 @@ const MOCK_RESULT = {
   weakAreas: ["useMemo", "useCallback"],
 };
 
-type Stage = "questions" | "results" | "notes";
+type Stage = "questions" | "results";
 
 const RevisionAttempt = () => {
   const navigate = useNavigate();
-  const { reviewId } = useParams<{ reviewId: string }>();
+  const { reviewId, topicId } = useParams<{
+    reviewId: string;
+    topicId: string;
+  }>();
 
   const [theme] = useState<"light" | "dark">(() => {
     const stored = localStorage.getItem("theme");
@@ -79,6 +38,21 @@ const RevisionAttempt = () => {
   const [answeredIds, setAnsweredIds] = useState<Set<string>>(new Set());
 
   const [answers, setAnswers] = useState<Record<string, string>>({});
+
+  const questionsQuery = useQuery({
+    queryKey: ["revision-questions", reviewId],
+    queryFn: () => getAllTodayQuestions({ review_Id: reviewId! }),
+    enabled: !!reviewId,
+    retry: 3,
+  });
+
+  const revisionQuestions = questionsQuery.data || [];
+
+  useEffect(() => {
+    if (questionsQuery.isError) {
+      toast.error("Unable To Fetch Questions!! Please Try again Later");
+    }
+  }, [questionsQuery.isError]);
 
   const {
     transcript,
@@ -110,10 +84,15 @@ const RevisionAttempt = () => {
     dividerColor,
   } = useTheme(theme);
 
-  const totalQuestions = MOCK_QUESTIONS.length;
-  const currentQuestion = MOCK_QUESTIONS[currentIndex];
+  const totalQuestions = revisionQuestions.length;
+  const currentQuestion = revisionQuestions[currentIndex];
   const isLastQuestion = currentIndex === totalQuestions - 1;
-  const hasAnsweredCurrent = answeredIds.has(currentQuestion?.id);
+  const hasAnsweredCurrent = currentQuestion
+    ? answeredIds.has(currentQuestion.id)
+    : false;
+  const noQuestionsAvailable =
+    !questionsQuery.isLoading &&
+    (questionsQuery.isError || revisionQuestions.length === 0);
 
   const handleToggleRecording = async () => {
     if (!isRecording) {
@@ -146,10 +125,6 @@ const RevisionAttempt = () => {
     }
   };
 
-  const handleBackToTopic = () => {
-    navigate(`/revision/${reviewId}`);
-  };
-
   if (!browserSupportsSpeechRecognition) {
     alert(
       "Your browser does not support speech recognition. Please use a compatible browser.",
@@ -157,10 +132,76 @@ const RevisionAttempt = () => {
     return null;
   }
 
-  // -------------------------------------------------------------------------
-  // STAGE: QUESTIONS
-  // -------------------------------------------------------------------------
+  if (questionsQuery.isLoading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+  if (noQuestionsAvailable) {
+    return (
+      <div
+        style={{ backgroundColor: bg }}
+        className="min-h-screen w-full flex items-center justify-center px-4 py-10"
+      >
+        <div className="w-full max-w-md">
+          <div
+            style={{ backgroundColor: cardBg, borderColor: cardBorder }}
+            className="rounded-2xl border p-8 shadow-sm flex flex-col items-center text-center gap-4"
+          >
+            <div
+              style={{ backgroundColor: dangerBg, color: dangerColor }}
+              className="h-14 w-14 rounded-full flex items-center justify-center"
+            >
+              <RefreshCcw className="h-6 w-6" />
+            </div>
+            <div>
+              <h2
+                style={{ color: titleColor }}
+                className="text-lg font-semibold mb-1.5"
+              >
+                Unable to fetch questions
+              </h2>
+              <p style={{ color: subtleText }} className="text-sm">
+                {questionsQuery.isError
+                  ? "Something went wrong while loading today's revision questions."
+                  : "There are no revision questions available right now."}
+              </p>
+            </div>
+            <button
+              onClick={() => questionsQuery.refetch()}
+              disabled={questionsQuery.isRefetching}
+              style={{
+                backgroundColor: primaryBtnBg,
+                color: primaryBtnText,
+                opacity: questionsQuery.isRefetching ? 0.6 : 1,
+              }}
+              onMouseEnter={(e) => {
+                if (!questionsQuery.isRefetching)
+                  e.currentTarget.style.backgroundColor = primaryBtnHover;
+              }}
+              onMouseLeave={(e) => {
+                if (!questionsQuery.isRefetching)
+                  e.currentTarget.style.backgroundColor = primaryBtnBg;
+              }}
+              className="w-full rounded-xl py-3 font-semibold text-sm transition-colors duration-200 flex items-center justify-center gap-2 disabled:cursor-not-allowed"
+            >
+              <RefreshCcw
+                className={`h-4 w-4 ${questionsQuery.isRefetching ? "animate-spin" : ""}`}
+              />
+              {questionsQuery.isRefetching ? "Regenerating…" : "Regenerate"}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (stage === "questions") {
+    const currentTranscriptText =
+      transcript || answers[currentQuestion.id] || "";
+
     return (
       <div
         style={{ backgroundColor: bg }}
@@ -207,7 +248,7 @@ const RevisionAttempt = () => {
           {/* Question card */}
           <div
             style={{ backgroundColor: cardBg, borderColor: cardBorder }}
-            className="rounded-2xl border p-6 sm:p-8 shadow-sm"
+            className="rounded-2xl border p-6 sm:p-8 shadow-sm w-full h-full"
           >
             <span
               style={{ backgroundColor: pillBg, color: pillText }}
@@ -216,12 +257,14 @@ const RevisionAttempt = () => {
               {currentQuestion.difficulty}
             </span>
 
-            <h2
-              style={{ color: titleColor }}
-              className="text-xl sm:text-2xl font-semibold leading-snug mb-10"
-            >
-              {currentQuestion.question}
-            </h2>
+            <div className="w-full h-44 overflow-y-scroll">
+              <h2
+                style={{ color: titleColor }}
+                className="text-xl sm:text-2xl font-semibold leading-snug mb-10"
+              >
+                {currentQuestion.question}
+              </h2>
+            </div>
 
             {/* Voice input — no text input by design */}
             <div className="flex flex-col items-center gap-4 mb-8">
@@ -230,7 +273,7 @@ const RevisionAttempt = () => {
                 style={{
                   backgroundColor: isRecording ? recordActiveBg : recordIdleBg,
                 }}
-                className="h-20 w-20 rounded-full flex items-center justify-center transition-colors duration-200 shadow-md"
+                className="h-20 w-20 rounded-full flex items-center justify-center transition-colors duration-200 shadow-md shrink-0"
                 aria-label={isRecording ? "Stop recording" : "Start recording"}
               >
                 {isRecording ? (
@@ -246,9 +289,23 @@ const RevisionAttempt = () => {
                     ? "Answer recorded — tap to re-record"
                     : "Tap to answer by voice"}
               </p>
-              <p style={{ color: subtleText }} className="text-sm">
-                {transcript ? transcript : answers[currentQuestion.id]}
-              </p>
+
+              {/* Scrollable, height-capped transcript so long answers
+                  don't blow up the card's height. Auto-scrolls to the
+                  latest words while actively recording. */}
+              {currentTranscriptText && (
+                <div
+                  style={{ backgroundColor: progressTrack, borderColor: cardBorder }}
+                  className="w-full max-h-28 overflow-y-auto rounded-xl border px-4 py-3"
+                >
+                  <p
+                    style={{ color: subtleText }}
+                    className="text-sm leading-relaxed whitespace-pre-wrap break-words"
+                  >
+                    {currentTranscriptText}
+                  </p>
+                </div>
+              )}
             </div>
 
             <button
@@ -277,9 +334,6 @@ const RevisionAttempt = () => {
     );
   }
 
-  // -------------------------------------------------------------------------
-  // STAGE: RESULTS
-  // -------------------------------------------------------------------------
   if (stage === "results") {
     return (
       <div
@@ -350,7 +404,7 @@ const RevisionAttempt = () => {
             </div>
 
             <button
-              onClick={() => setStage("notes")}
+              onClick={() => navigate(`/notes/${topicId}`)}
               style={{ backgroundColor: primaryBtnBg, color: primaryBtnText }}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.backgroundColor = primaryBtnHover)
@@ -367,136 +421,6 @@ const RevisionAttempt = () => {
       </div>
     );
   }
-
-  // -------------------------------------------------------------------------
-  // STAGE: NOTES (original content + uploaded documents + expected answers)
-  // -------------------------------------------------------------------------
-  return (
-    <div style={{ backgroundColor: bg }} className="min-h-screen w-full">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-8">
-          <button
-            onClick={() => setStage("results")}
-            style={{ color: subtleText }}
-            className="flex items-center justify-center h-8 w-8 rounded-full transition-colors hover:opacity-70"
-            aria-label="Back to results"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </button>
-          <h1 style={{ color: titleColor }} className="text-2xl font-bold">
-            Review Notes
-          </h1>
-        </div>
-
-        {/* Original note content */}
-        <section className="mb-8">
-          <div className="flex items-center gap-2 mb-3">
-            <FileText className="h-4 w-4" style={{ color: subtleText }} />
-            <h2
-              style={{ color: subtleText }}
-              className="text-xs font-semibold uppercase tracking-wide"
-            >
-              Original Note Content
-            </h2>
-          </div>
-          <div
-            style={{ backgroundColor: cardBg, borderColor: cardBorder }}
-            className="rounded-2xl border p-5 sm:p-6"
-          >
-            <p
-              style={{ color: titleColor }}
-              className="text-sm leading-relaxed whitespace-pre-line"
-            >
-              {MOCK_NOTE_CONTENT}
-            </p>
-          </div>
-        </section>
-
-        {/* Uploaded documents */}
-        <section className="mb-8">
-          <div className="flex items-center gap-2 mb-3">
-            <Paperclip className="h-4 w-4" style={{ color: subtleText }} />
-            <h2
-              style={{ color: subtleText }}
-              className="text-xs font-semibold uppercase tracking-wide"
-            >
-              Uploaded Documents
-            </h2>
-          </div>
-          <div
-            style={{ backgroundColor: cardBg, borderColor: cardBorder }}
-            className="rounded-2xl border divide-y"
-          >
-            {MOCK_DOCUMENTS.map((doc) => (
-              <div
-                key={doc.id}
-                style={{ borderColor: dividerColor }}
-                className="flex items-center gap-3 p-4"
-              >
-                <FileText
-                  className="h-4 w-4 flex-shrink-0"
-                  style={{ color: subtleText }}
-                />
-                <span
-                  style={{ color: titleColor }}
-                  className="text-sm truncate"
-                >
-                  {doc.title}
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Questions + expected answers */}
-        <section className="mb-8">
-          <h2
-            style={{ color: subtleText }}
-            className="text-xs font-semibold uppercase tracking-wide mb-3"
-          >
-            Expected Answers
-          </h2>
-          <div className="flex flex-col gap-3">
-            {MOCK_QUESTIONS.map((q, idx) => (
-              <div
-                key={q.id}
-                style={{ backgroundColor: cardBg, borderColor: cardBorder }}
-                className="rounded-2xl border p-5"
-              >
-                <p
-                  style={{ color: titleColor }}
-                  className="text-sm font-semibold mb-2"
-                >
-                  {idx + 1}. {q.question}
-                </p>
-                <p
-                  style={{ color: subtleText }}
-                  className="text-sm leading-relaxed"
-                >
-                  {q.expectedAnswer}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <button
-          onClick={handleBackToTopic}
-          style={{ backgroundColor: primaryBtnBg, color: primaryBtnText }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.backgroundColor = primaryBtnHover)
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.backgroundColor = primaryBtnBg)
-          }
-          className="w-full rounded-xl py-3.5 font-semibold text-base transition-colors duration-200 mb-4"
-        >
-          Done
-        </button>
-      </div>
-    </div>
-  );
 };
 
 export default RevisionAttempt;

@@ -80,7 +80,7 @@ const App = () => {
             }
           />
           <Route
-            path="/revision/:reviewId/attempt"
+            path="/revision/:reviewId/:topicId/attempt"
             element={
               <Protected>
                 <RevisionAttempt />
