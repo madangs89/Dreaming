@@ -1,9 +1,9 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const MainNavbar = () => {
   const location = useLocation();
-
+  const navigate = useNavigate();
   const isDashboard = location.pathname === "/dashboard";
   return (
     <nav className="w-screen bg-white h-fit flex flex-col overflow-hidden  fixed top-0  right-0">
@@ -14,6 +14,11 @@ const MainNavbar = () => {
           {["Topics", "Reviews"].map((item) => (
             <span
               key={item}
+              onClick={() => {
+                if (item == "Reviews") {
+                  navigate("/revision");
+                }
+              }}
               className="ml-8 lg:block hidden text-semibold text-[17px] text-[#0c0c0c] hover:text-[#666] transition-colors duration-300 cursor-pointer"
             >
               {item}

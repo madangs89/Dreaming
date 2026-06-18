@@ -13,6 +13,8 @@ import { useAppDispatch } from "./app/hook";
 import { clearAuthenticated, setAuthenticated } from "./app/slice/authSlice";
 import Spinner from "./components/Spinner";
 import Notes from "./modules/notes/Notes";
+import RevisionPage from "./modules/revision/RevisionPage";
+import RevisionAttempt from "./modules/revision/Revisionattempt";
 
 const App = () => {
   const navigate = useNavigate();
@@ -38,8 +40,6 @@ const App = () => {
       navigate("/");
     }
   }, [authQuery.isError, authQuery.isSuccess]);
-
-
 
   if (authQuery.isLoading) {
     return (
@@ -70,6 +70,24 @@ const App = () => {
           >
             <Route path="/dashboard" element={<Topic />} />
           </Route>
+
+          <Route
+            path="/revision"
+            element={
+              <Protected>
+                <RevisionPage />
+              </Protected>
+            }
+          />
+          <Route
+            path="/revision/:reviewId/attempt"
+            element={
+              <Protected>
+                <RevisionAttempt />
+              </Protected>
+            }
+          />
+
           <Route
             path="/notes/:topicId"
             element={
