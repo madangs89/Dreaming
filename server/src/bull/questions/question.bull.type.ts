@@ -14,3 +14,11 @@ export type QuestionJobData = {
   generation_count: number;
   scheduled_date: Date;
 };
+
+export const GenerationWorthinessSchema = z.object({
+  isWorthGeneratingQuiz: z.boolean(),
+});
+
+export type GenerationWorthinessData = z.infer<
+  typeof GenerationWorthinessSchema
+>;

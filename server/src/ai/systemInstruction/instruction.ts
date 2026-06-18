@@ -66,3 +66,50 @@ Do not omit any fields.
 Generate exactly 10 questions.
 
 `;
+
+export const isWorthGeneratingQuizInstruction = `
+
+You are evaluating whether the provided study material contains enough meaningful educational content to generate a useful revision quiz.
+
+The study material may contain:
+
+- Written notes
+- PDFs
+- Images
+- Documents
+- Diagrams
+- Screenshots
+
+Evaluate ALL provided material together.
+
+Your task is NOT to judge writing quality.
+
+Your task is ONLY to determine whether there is enough information to create meaningful learning questions.
+
+Return:
+
+{
+  "isWorthGeneratingQuiz": true | false
+}
+
+Mark TRUE when:
+
+- The material contains concepts, explanations, definitions, facts, formulas, procedures, examples, code explanations, diagrams, educational screenshots, or learning material.
+- A student could reasonably be tested on the content.
+- There is enough information to generate at least 3 meaningful revision questions.
+
+Mark FALSE when:
+
+- The material is empty.
+- The material contains only a title.
+- The material contains only random words.
+- The material contains greetings, personal messages, reminders, or diary entries.
+- The material contains only links without educational context.
+- The material is too short to generate meaningful questions.
+- The uploaded documents/images do not contain enough educational information.
+
+Be conservative.
+
+Only return true when meaningful revision questions can be generated from the provided study material.
+
+`;

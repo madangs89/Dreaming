@@ -1,5 +1,3 @@
-
-
 import { ThinkingLevel } from "@google/genai/web";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import * as z from "zod";
@@ -8,10 +6,18 @@ import { prisma } from "../../configs/prisma.js";
 import { QuestionHistoryBody } from "../../modules/questionHistory/question.types.js";
 import { ReviewBody } from "../../modules/review/review.types.js";
 import { DocumentBody } from "../../modules/document/documents.type.js";
-import { LLMQuestionData, LLMQuestionSchema } from "./question.bull.type.js";
-import { scheduleReviewInstruction } from "../../ai/systemInstruction/instruction.js";
+import {
+  GenerationWorthinessData,
+  GenerationWorthinessSchema,
+  LLMQuestionData,
+  LLMQuestionSchema,
+} from "./question.bull.type.js";
+import {
+  isWorthGeneratingQuizInstruction,
+  scheduleReviewInstruction,
+} from "../../ai/systemInstruction/instruction.js";
 import { ai } from "../../configs/google.js";
-
+import { getDocumentData } from "../review/review.helpers.js";
 
 async function fileToGenerativePart(url: string, explicitMimeType?: string) {
   // Look up by URL first. If that fails, fallback to the explicit type from your DB.
@@ -132,9 +138,6 @@ ${
         contents,
         config: {
           systemInstruction: scheduleReviewInstruction,
-          // thinkingConfig: {
-          //   thinkingLevel: ThinkingLevel.HIGH,
-          // },
           responseMimeType: "application/json",
           responseSchema: {
             type: "ARRAY",
@@ -172,6 +175,80 @@ ${
       const rawData = JSON.parse(response.text);
 
       const parsedData = z.array(LLMQuestionSchema).safeParse(rawData);
+
+      if (!parsedData.success) {
+        console.error(parsedData.error.flatten());
+        throw new Error("Invalid response schema");
+      }
+      return parsedData.data;
+    } catch (error) {
+      console.error(
+        `Question generation failed (attempt ${attempt}/3):`,
+        error,
+      );
+
+      if (attempt === 3) {
+        throw error;
+      }
+    }
+  }
+
+  throw new Error("Failed to generate questions");
+};
+
+export const llmCheckContentWorthToGenerateQuiz = async (
+  content: string,
+  documentData: DocumentBody[],
+): Promise<GenerationWorthinessData> => {
+  let prompt = `
+  Study Notes:
+  ${content || "No notes available"}
+  `;
+
+  const contents: any[] = [{ text: prompt }];
+
+  if (documentData.length > 0) {
+    const fileParts = await Promise.allSettled(
+      documentData.map((document) =>
+        fileToGenerativePart(document.url, document.memetype),
+      ),
+    );
+
+    contents.push(
+      ...fileParts
+        .filter(
+          (result): result is PromiseFulfilledResult<any> =>
+            result.status === "fulfilled",
+        )
+        .map((result) => result.value),
+    );
+  }
+
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash-lite",
+        contents,
+        config: {
+          systemInstruction: isWorthGeneratingQuizInstruction,
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: "OBJECT",
+            properties: {
+              isWorthGeneratingQuiz: { type: "BOOLEAN" },
+            },
+            required: ["isWorthGeneratingQuiz"],
+          },
+        },
+      });
+
+      if (!response.text) {
+        throw new Error("Empty response from Gemini");
+      }
+
+      const rawData = JSON.parse(response.text);
+
+      const parsedData = GenerationWorthinessSchema.safeParse(rawData);
 
       if (!parsedData.success) {
         console.error(parsedData.error.flatten());
