@@ -289,14 +289,13 @@ const RevisionAttempt = () => {
                     ? "Answer recorded — tap to re-record"
                     : "Tap to answer by voice"}
               </p>
-
-              {/* Scrollable, height-capped transcript so long answers
-                  don't blow up the card's height. Auto-scrolls to the
-                  latest words while actively recording. */}
               {currentTranscriptText && (
                 <div
-                  style={{ backgroundColor: progressTrack, borderColor: cardBorder }}
-                  className="w-full max-h-28 overflow-y-auto rounded-xl border px-4 py-3"
+                  style={{
+                    backgroundColor: progressTrack,
+                    borderColor: cardBorder,
+                  }}
+                  className="w-full max-h-20 overflow-y-auto rounded-xl border px-4 py-3"
                 >
                   <p
                     style={{ color: subtleText }}
