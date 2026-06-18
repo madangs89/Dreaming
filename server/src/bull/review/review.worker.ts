@@ -104,6 +104,11 @@ const reviewWorker = new Worker<ReviewJobData>(
           if (reviewData && isNoteEmpty(newBlocks)) {
             console.log("New notes content is empty, deleting review.");
             // 1 Deleting Review
+
+            const deleteQuestions = await prisma.questionHistory.deleteMany({
+              where: { review_id: reviewData.id },
+            });
+            console.log("Deleted questions:", deleteQuestions);
             const deletedReview = await prisma.review.delete({
               where: {
                 notes_id: notes_id,
