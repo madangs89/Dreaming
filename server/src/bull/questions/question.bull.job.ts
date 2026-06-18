@@ -17,7 +17,7 @@ export const scheduleQuestionJob = async ({
       scheduled_date,
     },
     {
-      delay: delay,
+      delay: 0,
     },
   );
 };
