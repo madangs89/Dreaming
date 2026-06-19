@@ -40,3 +40,20 @@ export type QuestionSuccessRes<T> = {
   success: boolean;
   questions?: T;
 };
+
+export type RevisionAttemptBody = {
+  id: string;
+  review_id: string;
+  status: StringConstructor;
+  score?: number;
+  rememberStatus?: string;
+  strong_areas: string[];
+  weak_areas: string[];
+  createdAt: Date;
+};
+
+export type RevisionAttemptSuccessRes<T> = {
+  message: string;
+  success: boolean;
+  attempt?: T;
+};

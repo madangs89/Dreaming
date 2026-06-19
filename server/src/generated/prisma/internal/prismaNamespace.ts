@@ -389,7 +389,8 @@ export const ModelName = {
   Note: 'Note',
   Document: 'Document',
   review: 'review',
-  QuestionHistory: 'QuestionHistory'
+  QuestionHistory: 'QuestionHistory',
+  ReviewAttempt: 'ReviewAttempt'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -405,7 +406,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "topic" | "note" | "document" | "review" | "questionHistory"
+    modelProps: "user" | "topic" | "note" | "document" | "review" | "questionHistory" | "reviewAttempt"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -853,6 +854,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ReviewAttempt: {
+      payload: Prisma.$ReviewAttemptPayload<ExtArgs>
+      fields: Prisma.ReviewAttemptFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ReviewAttemptFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewAttemptPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ReviewAttemptFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewAttemptPayload>
+        }
+        findFirst: {
+          args: Prisma.ReviewAttemptFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewAttemptPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ReviewAttemptFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewAttemptPayload>
+        }
+        findMany: {
+          args: Prisma.ReviewAttemptFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewAttemptPayload>[]
+        }
+        create: {
+          args: Prisma.ReviewAttemptCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewAttemptPayload>
+        }
+        createMany: {
+          args: Prisma.ReviewAttemptCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ReviewAttemptCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewAttemptPayload>[]
+        }
+        delete: {
+          args: Prisma.ReviewAttemptDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewAttemptPayload>
+        }
+        update: {
+          args: Prisma.ReviewAttemptUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewAttemptPayload>
+        }
+        deleteMany: {
+          args: Prisma.ReviewAttemptDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ReviewAttemptUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ReviewAttemptUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewAttemptPayload>[]
+        }
+        upsert: {
+          args: Prisma.ReviewAttemptUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewAttemptPayload>
+        }
+        aggregate: {
+          args: Prisma.ReviewAttemptAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateReviewAttempt>
+        }
+        groupBy: {
+          args: Prisma.ReviewAttemptGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReviewAttemptGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ReviewAttemptCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReviewAttemptCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -983,6 +1058,20 @@ export const QuestionHistoryScalarFieldEnum = {
 } as const
 
 export type QuestionHistoryScalarFieldEnum = (typeof QuestionHistoryScalarFieldEnum)[keyof typeof QuestionHistoryScalarFieldEnum]
+
+
+export const ReviewAttemptScalarFieldEnum = {
+  id: 'id',
+  review_id: 'review_id',
+  status: 'status',
+  score: 'score',
+  rememberStatus: 'rememberStatus',
+  strong_areas: 'strong_areas',
+  weak_areas: 'weak_areas',
+  createdAt: 'createdAt'
+} as const
+
+export type ReviewAttemptScalarFieldEnum = (typeof ReviewAttemptScalarFieldEnum)[keyof typeof ReviewAttemptScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1149,6 +1238,20 @@ export type ListEnumdifficultyFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 
 
 /**
+ * Reference to a field of type 'AttemptStatus'
+ */
+export type EnumAttemptStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AttemptStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'AttemptStatus[]'
+ */
+export type ListEnumAttemptStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AttemptStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -1277,6 +1380,7 @@ export type GlobalOmitConfig = {
   document?: Prisma.DocumentOmit
   review?: Prisma.reviewOmit
   questionHistory?: Prisma.QuestionHistoryOmit
+  reviewAttempt?: Prisma.ReviewAttemptOmit
 }
 
 /* Types for Logging */

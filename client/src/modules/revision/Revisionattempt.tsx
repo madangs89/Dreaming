@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ChevronLeft, Mic, RefreshCcw, Square } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import SpeechRecognition, {
@@ -8,7 +8,8 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import Spinner from "../../components/Spinner";
 import { useTheme } from "../../hooks/useTheme";
-import { getAllTodayQuestions } from "./revision.api";
+import { getAllTodayQuestions, submitRevisionAttempt } from "./revision.api";
+import type { RevisionAttemptBody } from "./revision.types";
 
 // Mock result — TODO: replace with real AI evaluation response
 const MOCK_RESULT = {
@@ -38,6 +39,12 @@ const RevisionAttempt = () => {
   const [answeredIds, setAnsweredIds] = useState<Set<string>>(new Set());
 
   const [answers, setAnswers] = useState<Record<string, string>>({});
+
+  const [resultStageLoading, setResultStageLoading] = useState<boolean>(false);
+  const [resultStageResults, setResultStageResults] =
+    useState<RevisionAttemptBody | null>(null);
+
+  const attemptIdRef = useRef<string | null>(null);
 
   const questionsQuery = useQuery({
     queryKey: ["revision-questions", reviewId],
@@ -107,18 +114,42 @@ const RevisionAttempt = () => {
     } else {
       SpeechRecognition.stopListening();
       setIsRecording(false);
-      setAnsweredIds((prev) => new Set([...prev, currentQuestion.id]));
-      setAnswers((prev) => ({
-        ...prev,
-        [currentQuestion.id]: transcript,
-      }));
+      if (transcript && transcript.trim() !== "") {
+        setAnsweredIds((prev) => new Set([...prev, currentQuestion.id]));
+        setAnswers((prev) => ({
+          ...prev,
+          [currentQuestion.id]: transcript,
+        }));
+      }
     }
   };
 
+  const revisionAttemptMutation = useMutation({
+    mutationFn: submitRevisionAttempt,
+    onSuccess: (data) => {
+      attemptIdRef.current = data.id;
+      setResultStageLoading(true);
+      setStage("results");
+    },
+    onError: () => {
+      toast.error("Failed to submit answers! Please try again.");
+    },
+  });
+
   const handleNext = () => {
     if (isLastQuestion) {
-      console.log(answers);
-      setStage("results");
+      const allValues = Object.values(answers);
+      const hasEmpty = allValues.some((val) => !val || val.trim() === "");
+
+      if (hasEmpty) {
+        toast.error("Please Answer All Questions!!");
+        return;
+      }
+
+      revisionAttemptMutation.mutate({
+        answers,
+        reviewId: reviewId!,
+      });
     } else {
       resetTranscript();
       setCurrentIndex((i) => i + 1);
@@ -309,7 +340,9 @@ const RevisionAttempt = () => {
 
             <button
               onClick={handleNext}
-              disabled={!hasAnsweredCurrent}
+              disabled={
+                !hasAnsweredCurrent || revisionAttemptMutation.isPending
+              }
               style={{
                 backgroundColor: primaryBtnBg,
                 color: primaryBtnText,
@@ -323,9 +356,15 @@ const RevisionAttempt = () => {
                 if (hasAnsweredCurrent)
                   e.currentTarget.style.backgroundColor = primaryBtnBg;
               }}
-              className="w-full rounded-xl py-3.5 font-semibold text-base transition-colors duration-200 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center rounded-xl py-3.5 font-semibold text-base transition-colors duration-200 disabled:cursor-not-allowed"
             >
-              {isLastQuestion ? "Submit Revision" : "Next Question"}
+              {revisionAttemptMutation.isPending ? (
+                <Spinner />
+              ) : isLastQuestion ? (
+                "Submit Revision"
+              ) : (
+                "Next Question"
+              )}
             </button>
           </div>
         </div>

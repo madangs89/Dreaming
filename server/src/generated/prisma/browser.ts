@@ -47,3 +47,8 @@ export type review = Prisma.reviewModel
  * 
  */
 export type QuestionHistory = Prisma.QuestionHistoryModel
+/**
+ * Model ReviewAttempt
+ * 
+ */
+export type ReviewAttempt = Prisma.ReviewAttemptModel

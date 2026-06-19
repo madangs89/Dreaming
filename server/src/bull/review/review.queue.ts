@@ -1,24 +1,27 @@
 import { Queue } from "bullmq";
 import { bullRedis } from "../../configs/redis.js";
-import { ReviewJobData } from "./review.job.type.js";
+import { EvaluateJobData, ReviewJobData } from "./review.job.type.js";
 
-export const reviewQueue = new Queue<ReviewJobData>("reviewQueue", {
-  connection: bullRedis,
+export const reviewQueue = new Queue<ReviewJobData | EvaluateJobData>(
+  "reviewQueue",
+  {
+    connection: bullRedis,
 
-  defaultJobOptions: {
-    attempts: 3,
+    defaultJobOptions: {
+      attempts: 3,
 
-    backoff: {
-      type: "exponential",
-      delay: 5000,
-    },
+      backoff: {
+        type: "exponential",
+        delay: 5000,
+      },
 
-    removeOnComplete: {
-      count: 1000,
-    },
+      removeOnComplete: {
+        count: 1000,
+      },
 
-    removeOnFail: {
-      count: 500,
+      removeOnFail: {
+        count: 500,
+      },
     },
   },
-});
+);

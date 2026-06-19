@@ -72,3 +72,12 @@ export const difficulty = {
 } as const
 
 export type difficulty = (typeof difficulty)[keyof typeof difficulty]
+
+
+export const AttemptStatus = {
+  processing: 'processing',
+  completed: 'completed',
+  failed: 'failed'
+} as const
+
+export type AttemptStatus = (typeof AttemptStatus)[keyof typeof AttemptStatus]

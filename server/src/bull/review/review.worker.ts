@@ -1,6 +1,6 @@
 import { Worker, Job } from "bullmq";
 import { bullRedis } from "../../configs/redis.js";
-import { ReviewJobData } from "./review.job.type.js";
+import { EvaluateJobData, ReviewJobData } from "./review.job.type.js";
 
 import { diffWords } from "diff";
 
@@ -11,6 +11,7 @@ import {
 } from "../../configs/datesfn.js";
 import { reviewRememberStatus } from "../../generated/prisma/enums.js";
 import { scheduleQuestionJob } from "../questions/question.bull.job.js";
+import { llmAnswerEvaluation } from "./review.helpers.js";
 
 type BlockNoteContent = {
   type: string;
@@ -47,13 +48,15 @@ function isNoteEmpty(blocks: BlockNoteBlock[]) {
 }
 
 console.log("Review Worker Started");
-const reviewWorker = new Worker<ReviewJobData>(
+const reviewWorker = new Worker<ReviewJobData | EvaluateJobData>(
   "reviewQueue",
-  async (job: Job<ReviewJobData>) => {
+  async (job: Job<ReviewJobData | EvaluateJobData>) => {
     try {
       switch (job.name) {
-        case "schedule_review":
-          const { notes_id, topic_id, user_id, old_notes_content } = job.data;
+        case "schedule_review": {
+          const data = job.data as ReviewJobData;
+
+          const { notes_id, topic_id, user_id, old_notes_content } = data;
 
           const notesData = await prisma.note.findUnique({
             where: {
@@ -275,6 +278,64 @@ const reviewWorker = new Worker<ReviewJobData>(
           }
 
           break;
+        }
+
+        case "evaluate_review": {
+          const { attempt_id, answers, review_id, user_id } =
+            job.data as EvaluateJobData;
+
+          if (!attempt_id || !answers || !review_id || !user_id) {
+            throw new Error("Missing required data for evaluate_review job");
+          }
+
+          const review = await prisma.review.findUnique({
+            where: { id: review_id },
+          });
+
+          if (!review) {
+            throw new Error(`Review with id ${review_id} not found`);
+          }
+
+          const allQuestionIds = Object.keys(answers);
+
+          const revisionCount = review.review_count;
+          const old_strong_areas = review.strong_areas || [];
+          const old_weak_areas = review.weak_areas || [];
+
+          const allQuestions = await prisma.questionHistory.findMany({
+            where: {
+              review_id: review_id,
+              id: { in: allQuestionIds },
+            },
+          });
+
+          const answerPayload = allQuestions.map((question) => {
+            return {
+              question: question.question,
+              answer: answers[question.id],
+            };
+          });
+
+          const prompt = `
+          Review Count: ${revisionCount}
+          Strong Areas: ${old_strong_areas}
+          Weak Areas: ${old_weak_areas}
+
+          Today Assessment: ${JSON.stringify(answerPayload)}
+          `;
+
+          const evaluationResult = await llmAnswerEvaluation(
+            attempt_id,
+            prompt,
+          );
+
+          console.log("Evaluation Result:", evaluationResult);
+
+          return true;
+
+          break;
+        }
+
         default:
           break;
       }

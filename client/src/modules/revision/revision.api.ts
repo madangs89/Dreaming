@@ -1,6 +1,8 @@
 import axios from "axios";
 import type {
   QuestionSuccessRes,
+  RevisionAttemptBody,
+  RevisionAttemptSuccessRes,
   RevisionBody,
   RevisionQuestion,
   RevisionSuccessRes,
@@ -31,4 +33,23 @@ export const getAllTodayQuestions = async ({
     },
   );
   return response.data.questions || [];
+};
+
+export const submitRevisionAttempt = async ({
+  reviewId,
+  answers,
+}: {
+  reviewId: string;
+  answers: Record<string, string>;
+}): Promise<RevisionAttemptBody> => {
+  const response = await axios.post<
+    RevisionAttemptSuccessRes<RevisionAttemptBody>
+  >(
+    `${API_URL}/api/v1/reviews/attempt/submit/${reviewId}`,
+    { answers },
+    {
+      withCredentials: true,
+    },
+  );
+  return response.data.attempt!;
 };

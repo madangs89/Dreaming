@@ -112,7 +112,7 @@ model review {
   id                 String                @id @default(uuid())
   user_id            String
   user               User                  @relation(fields: [user_id], references: [id])
-  notes_id           String                 @unique
+  notes_id           String                @unique
   topic_id           String
   scheduled_date     DateTime
   status             ReviewStatus          @default(scheduled)
@@ -128,6 +128,7 @@ model review {
   createdAt          DateTime              @default(now())
   updatedAt          DateTime              @updatedAt
   questionHistories  QuestionHistory[]
+  reviewAttempts     ReviewAttempt[]
 }
 
 model QuestionHistory {
@@ -143,4 +144,22 @@ model QuestionHistory {
   question         String
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
+}
+
+enum AttemptStatus {
+  processing
+  completed
+  failed
+}
+
+model ReviewAttempt {
+  id             String                @id @default(uuid())
+  review_id      String
+  review         review                @relation(fields: [review_id], references: [id])
+  status         AttemptStatus         @default(processing)
+  score          Int?
+  rememberStatus reviewRememberStatus?
+  strong_areas   String[]
+  weak_areas     String[]
+  createdAt      DateTime              @default(now())
 }

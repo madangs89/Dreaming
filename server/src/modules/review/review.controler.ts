@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
 import { prisma, prismaErrorHandler } from "../../configs/prisma.js";
-import { Prisma } from "../../generated/prisma/client.js";
+import { AttemptStatus, Prisma } from "../../generated/prisma/client.js";
 import {
   ReviewBody,
   ReviewErrorResponse,
   ReviewSuccessResponse,
 } from "./review.types.js";
+import { RevisionAnswerBody } from "../revisionAttempt/revisionattempt.types.js";
+import { scheduleEvaluateJob } from "../../bull/review/review.jobs.js";
 
 export const getTodayReviews = async (
   req: Request,
@@ -43,6 +45,68 @@ export const getTodayReviews = async (
       prismaErrorHandler(req, res, error);
       return;
     }
-    res.status(500).json({ message: "Internal Server Error", success: false });
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", success: false });
+  }
+};
+
+export const submitReview = async (
+  req: Request<{ id: string }, {}, RevisionAnswerBody>,
+  res: Response,
+) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized", success: false });
+    }
+
+    const review_id = req.params.id;
+    if (!review_id) {
+      return res
+        .status(400)
+        .json({ message: "Review ID is required", success: false });
+    }
+
+    // 1 Check is already any review attempt added
+
+    const isAlreadyReviewAttemptAdded = await prisma.reviewAttempt.findFirst({
+      where: {
+        review_id: review_id,
+        status: AttemptStatus.processing,
+      },
+    });
+
+    if (isAlreadyReviewAttemptAdded) {
+      return res.status(201).json({
+        message: "Attempt SuccessFully Created",
+        success: true,
+        attempt: isAlreadyReviewAttemptAdded,
+      });
+    }
+    // 2 Not added means create new review attempt
+
+    const newReviewAttempt = await prisma.reviewAttempt.create({
+      data: {
+        review_id,
+      },
+    });
+
+    // 3 Push to Bull Queue
+    await scheduleEvaluateJob(review_id, userId, newReviewAttempt.id, req.body);
+    return res.status(201).json({
+      message: "Attempt SuccessFully Created",
+      success: true,
+      attempt: newReviewAttempt,
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      prismaErrorHandler(req, res, error);
+      return;
+    }
+
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", success: false });
   }
 };
