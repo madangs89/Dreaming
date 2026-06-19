@@ -48,7 +48,7 @@ export const llmAnswerEvaluation = async (
           systemInstruction: evaluationSystemInstruction,
           responseMimeType: "application/json",
           responseSchema: {
-            type: "Object",
+            type: "OBJECT",
             properties: {
               score: { type: "number" },
               rememberStatus: {
