@@ -53,8 +53,8 @@ const RevisionAttempt = () => {
     retry: 3,
   });
 
-  const revisionQuestions = questionsQuery.data || [];
-
+  let revisionQuestions = questionsQuery.data || [];
+  revisionQuestions = revisionQuestions.slice(0, 2);
   useEffect(() => {
     if (questionsQuery.isError) {
       toast.error("Unable To Fetch Questions!! Please Try again Later");

@@ -312,7 +312,8 @@ const reviewWorker = new Worker<ReviewJobData | EvaluateJobData>(
           const answerPayload = allQuestions.map((question) => {
             return {
               question: question.question,
-              answer: answers[question.id],
+              studentAnswer: answers[question.id] ?? "",
+              expectedAnswer: question.expectedAnswer,
             };
           });
 

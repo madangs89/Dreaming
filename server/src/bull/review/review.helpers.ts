@@ -64,6 +64,7 @@ export const llmAnswerEvaluation = async (
                 items: { type: "string" },
               },
             },
+            required: ["score", "rememberStatus", "strong_areas", "weak_areas"],
           },
         },
       });
@@ -73,6 +74,8 @@ export const llmAnswerEvaluation = async (
       }
 
       const rawData = JSON.parse(response.text);
+
+      console.log(rawData);
 
       const parsedData = LLmEvaluationSchema.safeParse(rawData);
 

@@ -15,7 +15,7 @@ export type EvaluateJobData = {
 
 export const LLmEvaluationSchema = z.object({
   score: z.number(),
-  rememberStatus: z.enum(["easy", "partial", "forgot"]),
+  rememberStatus: z.string(),
   strong_areas: z.array(z.string()),
   weak_areas: z.array(z.string()),
 });

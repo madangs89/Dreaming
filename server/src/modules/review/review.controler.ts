@@ -70,20 +70,20 @@ export const submitReview = async (
 
     // 1 Check is already any review attempt added
 
-    const isAlreadyReviewAttemptAdded = await prisma.reviewAttempt.findFirst({
-      where: {
-        review_id: review_id,
-        status: AttemptStatus.processing,
-      },
-    });
+    // const isAlreadyReviewAttemptAdded = await prisma.reviewAttempt.findFirst({
+    //   where: {
+    //     review_id: review_id,
+    //     status: AttemptStatus.processing,
+    //   },
+    // });
 
-    if (isAlreadyReviewAttemptAdded) {
-      return res.status(201).json({
-        message: "Attempt SuccessFully Created",
-        success: true,
-        attempt: isAlreadyReviewAttemptAdded,
-      });
-    }
+    // if (isAlreadyReviewAttemptAdded) {
+    //   return res.status(201).json({
+    //     message: "Attempt SuccessFully Created",
+    //     success: true,
+    //     attempt: isAlreadyReviewAttemptAdded,
+    //   });
+    // }
     // 2 Not added means create new review attempt
 
     const newReviewAttempt = await prisma.reviewAttempt.create({
