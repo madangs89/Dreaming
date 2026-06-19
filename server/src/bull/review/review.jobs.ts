@@ -18,12 +18,12 @@ export const scheduleEvaluateJob = async (
   review_id: string,
   user_id: string,
   attempt_id: string,
-  answers: RevisionAnswerBody
+  answers: RevisionAnswerBody,
 ) => {
   await reviewQueue.add("evaluate_review", {
     review_id,
     user_id,
     attempt_id,
-    answers
+    answers,
   });
 };

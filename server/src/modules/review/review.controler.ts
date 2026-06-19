@@ -68,6 +68,12 @@ export const submitReview = async (
         .json({ message: "Review ID is required", success: false });
     }
 
+    const bodyData = req.body;
+    if (!bodyData) {
+      return res
+        .status(400)
+        .json({ message: "Request body is required", success: false });
+    }
     // 1 Check is already any review attempt added
 
     // const isAlreadyReviewAttemptAdded = await prisma.reviewAttempt.findFirst({

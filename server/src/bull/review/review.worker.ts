@@ -9,7 +9,10 @@ import {
   getNextReviewDate,
   returnTomorrowDate,
 } from "../../configs/datesfn.js";
-import { reviewRememberStatus } from "../../generated/prisma/enums.js";
+import {
+  AttemptStatus,
+  reviewRememberStatus,
+} from "../../generated/prisma/enums.js";
 import { scheduleQuestionJob } from "../questions/question.bull.job.js";
 import { llmAnswerEvaluation } from "./review.helpers.js";
 
@@ -330,9 +333,41 @@ const reviewWorker = new Worker<ReviewJobData | EvaluateJobData>(
             prompt,
           );
 
-          console.log("Evaluation Result:", evaluationResult);
+          const [updatedAttempt, updateReview] = await prisma.$transaction([
+            prisma.reviewAttempt.update({
+              where: {
+                id: attempt_id,
+              },
+              data: {
+                score: Number(evaluationResult.score),
+                status: AttemptStatus.completed,
+                rememberStatus:
+                  evaluationResult.rememberStatus as reviewRememberStatus,
+                weak_areas: evaluationResult.weak_areas,
+                strong_areas: evaluationResult.strong_areas,
+              },
+            }),
+            prisma.review.update({
+              where: {
+                id: review_id,
+              },
+              data: {
+                scheduled_date: getNextReviewDate(
+                  evaluationResult.rememberStatus as reviewRememberStatus,
+                ),
+                generation_count: {
+                  increment: 1,
+                },
+                review_count: {
+                  increment: 1,
+                },
+                strong_areas: evaluationResult.strong_areas,
+                weak_areas: evaluationResult.weak_areas,
+              },
+            }),
+          ]);
 
-          return true;
+          return updateReview;
 
           break;
         }
