@@ -366,6 +366,11 @@ const reviewWorker = new Worker<ReviewJobData | EvaluateJobData>(
               },
             }),
           ]);
+          await scheduleQuestionJob({
+            review_id: review_id,
+            generation_count: updateReview.generation_count,
+            scheduled_date: updateReview.scheduled_date,
+          });
 
           return updateReview;
 
