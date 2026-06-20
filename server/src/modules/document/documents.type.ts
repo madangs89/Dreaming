@@ -22,6 +22,7 @@ export type DocumentBody = {
   public_id: string;
   createdAt?: Date;
   updatedAt?: Date;
+  is_indexed?: boolean;
 };
 
 export type DocumentParams = z.infer<typeof DocumentParamSchema>;

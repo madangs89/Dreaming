@@ -125,6 +125,7 @@ export const DocumentScalarFieldEnum = {
   memetype: 'memetype',
   title: 'title',
   public_id: 'public_id',
+  is_indexed: 'is_indexed',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

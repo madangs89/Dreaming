@@ -31,6 +31,7 @@ export type DocumentMinAggregateOutputType = {
   memetype: $Enums.Memetype | null
   title: string | null
   public_id: string | null
+  is_indexed: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -42,6 +43,7 @@ export type DocumentMaxAggregateOutputType = {
   memetype: $Enums.Memetype | null
   title: string | null
   public_id: string | null
+  is_indexed: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -53,6 +55,7 @@ export type DocumentCountAggregateOutputType = {
   memetype: number
   title: number
   public_id: number
+  is_indexed: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -66,6 +69,7 @@ export type DocumentMinAggregateInputType = {
   memetype?: true
   title?: true
   public_id?: true
+  is_indexed?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -77,6 +81,7 @@ export type DocumentMaxAggregateInputType = {
   memetype?: true
   title?: true
   public_id?: true
+  is_indexed?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -88,6 +93,7 @@ export type DocumentCountAggregateInputType = {
   memetype?: true
   title?: true
   public_id?: true
+  is_indexed?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -172,6 +178,7 @@ export type DocumentGroupByOutputType = {
   memetype: $Enums.Memetype
   title: string
   public_id: string
+  is_indexed: boolean
   createdAt: Date
   updatedAt: Date
   _count: DocumentCountAggregateOutputType | null
@@ -204,6 +211,7 @@ export type DocumentWhereInput = {
   memetype?: Prisma.EnumMemetypeFilter<"Document"> | $Enums.Memetype
   title?: Prisma.StringFilter<"Document"> | string
   public_id?: Prisma.StringFilter<"Document"> | string
+  is_indexed?: Prisma.BoolFilter<"Document"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   notes?: Prisma.XOR<Prisma.NoteScalarRelationFilter, Prisma.NoteWhereInput>
@@ -216,6 +224,7 @@ export type DocumentOrderByWithRelationInput = {
   memetype?: Prisma.SortOrder
   title?: Prisma.SortOrder
   public_id?: Prisma.SortOrder
+  is_indexed?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   notes?: Prisma.NoteOrderByWithRelationInput
@@ -231,6 +240,7 @@ export type DocumentWhereUniqueInput = Prisma.AtLeast<{
   memetype?: Prisma.EnumMemetypeFilter<"Document"> | $Enums.Memetype
   title?: Prisma.StringFilter<"Document"> | string
   public_id?: Prisma.StringFilter<"Document"> | string
+  is_indexed?: Prisma.BoolFilter<"Document"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   notes?: Prisma.XOR<Prisma.NoteScalarRelationFilter, Prisma.NoteWhereInput>
@@ -243,6 +253,7 @@ export type DocumentOrderByWithAggregationInput = {
   memetype?: Prisma.SortOrder
   title?: Prisma.SortOrder
   public_id?: Prisma.SortOrder
+  is_indexed?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.DocumentCountOrderByAggregateInput
@@ -260,6 +271,7 @@ export type DocumentScalarWhereWithAggregatesInput = {
   memetype?: Prisma.EnumMemetypeWithAggregatesFilter<"Document"> | $Enums.Memetype
   title?: Prisma.StringWithAggregatesFilter<"Document"> | string
   public_id?: Prisma.StringWithAggregatesFilter<"Document"> | string
+  is_indexed?: Prisma.BoolWithAggregatesFilter<"Document"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Document"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Document"> | Date | string
 }
@@ -270,6 +282,7 @@ export type DocumentCreateInput = {
   memetype: $Enums.Memetype
   title: string
   public_id: string
+  is_indexed?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   notes: Prisma.NoteCreateNestedOneWithoutDocumentsInput
@@ -282,6 +295,7 @@ export type DocumentUncheckedCreateInput = {
   memetype: $Enums.Memetype
   title: string
   public_id: string
+  is_indexed?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -292,6 +306,7 @@ export type DocumentUpdateInput = {
   memetype?: Prisma.EnumMemetypeFieldUpdateOperationsInput | $Enums.Memetype
   title?: Prisma.StringFieldUpdateOperationsInput | string
   public_id?: Prisma.StringFieldUpdateOperationsInput | string
+  is_indexed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NoteUpdateOneRequiredWithoutDocumentsNestedInput
@@ -304,6 +319,7 @@ export type DocumentUncheckedUpdateInput = {
   memetype?: Prisma.EnumMemetypeFieldUpdateOperationsInput | $Enums.Memetype
   title?: Prisma.StringFieldUpdateOperationsInput | string
   public_id?: Prisma.StringFieldUpdateOperationsInput | string
+  is_indexed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -315,6 +331,7 @@ export type DocumentCreateManyInput = {
   memetype: $Enums.Memetype
   title: string
   public_id: string
+  is_indexed?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -325,6 +342,7 @@ export type DocumentUpdateManyMutationInput = {
   memetype?: Prisma.EnumMemetypeFieldUpdateOperationsInput | $Enums.Memetype
   title?: Prisma.StringFieldUpdateOperationsInput | string
   public_id?: Prisma.StringFieldUpdateOperationsInput | string
+  is_indexed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -336,6 +354,7 @@ export type DocumentUncheckedUpdateManyInput = {
   memetype?: Prisma.EnumMemetypeFieldUpdateOperationsInput | $Enums.Memetype
   title?: Prisma.StringFieldUpdateOperationsInput | string
   public_id?: Prisma.StringFieldUpdateOperationsInput | string
+  is_indexed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -357,6 +376,7 @@ export type DocumentCountOrderByAggregateInput = {
   memetype?: Prisma.SortOrder
   title?: Prisma.SortOrder
   public_id?: Prisma.SortOrder
+  is_indexed?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -368,6 +388,7 @@ export type DocumentMaxOrderByAggregateInput = {
   memetype?: Prisma.SortOrder
   title?: Prisma.SortOrder
   public_id?: Prisma.SortOrder
+  is_indexed?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -379,6 +400,7 @@ export type DocumentMinOrderByAggregateInput = {
   memetype?: Prisma.SortOrder
   title?: Prisma.SortOrder
   public_id?: Prisma.SortOrder
+  is_indexed?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -429,12 +451,17 @@ export type EnumMemetypeFieldUpdateOperationsInput = {
   set?: $Enums.Memetype
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
 export type DocumentCreateWithoutNotesInput = {
   id?: string
   url: string
   memetype: $Enums.Memetype
   title: string
   public_id: string
+  is_indexed?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -445,6 +472,7 @@ export type DocumentUncheckedCreateWithoutNotesInput = {
   memetype: $Enums.Memetype
   title: string
   public_id: string
+  is_indexed?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -485,6 +513,7 @@ export type DocumentScalarWhereInput = {
   memetype?: Prisma.EnumMemetypeFilter<"Document"> | $Enums.Memetype
   title?: Prisma.StringFilter<"Document"> | string
   public_id?: Prisma.StringFilter<"Document"> | string
+  is_indexed?: Prisma.BoolFilter<"Document"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Document"> | Date | string
 }
@@ -495,6 +524,7 @@ export type DocumentCreateManyNotesInput = {
   memetype: $Enums.Memetype
   title: string
   public_id: string
+  is_indexed?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -505,6 +535,7 @@ export type DocumentUpdateWithoutNotesInput = {
   memetype?: Prisma.EnumMemetypeFieldUpdateOperationsInput | $Enums.Memetype
   title?: Prisma.StringFieldUpdateOperationsInput | string
   public_id?: Prisma.StringFieldUpdateOperationsInput | string
+  is_indexed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -515,6 +546,7 @@ export type DocumentUncheckedUpdateWithoutNotesInput = {
   memetype?: Prisma.EnumMemetypeFieldUpdateOperationsInput | $Enums.Memetype
   title?: Prisma.StringFieldUpdateOperationsInput | string
   public_id?: Prisma.StringFieldUpdateOperationsInput | string
+  is_indexed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -525,6 +557,7 @@ export type DocumentUncheckedUpdateManyWithoutNotesInput = {
   memetype?: Prisma.EnumMemetypeFieldUpdateOperationsInput | $Enums.Memetype
   title?: Prisma.StringFieldUpdateOperationsInput | string
   public_id?: Prisma.StringFieldUpdateOperationsInput | string
+  is_indexed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -538,6 +571,7 @@ export type DocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   memetype?: boolean
   title?: boolean
   public_id?: boolean
+  is_indexed?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   notes?: boolean | Prisma.NoteDefaultArgs<ExtArgs>
@@ -550,6 +584,7 @@ export type DocumentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   memetype?: boolean
   title?: boolean
   public_id?: boolean
+  is_indexed?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   notes?: boolean | Prisma.NoteDefaultArgs<ExtArgs>
@@ -562,6 +597,7 @@ export type DocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   memetype?: boolean
   title?: boolean
   public_id?: boolean
+  is_indexed?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   notes?: boolean | Prisma.NoteDefaultArgs<ExtArgs>
@@ -574,11 +610,12 @@ export type DocumentSelectScalar = {
   memetype?: boolean
   title?: boolean
   public_id?: boolean
+  is_indexed?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type DocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "notes_id" | "url" | "memetype" | "title" | "public_id" | "createdAt" | "updatedAt", ExtArgs["result"]["document"]>
+export type DocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "notes_id" | "url" | "memetype" | "title" | "public_id" | "is_indexed" | "createdAt" | "updatedAt", ExtArgs["result"]["document"]>
 export type DocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   notes?: boolean | Prisma.NoteDefaultArgs<ExtArgs>
 }
@@ -601,6 +638,7 @@ export type $DocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     memetype: $Enums.Memetype
     title: string
     public_id: string
+    is_indexed: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["document"]>
@@ -1033,6 +1071,7 @@ export interface DocumentFieldRefs {
   readonly memetype: Prisma.FieldRef<"Document", 'Memetype'>
   readonly title: Prisma.FieldRef<"Document", 'String'>
   readonly public_id: Prisma.FieldRef<"Document", 'String'>
+  readonly is_indexed: Prisma.FieldRef<"Document", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Document", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Document", 'DateTime'>
 }

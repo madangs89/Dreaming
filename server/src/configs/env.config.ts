@@ -10,11 +10,22 @@ const JWT_SECRET = String(process.env.JWT_SECRET);
 const NODE_ENV = process.env.NODE_ENV;
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 const FRONTEND_URL = process.env.FRONTEND_URL;
-
+const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY;
 const REDIS_URL = process.env.REDIS_URL;
+const SUPABASE_URL = process.env.SUPABASE_URL;
 
 if (!FRONTEND_URL) {
   console.error("Error: FRONTEND_URL environment variable is not set");
+  process.exit(1);
+}
+
+if (!SUPABASE_URL) {
+  console.error("Error: SUPABASE_URL environment variable is not set");
+  process.exit(1);
+}
+
+if (!SUPABASE_SECRET_KEY) {
+  console.error("Error: SUPABASE_SECRET_KEY environment variable is not set");
   process.exit(1);
 }
 
@@ -62,4 +73,6 @@ export {
   REDIS_URL,
   GOOGLE_API_KEY,
   FRONTEND_URL,
+  SUPABASE_SECRET_KEY,
+  SUPABASE_URL,
 };

@@ -15,6 +15,8 @@ import {
 import { DocumentParamSchema } from "./documents.zod.js";
 import fs from "fs";
 import { pdfToText } from "../../configs/ocr.js";
+import { scheduleRagDocumentJob } from "../../bull/rag/rag.job.js";
+import { vectorStore } from "../../configs/supabaseVector.js";
 
 export const createDocument = async (
   req: Request<
@@ -68,9 +70,14 @@ export const createDocument = async (
       data: payload,
     });
 
-    const parsedText = await pdfToText(file.path);
-
-    console.log("Parsed Text:", parsedText);
+    try {
+      await scheduleRagDocumentJob({
+        documentId: document.id,
+        notesId: document.notes_id,
+      });
+    } catch (error) {
+      console.error("Error scheduling RAG document job:", error);
+    }
 
     if (fs.existsSync(file.path)) {
       await fs.promises.unlink(file.path);
@@ -136,6 +143,16 @@ export const deleteDocument = async (
       });
     }
 
+    try {
+      const deletedCount = await prisma.$executeRaw`
+    DELETE FROM rag_chunks
+    WHERE metadata->>'document_id' = ${id};
+  `;
+
+      console.log("Deleted rows:", deletedCount);
+    } catch (error) {
+      console.error("Failed to delete chunks:", error);
+    }
     await prisma.document.delete({
       where: { id },
     });

@@ -10,6 +10,7 @@ import { reviewRouter } from "./modules/review/review.routes.js";
 import { bullRedis } from "./configs/redis.js";
 import { questionHistoryRouter } from "./modules/questionHistory/question.routes.js";
 import { revisionAttemptRouter } from "./modules/revisionAttempt/revisiontAttempt.routes.js";
+import { embeddings } from "./configs/google.js";
 
 const app = express();
 

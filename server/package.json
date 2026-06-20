@@ -4,7 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch": "tsc --watch",
+    "server": "node --watch dist/index.js",
+    "question-worker": "node --watch dist/bull/questions/question.bull.worker.js",
+    "review-worker": "node --watch dist/bull/review/review.worker.js",
+    "rag-worker": "node --watch dist/bull/rag/rag.worker.js",
+    "dev": "concurrently -n SERVER,QUESTION,REVIEW,RAG,TSC -c blue,green,yellow,magenta,cyan \"npm run server\" \"npm run question-worker\" \"npm run review-worker\" \"npm run rag-worker\" \"npm run watch\""
   },
   "keywords": [],
   "author": "",
@@ -23,13 +28,19 @@
     "@types/node": "^25.9.1",
     "@types/pg": "^8.20.0",
     "@types/uuid": "^10.0.0",
+    "concurrently": "^10.0.3",
     "prisma": "^7.8.0",
     "typescript": "^6.0.3"
   },
   "dependencies": {
     "@google/genai": "^2.8.0",
+    "@langchain/community": "^1.1.29",
+    "@langchain/core": "^1.2.0",
+    "@langchain/google-genai": "^2.2.0",
+    "@langchain/textsplitters": "^1.0.1",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "@supabase/supabase-js": "^2.108.2",
     "@types/diff": "^7.0.2",
     "@types/tesseract.js": "^0.0.2",
     "bcrypt": "^6.0.0",
@@ -43,6 +54,7 @@
     "express": "^5.2.1",
     "ioredis": "^5.10.1",
     "jsonwebtoken": "^9.0.3",
+    "langchain": "^1.5.0",
     "mammoth": "^1.12.0",
     "mime-types": "^3.0.2",
     "multer": "^2.1.1",

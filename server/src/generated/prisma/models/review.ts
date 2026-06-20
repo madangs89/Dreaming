@@ -744,10 +744,6 @@ export type EnumReviewStatusFieldUpdateOperationsInput = {
   set?: $Enums.ReviewStatus
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type NullableEnumreviewRememberStatusFieldUpdateOperationsInput = {
   set?: $Enums.reviewRememberStatus | null
 }

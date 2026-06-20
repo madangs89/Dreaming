@@ -46,7 +46,6 @@ export const pdfToText = async (
     };
   } catch (error) {
     console.error("Error converting PDF to text:", error);
-
     return {
       text: "",
       success: false,
@@ -54,22 +53,41 @@ export const pdfToText = async (
   }
 };
 
-export const imageToText = async (imagePath: string) => {
-  const result = await Tesseract.recognize(imagePath, "eng");
+export const imageToText = async (
+  imagePath: string,
+): Promise<{ text: string; success: boolean }> => {
+  try {
+    const result = await Tesseract.recognize(imagePath, "eng");
 
-  return {
-    text: result.data.text,
-    success: true,
-  };
+    return {
+      text: result.data.text,
+      success: true,
+    };
+  } catch (error) {
+    console.error("Error converting image to text:", error);
+    return {
+      text: "",
+      success: false,
+    };
+  }
 };
 
-export const docxToText = async (filePath: string) => {
-  const result = await mammoth.extractRawText({
-    path: filePath,
-  });
-
-  return {
-    text: result.value,
-    success: true,
-  };
+export const docxToText = async (
+  filePath: string,
+): Promise<{ text: string; success: boolean }> => {
+  try {
+    const result = await mammoth.extractRawText({
+      path: filePath,
+    });
+    return {
+      text: result.value,
+      success: true,
+    };
+  } catch (error) {
+    console.error("Error converting docx to text:", error);
+    return {
+      text: "",
+      success: false,
+    };
+  }
 };
