@@ -120,7 +120,6 @@ const RevisionAttempt = () => {
   ]);
 
   const revisionQuestions = questionsQuery.data || [];
-
   useEffect(() => {
     if (questionsQuery.isError) {
       toast.error("Unable To Fetch Questions!! Please Try again Later");
@@ -227,6 +226,16 @@ const RevisionAttempt = () => {
       resetTranscript();
       setCurrentIndex((i) => i + 1);
     }
+  };
+
+  // Retry handler — resets error/loading state and re-triggers submission
+  const handleRetrySubmit = () => {
+    setResultStageError({ isError: false, error: "" });
+    setResultStageLoading(true);
+    revisionAttemptMutation.mutate({
+      answers,
+      reviewId: reviewId!,
+    });
   };
 
   if (!browserSupportsSpeechRecognition) {
@@ -452,87 +461,163 @@ const RevisionAttempt = () => {
         className="min-h-screen w-full flex items-center justify-center px-4 py-10"
       >
         <div className="w-full max-w-md">
-          <div
-            style={{ backgroundColor: cardBg, borderColor: cardBorder }}
-            className="rounded-2xl border p-6 sm:p-8 shadow-sm"
-          >
-            <p
-              style={{ color: subtleText }}
-              className="text-sm font-medium uppercase tracking-wide mb-2"
-            >
-              Score
-            </p>
-            <h1
-              style={{ color: titleColor }}
-              className="text-5xl font-bold mb-8"
-            >
-              {resultStageResults?.score}%
-            </h1>
-
-            {/* Strong areas */}
-            <div className="mb-6">
-              <p
-                style={{ color: subtleText }}
-                className="text-xs font-semibold uppercase tracking-wide mb-3"
-              >
-                Strong Areas
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {resultStageResults?.strong_areas &&
-                  resultStageResults?.strong_areas.map((area) => (
-                    <span
-                      key={area}
-                      style={{
-                        backgroundColor: successBg,
-                        color: successColor,
-                      }}
-                      className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium"
-                    >
-                      ✓ {area}
-                    </span>
-                  ))}
-              </div>
-            </div>
-
-            {/* Weak areas */}
+          {/* Loading state — waiting on AI evaluation */}
+          {resultStageLoading && (
             <div
-              style={{ borderColor: dividerColor }}
-              className="mb-8 pb-8 border-b"
+              style={{ backgroundColor: cardBg, borderColor: cardBorder }}
+              className="rounded-2xl border p-8 shadow-sm flex flex-col items-center justify-center gap-4 min-h-[260px]"
             >
-              <p
-                style={{ color: subtleText }}
-                className="text-xs font-semibold uppercase tracking-wide mb-3"
-              >
-                Weak Areas
+              <Spinner />
+              <p style={{ color: subtleText }} className="text-sm font-medium">
+                Evaluating your answers…
               </p>
-              <div className="flex flex-wrap gap-2">
-                {resultStageResults?.weak_areas &&
-                  resultStageResults?.weak_areas.map((area) => (
-                    <span
-                      key={area}
-                      style={{ backgroundColor: dangerBg, color: dangerColor }}
-                      className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium"
-                    >
-                      ✗ {area}
-                    </span>
-                  ))}
-              </div>
             </div>
+          )}
 
-            <button
-              onClick={() => navigate(`/notes/${topicId}`)}
-              style={{ backgroundColor: primaryBtnBg, color: primaryBtnText }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = primaryBtnHover)
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = primaryBtnBg)
-              }
-              className="w-full rounded-xl py-3.5 font-semibold text-base transition-colors duration-200"
+          {/* Error state — failed submit / failed evaluation / polling error */}
+          {!resultStageLoading && resultStageError?.isError && (
+            <div
+              style={{ backgroundColor: cardBg, borderColor: cardBorder }}
+              className="rounded-2xl border p-8 shadow-sm flex flex-col items-center text-center gap-4"
             >
-              Review Notes
-            </button>
-          </div>
+              <div
+                style={{ backgroundColor: dangerBg, color: dangerColor }}
+                className="h-14 w-14 rounded-full flex items-center justify-center"
+              >
+                <RefreshCcw className="h-6 w-6" />
+              </div>
+              <div>
+                <h2
+                  style={{ color: titleColor }}
+                  className="text-lg font-semibold mb-1.5"
+                >
+                  Something went wrong
+                </h2>
+                <p style={{ color: subtleText }} className="text-sm">
+                  {resultStageError.error ||
+                    "We couldn't evaluate your revision. Please try again."}
+                </p>
+              </div>
+              <button
+                onClick={handleRetrySubmit}
+                disabled={revisionAttemptMutation.isPending}
+                style={{
+                  backgroundColor: primaryBtnBg,
+                  color: primaryBtnText,
+                  opacity: revisionAttemptMutation.isPending ? 0.6 : 1,
+                }}
+                onMouseEnter={(e) => {
+                  if (!revisionAttemptMutation.isPending)
+                    e.currentTarget.style.backgroundColor = primaryBtnHover;
+                }}
+                onMouseLeave={(e) => {
+                  if (!revisionAttemptMutation.isPending)
+                    e.currentTarget.style.backgroundColor = primaryBtnBg;
+                }}
+                className="w-full rounded-xl py-3 font-semibold text-sm transition-colors duration-200 flex items-center justify-center gap-2 disabled:cursor-not-allowed"
+              >
+                <RefreshCcw
+                  className={`h-4 w-4 ${revisionAttemptMutation.isPending ? "animate-spin" : ""}`}
+                />
+                {revisionAttemptMutation.isPending
+                  ? "Resubmitting…"
+                  : "Resubmit"}
+              </button>
+            </div>
+          )}
+
+          {/* Success state — show evaluation results */}
+          {!resultStageLoading &&
+            !resultStageError?.isError &&
+            resultStageResults && (
+              <div
+                style={{ backgroundColor: cardBg, borderColor: cardBorder }}
+                className="rounded-2xl border p-6 sm:p-8 shadow-sm"
+              >
+                <p
+                  style={{ color: subtleText }}
+                  className="text-sm font-medium uppercase tracking-wide mb-2"
+                >
+                  Score
+                </p>
+                <h1
+                  style={{ color: titleColor }}
+                  className="text-5xl font-bold mb-8"
+                >
+                  {resultStageResults?.score}%
+                </h1>
+
+                {/* Strong areas */}
+                <div className="mb-6">
+                  <p
+                    style={{ color: subtleText }}
+                    className="text-xs font-semibold uppercase tracking-wide mb-3"
+                  >
+                    Strong Areas
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {resultStageResults?.strong_areas &&
+                      resultStageResults?.strong_areas.map((area) => (
+                        <span
+                          key={area}
+                          style={{
+                            backgroundColor: successBg,
+                            color: successColor,
+                          }}
+                          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium"
+                        >
+                          ✓ {area}
+                        </span>
+                      ))}
+                  </div>
+                </div>
+
+                {/* Weak areas */}
+                <div
+                  style={{ borderColor: dividerColor }}
+                  className="mb-8 pb-8 border-b"
+                >
+                  <p
+                    style={{ color: subtleText }}
+                    className="text-xs font-semibold uppercase tracking-wide mb-3"
+                  >
+                    Weak Areas
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {resultStageResults?.weak_areas &&
+                      resultStageResults?.weak_areas.map((area) => (
+                        <span
+                          key={area}
+                          style={{
+                            backgroundColor: dangerBg,
+                            color: dangerColor,
+                          }}
+                          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium"
+                        >
+                          ✗ {area}
+                        </span>
+                      ))}
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => navigate(`/notes/${topicId}`)}
+                  style={{
+                    backgroundColor: primaryBtnBg,
+                    color: primaryBtnText,
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor = primaryBtnHover)
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor = primaryBtnBg)
+                  }
+                  className="w-full rounded-xl py-3.5 font-semibold text-base transition-colors duration-200"
+                >
+                  Review Notes
+                </button>
+              </div>
+            )}
         </div>
       </div>
     );
