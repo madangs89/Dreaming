@@ -58,10 +58,6 @@ export const handleSingleUpload = async (
       message: "Failed to upload file",
       url: null,
     };
-  } finally {
-    if (fs.existsSync(filePath)) {
-      await fs.promises.unlink(filePath);
-    }
   }
 };
 

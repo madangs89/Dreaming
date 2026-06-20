@@ -13,6 +13,8 @@ import {
   DocumentSuccessResponse,
 } from "./documents.type.js";
 import { DocumentParamSchema } from "./documents.zod.js";
+import fs from "fs";
+import { pdfToText } from "../../configs/ocr.js";
 
 export const createDocument = async (
   req: Request<
@@ -65,6 +67,15 @@ export const createDocument = async (
     const document = await prisma.document.create({
       data: payload,
     });
+
+    const parsedText = await pdfToText(file.path);
+
+    console.log("Parsed Text:", parsedText);
+
+    if (fs.existsSync(file.path)) {
+      await fs.promises.unlink(file.path);
+    }
+
     return res.status(201).json({
       message: "Document created successfully",
       document,
@@ -73,6 +84,11 @@ export const createDocument = async (
   } catch (error) {
     console.error("Error creating document:", error);
 
+    if (req.file?.path) {
+      if (fs.existsSync(req.file?.path)) {
+        await fs.promises.unlink(req.file?.path);
+      }
+    }
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       prismaErrorHandler(req, res, error);
       return;
