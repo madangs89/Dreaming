@@ -6,7 +6,12 @@ import {
   ReviewErrorResponse,
   ReviewSuccessResponse,
 } from "./review.types.js";
-import { RevisionAnswerBody } from "../revisionAttempt/revisionattempt.types.js";
+import {
+  RevisionAnswerBody,
+  RevisionAttemptBody,
+  RevisionAttemptErrorResponse,
+  RevisionAttemptSuccessResponse,
+} from "../revisionAttempt/revisionattempt.types.js";
 import { scheduleEvaluateJob } from "../../bull/review/review.jobs.js";
 
 export const getTodayReviews = async (
@@ -53,7 +58,10 @@ export const getTodayReviews = async (
 
 export const submitReview = async (
   req: Request<{ id: string }, {}, RevisionAnswerBody>,
-  res: Response,
+  res: Response<
+    | RevisionAttemptSuccessResponse<RevisionAttemptBody>
+    | RevisionAttemptErrorResponse
+  >,
 ) => {
   try {
     const userId = req.user?.id;

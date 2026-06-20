@@ -158,7 +158,7 @@ model ReviewAttempt {
   review         review                @relation(fields: [review_id], references: [id])
   status         AttemptStatus         @default(processing)
   score          Int?
-  rememberStatus reviewRememberStatus?
+  rememberStatus reviewRememberStatus? 
   strong_areas   String[]
   weak_areas     String[]
   createdAt      DateTime              @default(now())

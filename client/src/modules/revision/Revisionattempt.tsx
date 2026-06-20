@@ -8,7 +8,11 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import Spinner from "../../components/Spinner";
 import { useTheme } from "../../hooks/useTheme";
-import { getAllTodayQuestions, submitRevisionAttempt } from "./revision.api";
+import {
+  getAllTodayQuestions,
+  getRevisionAttemptResults,
+  submitRevisionAttempt,
+} from "./revision.api";
 import type { RevisionAttemptBody } from "./revision.types";
 
 // Mock result — TODO: replace with real AI evaluation response
@@ -44,7 +48,16 @@ const RevisionAttempt = () => {
   const [resultStageResults, setResultStageResults] =
     useState<RevisionAttemptBody | null>(null);
 
-  const attemptIdRef = useRef<string | null>(null);
+  const [resultStageError, setResultStageError] = useState<{
+    isError: boolean;
+    error: string;
+  } | null>({
+    error: "",
+    isError: false,
+  });
+
+  const [attemptId, setAttemptId] = useState<string | null>(null);
+  const hasShownSuccessToast = useRef(false);
 
   const questionsQuery = useQuery({
     queryKey: ["revision-questions", reviewId],
@@ -53,8 +66,61 @@ const RevisionAttempt = () => {
     retry: 3,
   });
 
-  let revisionQuestions = questionsQuery.data || [];
-  revisionQuestions = revisionQuestions.slice(0, 2);
+  const revisionAttemptPollingQuery = useQuery({
+    queryKey: ["revision-attempt", attemptId],
+    queryFn: () => getRevisionAttemptResults({ attemptId: attemptId! }),
+    enabled: !!attemptId,
+    refetchInterval: (data) => {
+      if (!data?.success) return false;
+      return data.attempt?.status === "completed" ? false : 2000;
+    },
+  });
+
+  useEffect(() => {
+    if (revisionAttemptPollingQuery.isError) {
+      toast.error("Unable To Fetch Results!! Please Try again Later");
+      setResultStageLoading(false);
+      setResultStageError({
+        isError: true,
+        error: "Unable To Fetch Results!! Please Try again Later",
+      });
+      setAttemptId(null);
+    }
+    if (
+      revisionAttemptPollingQuery.isSuccess &&
+      revisionAttemptPollingQuery.data?.success
+    ) {
+      const attemptData = revisionAttemptPollingQuery.data.attempt;
+      if (attemptData?.status === "completed") {
+        if (!hasShownSuccessToast.current) {
+          hasShownSuccessToast.current = true;
+
+          toast.success("Revision evaluated successfully");
+        }
+        setResultStageResults(attemptData);
+        setResultStageLoading(false);
+        setAttemptId(null);
+      } else if (attemptData?.status === "failed") {
+        if (!hasShownSuccessToast.current) {
+          hasShownSuccessToast.current = true;
+          toast.error("Failed to evaluate revision");
+        }
+        setResultStageError({
+          isError: true,
+          error: "Failed to evaluate revision",
+        });
+        setResultStageLoading(false);
+        setAttemptId(null);
+      }
+    }
+  }, [
+    revisionAttemptPollingQuery.isError,
+    revisionAttemptPollingQuery.data,
+    revisionAttemptPollingQuery.isSuccess,
+  ]);
+
+  const revisionQuestions = questionsQuery.data || [];
+
   useEffect(() => {
     if (questionsQuery.isError) {
       toast.error("Unable To Fetch Questions!! Please Try again Later");
@@ -127,12 +193,19 @@ const RevisionAttempt = () => {
   const revisionAttemptMutation = useMutation({
     mutationFn: submitRevisionAttempt,
     onSuccess: (data) => {
-      attemptIdRef.current = data.id;
+      hasShownSuccessToast.current = false;
+      setAttemptId(data.id);
       setResultStageLoading(true);
       setStage("results");
     },
     onError: () => {
       toast.error("Failed to submit answers! Please try again.");
+      setResultStageLoading(false);
+      setAttemptId(null);
+      setResultStageError({
+        isError: true,
+        error: "Failed to submit answers! Please try again.",
+      });
     },
   });
 
@@ -393,7 +466,7 @@ const RevisionAttempt = () => {
               style={{ color: titleColor }}
               className="text-5xl font-bold mb-8"
             >
-              {MOCK_RESULT.score}%
+              {resultStageResults?.score}%
             </h1>
 
             {/* Strong areas */}
@@ -405,15 +478,19 @@ const RevisionAttempt = () => {
                 Strong Areas
               </p>
               <div className="flex flex-wrap gap-2">
-                {MOCK_RESULT.strongAreas.map((area) => (
-                  <span
-                    key={area}
-                    style={{ backgroundColor: successBg, color: successColor }}
-                    className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium"
-                  >
-                    ✓ {area}
-                  </span>
-                ))}
+                {resultStageResults?.strong_areas &&
+                  resultStageResults?.strong_areas.map((area) => (
+                    <span
+                      key={area}
+                      style={{
+                        backgroundColor: successBg,
+                        color: successColor,
+                      }}
+                      className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium"
+                    >
+                      ✓ {area}
+                    </span>
+                  ))}
               </div>
             </div>
 
@@ -429,15 +506,16 @@ const RevisionAttempt = () => {
                 Weak Areas
               </p>
               <div className="flex flex-wrap gap-2">
-                {MOCK_RESULT.weakAreas.map((area) => (
-                  <span
-                    key={area}
-                    style={{ backgroundColor: dangerBg, color: dangerColor }}
-                    className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium"
-                  >
-                    ✗ {area}
-                  </span>
-                ))}
+                {resultStageResults?.weak_areas &&
+                  resultStageResults?.weak_areas.map((area) => (
+                    <span
+                      key={area}
+                      style={{ backgroundColor: dangerBg, color: dangerColor }}
+                      className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium"
+                    >
+                      ✗ {area}
+                    </span>
+                  ))}
               </div>
             </div>
 

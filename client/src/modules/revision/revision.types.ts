@@ -44,7 +44,7 @@ export type QuestionSuccessRes<T> = {
 export type RevisionAttemptBody = {
   id: string;
   review_id: string;
-  status: StringConstructor;
+  status: string;
   score?: number;
   rememberStatus?: string;
   strong_areas: string[];

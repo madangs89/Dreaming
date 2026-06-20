@@ -9,6 +9,7 @@ import { documentRouter } from "./modules/document/documents.routes.js";
 import { reviewRouter } from "./modules/review/review.routes.js";
 import { bullRedis } from "./configs/redis.js";
 import { questionHistoryRouter } from "./modules/questionHistory/question.routes.js";
+import { revisionAttemptRouter } from "./modules/revisionAttempt/revisiontAttempt.routes.js";
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use("/api/v1/notes", notesRouter);
 app.use("/api/v1/documents", documentRouter);
 app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/questionhistory", questionHistoryRouter);
+app.use("/api/v1/revisionattempts", revisionAttemptRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

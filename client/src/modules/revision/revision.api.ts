@@ -53,3 +53,16 @@ export const submitRevisionAttempt = async ({
   );
   return response.data.attempt!;
 };
+
+export const getRevisionAttemptResults = async ({
+  attemptId,
+}: {
+  attemptId: string;
+}): Promise<RevisionAttemptSuccessRes<RevisionAttemptBody>> => {
+  const response = await axios.get<
+    RevisionAttemptSuccessRes<RevisionAttemptBody>
+  >(`${API_URL}/api/v1/revisionattempts/${attemptId}`, {
+    withCredentials: true,
+  });
+  return response.data;
+};
