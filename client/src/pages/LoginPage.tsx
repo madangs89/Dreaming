@@ -210,12 +210,6 @@ const LoginPage = ({ open = false, onClose = () => {} }: LoginPageProps) => {
           </span>
         </button>
 
-        {/* Apple */}
-        <button className="w-full h-12 border border-gray-300 rounded-xl flex items-center justify-center gap-3 mt-3 hover:bg-gray-50 transition">
-          <span className="text-xl"></span>
-          <span>{isSignup ? "Sign up with Apple" : "Sign in with Apple"}</span>
-        </button>
-
         {/* Terms */}
         <p className="text-center text-xs text-gray-500 leading-5 mt-6">
           By proceeding you acknowledge that you have read, understood and agree

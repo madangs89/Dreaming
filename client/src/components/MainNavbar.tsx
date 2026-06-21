@@ -49,6 +49,9 @@ const MainNavbar = () => {
       toast.success("Logged out successfully");
       navigate("/");
     },
+    onError: () => {
+      toast.error("Logout failed! Please try again.");
+    },
   });
 
   const handleLogout = () => {

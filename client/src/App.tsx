@@ -31,6 +31,8 @@ const App = () => {
     queryKey: ["auth"],
     queryFn: me,
     retry: 3,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   useEffect(() => {
