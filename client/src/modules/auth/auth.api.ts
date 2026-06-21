@@ -31,3 +31,10 @@ export const me = async (): Promise<User | undefined> => {
   console.log("Me response:", response.data);
   return response.data.data;
 };
+
+export const logout = async (): Promise<void> => {
+  const response = await axios.post(`${API_URL}/api/v1/auth/logout`, null, {
+    withCredentials: true,
+  });
+  console.log("Logout response:", response.data);
+};

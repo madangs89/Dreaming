@@ -7,7 +7,7 @@ const LandingPage = () => {
   const [open, setOpen] = useState<boolean>(false);
 
   return (
-    <div className="w-full relative h-full flex items-center   overflow-hidden lg:px-12 p-7 ">
+    <div className="w-full relative h-full flex items-center bg-white   overflow-hidden lg:px-12 p-7 ">
       <nav
         style={{
           fontFamily: "helveticRoman",
