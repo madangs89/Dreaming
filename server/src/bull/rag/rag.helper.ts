@@ -7,6 +7,7 @@ import { prisma } from "../../configs/prisma.js";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { Document } from "@langchain/core/documents";
 import { vectorStore } from "../../configs/supabaseVector.js";
+import { ChatBotMetaData } from "../../modules/chatbot/chatbot.types.js";
 const uploadDir = path.join(process.cwd(), "uploads");
 
 export const getDocumentData = async (
@@ -55,14 +56,7 @@ export const ragPipeline = async ({
   title,
   isDocument,
   version,
-}: {
-  extractedText: string;
-  notesId: string;
-  documentId: string;
-  title: string;
-  version: number;
-  isDocument: boolean;
-}) => {
+}: ChatBotMetaData) => {
   try {
     const splitter = new RecursiveCharacterTextSplitter({
       chunkSize: 500,

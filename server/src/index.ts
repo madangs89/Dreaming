@@ -11,6 +11,7 @@ import { bullRedis } from "./configs/redis.js";
 import { questionHistoryRouter } from "./modules/questionHistory/question.routes.js";
 import { revisionAttemptRouter } from "./modules/revisionAttempt/revisiontAttempt.routes.js";
 import { embeddings } from "./configs/google.js";
+import { chatbotRouter } from "./modules/chatbot/chatbot.routes.js";
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use("/api/v1/documents", documentRouter);
 app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/questionhistory", questionHistoryRouter);
 app.use("/api/v1/revisionattempts", revisionAttemptRouter);
+app.use("/api/v1/chatbot", chatbotRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
