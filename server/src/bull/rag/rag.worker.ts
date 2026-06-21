@@ -1,20 +1,28 @@
 import { Worker, Job } from "bullmq";
 import { bullRedis } from "../../configs/redis.js";
-import { downloadFileFromUrl, getDocumentData } from "./rag.helper.js";
-import { RagFileJobData } from "./rag.types.js";
+import {
+  deleteExistingVectors,
+  downloadFileFromUrl,
+  getDocumentData,
+  ragPipeline,
+} from "./rag.helper.js";
+import { RagContentJobData, RagFileJobData } from "./rag.types.js";
 import { Memetype } from "../../generated/prisma/enums.js";
 import { docxToText, imageToText, pdfToText } from "../../configs/ocr.js";
-import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
-import { Document } from "@langchain/core/documents";
 import { vectorStore } from "../../configs/supabaseVector.js";
 import fs from "fs";
 import { prisma } from "../../configs/prisma.js";
+import {
+  BlockNoteBlock,
+  getTextContent,
+  isNoteEmpty,
+} from "../review/review.worker.js";
 
 console.log("RAG worker is running...");
 
-const ragWorker = new Worker<RagFileJobData>(
+const ragWorker = new Worker<RagFileJobData | RagContentJobData>(
   "ragQueue",
-  async (job: Job<RagFileJobData>) => {
+  async (job: Job<RagFileJobData | RagContentJobData>) => {
     let filePath = "";
     try {
       switch (job.name) {
@@ -66,19 +74,14 @@ const ragWorker = new Worker<RagFileJobData>(
             throw new Error("Extracted text is empty");
           }
 
-          const splitter = new RecursiveCharacterTextSplitter({
-            chunkSize: 500,
-            chunkOverlap: 100,
+          const vectorData = await ragPipeline({
+            extractedText,
+            documentId,
+            notesId,
+            title: documentData.title,
+            isDocument: true,
+            version: 1,
           });
-
-          const document = new Document({
-            pageContent: extractedText,
-            metadata: { notes_id: notesId, document_id: documentId },
-          });
-          const texts = await splitter.splitDocuments([document]);
-
-          const vectorData = await vectorStore.addDocuments(texts);
-          console.log("Vector data:", vectorData);
 
           if (!vectorData || vectorData.length === 0) {
             throw new Error("Failed to add documents to vector store");
@@ -97,6 +100,69 @@ const ragWorker = new Worker<RagFileJobData>(
             throw new Error("Failed to update document indexing status");
           }
 
+          return true;
+        }
+        case "rag_content": {
+          const { index_version, notesId } = job.data as RagContentJobData;
+
+          console.log("Processing RAG content job for notesId:", notesId);
+          if (!index_version || !notesId) {
+            throw new Error("Missing index_version or notesId in job data");
+          }
+
+          const notesData = await prisma.note.findUnique({
+            where: { id: notesId },
+          });
+          if (!notesData) {
+            throw new Error("Notes data not found");
+          }
+
+          if (notesData.note_version == index_version) {
+            console.log(
+              "Note version is the same as index version, skipping RAG content job",
+            );
+            return true;
+          }
+
+          const newBlocks = JSON.parse(
+            notesData.content ?? "[]",
+          ) as BlockNoteBlock[];
+
+          if (isNoteEmpty(newBlocks)) {
+            throw new Error("Note content is empty");
+          }
+
+          const extractedText = getTextContent(newBlocks);
+
+          if (extractedText.trim() === "") {
+            throw new Error("Extracted text from note content is empty");
+          }
+          const vectorData = await ragPipeline({
+            extractedText,
+            notesId,
+            documentId: "",
+            title: notesData.title,
+            isDocument: false,
+            version: notesData.note_version,
+          });
+
+          if (!vectorData || vectorData.length === 0) {
+            throw new Error("Failed to add note content to vector store");
+          }
+
+          await deleteExistingVectors(notesId, notesData.note_version);
+
+          const updatedNote = await prisma.note.update({
+            where: {
+              id: notesId,
+            },
+            data: {
+              index_version: notesData.note_version,
+            },
+          });
+          if (!updatedNote) {
+            throw new Error("Failed to update note index version");
+          }
           return true;
         }
       }

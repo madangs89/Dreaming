@@ -1,8 +1,8 @@
 import { Queue } from "bullmq";
 import { bullRedis } from "../../configs/redis.js";
-import { RagFileJobData } from "./rag.types.js";
+import { RagContentJobData, RagFileJobData } from "./rag.types.js";
 
-export const ragQueue = new Queue<RagFileJobData>("ragQueue", {
+export const ragQueue = new Queue<RagFileJobData | RagContentJobData>("ragQueue", {
   connection: bullRedis,
 
   defaultJobOptions: {

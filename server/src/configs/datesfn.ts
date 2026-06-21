@@ -29,3 +29,8 @@ export const returnTomorrowDate = (oldScheduled_date: Date): Date => {
   const tomorrow = new Date(oldScheduled_date);
   return addDays(tomorrow, 1);
 };
+
+export const addHalfHourToDate = (): number => {
+  const current = new Date().getTime();
+  return current + 30 * 60 * 1000;
+};

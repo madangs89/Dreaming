@@ -27,6 +27,7 @@ import { v4 as uuidv4 } from "uuid";
 import { getNextReviewDate } from "../../configs/datesfn.js";
 import { reviewQueue } from "../../bull/review/review.queue.js";
 import { scheduleReviewJob } from "../../bull/review/review.jobs.js";
+import { scheduleRagContentJob } from "../../bull/rag/rag.job.js";
 export function getMemetype(mimetype: string): Memetype {
   if (mimetype.startsWith("image/")) {
     return Memetype.image;
@@ -343,7 +344,20 @@ export const updateNoteContent = async (
       include: { documents: true, reviews: true },
     });
 
-    scheduleReviewJob(note.id, note.topic_id, user_id, oldData.content!);
+    try {
+      await scheduleRagContentJob({
+        index_version: note.index_version,
+        notesId: note.id,
+      });
+      await scheduleReviewJob(
+        note.id,
+        note.topic_id,
+        user_id,
+        oldData.content!,
+      );
+    } catch (error) {
+      console.error("Error scheduling RAG document job:", error);
+    }
 
     return res.status(200).json({
       message: "Note content updated successfully",

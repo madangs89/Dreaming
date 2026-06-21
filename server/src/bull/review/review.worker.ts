@@ -16,19 +16,19 @@ import {
 import { scheduleQuestionJob } from "../questions/question.bull.job.js";
 import { llmAnswerEvaluation } from "./review.helpers.js";
 
-type BlockNoteContent = {
+export type BlockNoteContent = {
   type: string;
   text?: string;
 };
 
-type BlockNoteBlock = {
+export type BlockNoteBlock = {
   id: string;
   type: string;
   content?: BlockNoteContent[];
   children?: BlockNoteBlock[];
 };
 
-function getTextContent(blocks: BlockNoteBlock[]): string {
+export function getTextContent(blocks: BlockNoteBlock[]): string {
   let text = "";
 
   for (const block of blocks) {
@@ -44,7 +44,7 @@ function getTextContent(blocks: BlockNoteBlock[]): string {
   return text;
 }
 
-function isNoteEmpty(blocks: BlockNoteBlock[]) {
+export function isNoteEmpty(blocks: BlockNoteBlock[]) {
   const text = getTextContent(blocks);
 
   return text.trim().length === 0;
