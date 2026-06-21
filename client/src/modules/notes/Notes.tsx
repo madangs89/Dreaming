@@ -30,9 +30,12 @@ import {
 import Spinner from "../../components/Spinner";
 import axios from "axios";
 import type { DocumentBody } from "./notes.type";
-import { Trash, Files, Delete } from "lucide-react";
+import { Trash, Files, Bot } from "lucide-react";
 import FilePreviewModal from "./components/Filepreviewmodal";
+
 import { useTheme } from "../../hooks/useTheme";
+import ChatbotModal from "./components/ChatbotModal";
+
 
 const fileIcon = (type: string, isDark: boolean) => {
   const color = isDark ? "#a1a1aa" : "#71717a";
@@ -131,6 +134,8 @@ const Notes = () => {
   const [previewFile, setPreviewFile] = useState<DocumentBody | null>(null);
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [isFilesOpen, setIsFilesOpen] = useState(false);
+  // NEW: controls the AI chatbot modal
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     const storedTheme = localStorage.getItem("theme");
     return storedTheme === "dark" ? "dark" : "light";
@@ -201,9 +206,6 @@ const Notes = () => {
       }
     },
   });
-  console.log("t", editor._tiptapEditor.extensionStorage);
-
-  console.log("dd", editor._tiptapEditor.state);
 
   const notesQuery = useQuery({
     queryKey: ["notes", topicId],
@@ -309,7 +311,6 @@ const Notes = () => {
   const deleteNoteMutation = useMutation({
     mutationFn: deleteNote,
     onSuccess: async () => {
-      // need to remove localStorage
       const storedNoteIds = JSON.parse(
         localStorage.getItem("currentNoteId") ?? "{}",
       );
@@ -317,7 +318,6 @@ const Notes = () => {
         delete storedNoteIds[topicId!];
       }
       localStorage.setItem("currentNoteId", JSON.stringify(storedNoteIds));
-      // need to remove indexDb
       await retryWrapper(() => deleteNoteIndexDb(currentNoteId));
       makeEveryThingNew();
       queryClient.invalidateQueries({ queryKey: ["notes", topicId] });
@@ -343,7 +343,6 @@ const Notes = () => {
 
   useEffect(() => {
     if (singleNoteQuery.isSuccess && singleNoteQuery.data) {
-      console.log("effect running");
       (async () => {
         const storedData = await retryWrapper(() => getNote(currentNoteId));
 
@@ -495,7 +494,6 @@ const Notes = () => {
   };
 
   const handleContentChange = () => {
-    console.log("content change detected");
     if (isLoadingNoteRef.current) return;
     handleDebouncedContentChange(JSON.stringify(editor.document));
   };
@@ -598,6 +596,22 @@ const Notes = () => {
           )}
         </button>
       )}
+
+      {/* NEW: Floating AI chat button — bottom-right, always available */}
+      <button
+        onClick={() => setIsChatOpen(true)}
+        title="Ask AI"
+        style={{ backgroundColor: menuBtnBg, color: menuBtnText }}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.backgroundColor = menuBtnBgHover)
+        }
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.backgroundColor = menuBtnBg)
+        }
+        className="absolute bottom-5 right-5 z-50 flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-all hover:scale-105 sm:bottom-6 sm:right-6"
+      >
+        <Bot className="h-5 w-5" />
+      </button>
 
       {/* Left Sidebar — Notes */}
       <aside
@@ -814,7 +828,6 @@ const Notes = () => {
                         style={{ color: noteItemInactiveDate }}
                         className="mt-0.5 text-xs"
                       >
-                        {/* {file.} ·{" "} */}
                         {new Date(file.createdAt).toLocaleDateString()}
                       </p>
 
@@ -941,6 +954,16 @@ const Notes = () => {
         onClose={() => setPreviewFile(null)}
         isDark={isDark}
       />
+
+      {/* NEW: AI chatbot modal */}
+      <ChatbotModal
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+        theme={theme}
+        noteId={currentNoteId !== "new" ? currentNoteId : undefined}
+        noteTitle={currentNoteTitle || undefined}
+      />
+
       {/* Placeholder color for title input — injected via a style tag */}
       <style>{`
         input::placeholder {
