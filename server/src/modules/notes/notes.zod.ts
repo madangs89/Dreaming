@@ -50,6 +50,8 @@ export const NoteSchema = z.object({
   reviews: ReviewSchema.array().optional(),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
+  note_version: z.number(),
+  index_version: z.number(),
 });
 
 export const NoteParamSchema = z.object({

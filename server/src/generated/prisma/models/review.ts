@@ -38,52 +38,52 @@ export type ReviewSumAggregateOutputType = {
 
 export type ReviewMinAggregateOutputType = {
   id: string | null
-  user_id: string | null
   notes_id: string | null
   topic_id: string | null
   scheduled_date: Date | null
   status: $Enums.ReviewStatus | null
   is_completed: boolean | null
   review_results: $Enums.reviewRememberStatus | null
-  review_count: number | null
-  generation_count: number | null
-  is_revision_enough: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  is_revision_enough: boolean | null
+  user_id: string | null
+  review_count: number | null
+  generation_count: number | null
 }
 
 export type ReviewMaxAggregateOutputType = {
   id: string | null
-  user_id: string | null
   notes_id: string | null
   topic_id: string | null
   scheduled_date: Date | null
   status: $Enums.ReviewStatus | null
   is_completed: boolean | null
   review_results: $Enums.reviewRememberStatus | null
-  review_count: number | null
-  generation_count: number | null
-  is_revision_enough: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  is_revision_enough: boolean | null
+  user_id: string | null
+  review_count: number | null
+  generation_count: number | null
 }
 
 export type ReviewCountAggregateOutputType = {
   id: number
-  user_id: number
   notes_id: number
   topic_id: number
   scheduled_date: number
   status: number
   is_completed: number
   review_results: number
-  review_count: number
-  generation_count: number
-  strong_areas: number
-  weak_areas: number
-  is_revision_enough: number
   createdAt: number
   updatedAt: number
+  is_revision_enough: number
+  user_id: number
+  review_count: number
+  strong_areas: number
+  weak_areas: number
+  generation_count: number
   _all: number
 }
 
@@ -100,52 +100,52 @@ export type ReviewSumAggregateInputType = {
 
 export type ReviewMinAggregateInputType = {
   id?: true
-  user_id?: true
   notes_id?: true
   topic_id?: true
   scheduled_date?: true
   status?: true
   is_completed?: true
   review_results?: true
-  review_count?: true
-  generation_count?: true
-  is_revision_enough?: true
   createdAt?: true
   updatedAt?: true
+  is_revision_enough?: true
+  user_id?: true
+  review_count?: true
+  generation_count?: true
 }
 
 export type ReviewMaxAggregateInputType = {
   id?: true
-  user_id?: true
   notes_id?: true
   topic_id?: true
   scheduled_date?: true
   status?: true
   is_completed?: true
   review_results?: true
-  review_count?: true
-  generation_count?: true
-  is_revision_enough?: true
   createdAt?: true
   updatedAt?: true
+  is_revision_enough?: true
+  user_id?: true
+  review_count?: true
+  generation_count?: true
 }
 
 export type ReviewCountAggregateInputType = {
   id?: true
-  user_id?: true
   notes_id?: true
   topic_id?: true
   scheduled_date?: true
   status?: true
   is_completed?: true
   review_results?: true
-  review_count?: true
-  generation_count?: true
-  strong_areas?: true
-  weak_areas?: true
-  is_revision_enough?: true
   createdAt?: true
   updatedAt?: true
+  is_revision_enough?: true
+  user_id?: true
+  review_count?: true
+  strong_areas?: true
+  weak_areas?: true
+  generation_count?: true
   _all?: true
 }
 
@@ -237,20 +237,20 @@ export type reviewGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type ReviewGroupByOutputType = {
   id: string
-  user_id: string
   notes_id: string
   topic_id: string
   scheduled_date: Date
   status: $Enums.ReviewStatus
   is_completed: boolean
   review_results: $Enums.reviewRememberStatus | null
-  review_count: number
-  generation_count: number
-  strong_areas: string[]
-  weak_areas: string[]
-  is_revision_enough: boolean
   createdAt: Date
   updatedAt: Date
+  is_revision_enough: boolean
+  user_id: string
+  review_count: number
+  strong_areas: string[]
+  weak_areas: string[]
+  generation_count: number
   _count: ReviewCountAggregateOutputType | null
   _avg: ReviewAvgAggregateOutputType | null
   _sum: ReviewSumAggregateOutputType | null
@@ -278,48 +278,48 @@ export type reviewWhereInput = {
   OR?: Prisma.reviewWhereInput[]
   NOT?: Prisma.reviewWhereInput | Prisma.reviewWhereInput[]
   id?: Prisma.StringFilter<"review"> | string
-  user_id?: Prisma.StringFilter<"review"> | string
   notes_id?: Prisma.StringFilter<"review"> | string
   topic_id?: Prisma.StringFilter<"review"> | string
   scheduled_date?: Prisma.DateTimeFilter<"review"> | Date | string
   status?: Prisma.EnumReviewStatusFilter<"review"> | $Enums.ReviewStatus
   is_completed?: Prisma.BoolFilter<"review"> | boolean
   review_results?: Prisma.EnumreviewRememberStatusNullableFilter<"review"> | $Enums.reviewRememberStatus | null
-  review_count?: Prisma.IntFilter<"review"> | number
-  generation_count?: Prisma.IntFilter<"review"> | number
-  strong_areas?: Prisma.StringNullableListFilter<"review">
-  weak_areas?: Prisma.StringNullableListFilter<"review">
-  is_revision_enough?: Prisma.BoolFilter<"review"> | boolean
   createdAt?: Prisma.DateTimeFilter<"review"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"review"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  notes?: Prisma.XOR<Prisma.NoteScalarRelationFilter, Prisma.NoteWhereInput>
-  topic?: Prisma.XOR<Prisma.TopicScalarRelationFilter, Prisma.TopicWhereInput>
+  is_revision_enough?: Prisma.BoolFilter<"review"> | boolean
+  user_id?: Prisma.StringFilter<"review"> | string
+  review_count?: Prisma.IntFilter<"review"> | number
+  strong_areas?: Prisma.StringNullableListFilter<"review">
+  weak_areas?: Prisma.StringNullableListFilter<"review">
+  generation_count?: Prisma.IntFilter<"review"> | number
   questionHistories?: Prisma.QuestionHistoryListRelationFilter
   reviewAttempts?: Prisma.ReviewAttemptListRelationFilter
+  notes?: Prisma.XOR<Prisma.NoteScalarRelationFilter, Prisma.NoteWhereInput>
+  topic?: Prisma.XOR<Prisma.TopicScalarRelationFilter, Prisma.TopicWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type reviewOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
   notes_id?: Prisma.SortOrder
   topic_id?: Prisma.SortOrder
   scheduled_date?: Prisma.SortOrder
   status?: Prisma.SortOrder
   is_completed?: Prisma.SortOrder
   review_results?: Prisma.SortOrderInput | Prisma.SortOrder
-  review_count?: Prisma.SortOrder
-  generation_count?: Prisma.SortOrder
-  strong_areas?: Prisma.SortOrder
-  weak_areas?: Prisma.SortOrder
-  is_revision_enough?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
-  notes?: Prisma.NoteOrderByWithRelationInput
-  topic?: Prisma.TopicOrderByWithRelationInput
+  is_revision_enough?: Prisma.SortOrder
+  user_id?: Prisma.SortOrder
+  review_count?: Prisma.SortOrder
+  strong_areas?: Prisma.SortOrder
+  weak_areas?: Prisma.SortOrder
+  generation_count?: Prisma.SortOrder
   questionHistories?: Prisma.QuestionHistoryOrderByRelationAggregateInput
   reviewAttempts?: Prisma.ReviewAttemptOrderByRelationAggregateInput
+  notes?: Prisma.NoteOrderByWithRelationInput
+  topic?: Prisma.TopicOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type reviewWhereUniqueInput = Prisma.AtLeast<{
@@ -328,42 +328,42 @@ export type reviewWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.reviewWhereInput | Prisma.reviewWhereInput[]
   OR?: Prisma.reviewWhereInput[]
   NOT?: Prisma.reviewWhereInput | Prisma.reviewWhereInput[]
-  user_id?: Prisma.StringFilter<"review"> | string
   topic_id?: Prisma.StringFilter<"review"> | string
   scheduled_date?: Prisma.DateTimeFilter<"review"> | Date | string
   status?: Prisma.EnumReviewStatusFilter<"review"> | $Enums.ReviewStatus
   is_completed?: Prisma.BoolFilter<"review"> | boolean
   review_results?: Prisma.EnumreviewRememberStatusNullableFilter<"review"> | $Enums.reviewRememberStatus | null
-  review_count?: Prisma.IntFilter<"review"> | number
-  generation_count?: Prisma.IntFilter<"review"> | number
-  strong_areas?: Prisma.StringNullableListFilter<"review">
-  weak_areas?: Prisma.StringNullableListFilter<"review">
-  is_revision_enough?: Prisma.BoolFilter<"review"> | boolean
   createdAt?: Prisma.DateTimeFilter<"review"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"review"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  notes?: Prisma.XOR<Prisma.NoteScalarRelationFilter, Prisma.NoteWhereInput>
-  topic?: Prisma.XOR<Prisma.TopicScalarRelationFilter, Prisma.TopicWhereInput>
+  is_revision_enough?: Prisma.BoolFilter<"review"> | boolean
+  user_id?: Prisma.StringFilter<"review"> | string
+  review_count?: Prisma.IntFilter<"review"> | number
+  strong_areas?: Prisma.StringNullableListFilter<"review">
+  weak_areas?: Prisma.StringNullableListFilter<"review">
+  generation_count?: Prisma.IntFilter<"review"> | number
   questionHistories?: Prisma.QuestionHistoryListRelationFilter
   reviewAttempts?: Prisma.ReviewAttemptListRelationFilter
+  notes?: Prisma.XOR<Prisma.NoteScalarRelationFilter, Prisma.NoteWhereInput>
+  topic?: Prisma.XOR<Prisma.TopicScalarRelationFilter, Prisma.TopicWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "notes_id">
 
 export type reviewOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
   notes_id?: Prisma.SortOrder
   topic_id?: Prisma.SortOrder
   scheduled_date?: Prisma.SortOrder
   status?: Prisma.SortOrder
   is_completed?: Prisma.SortOrder
   review_results?: Prisma.SortOrderInput | Prisma.SortOrder
-  review_count?: Prisma.SortOrder
-  generation_count?: Prisma.SortOrder
-  strong_areas?: Prisma.SortOrder
-  weak_areas?: Prisma.SortOrder
-  is_revision_enough?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  is_revision_enough?: Prisma.SortOrder
+  user_id?: Prisma.SortOrder
+  review_count?: Prisma.SortOrder
+  strong_areas?: Prisma.SortOrder
+  weak_areas?: Prisma.SortOrder
+  generation_count?: Prisma.SortOrder
   _count?: Prisma.reviewCountOrderByAggregateInput
   _avg?: Prisma.reviewAvgOrderByAggregateInput
   _max?: Prisma.reviewMaxOrderByAggregateInput
@@ -376,20 +376,20 @@ export type reviewScalarWhereWithAggregatesInput = {
   OR?: Prisma.reviewScalarWhereWithAggregatesInput[]
   NOT?: Prisma.reviewScalarWhereWithAggregatesInput | Prisma.reviewScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"review"> | string
-  user_id?: Prisma.StringWithAggregatesFilter<"review"> | string
   notes_id?: Prisma.StringWithAggregatesFilter<"review"> | string
   topic_id?: Prisma.StringWithAggregatesFilter<"review"> | string
   scheduled_date?: Prisma.DateTimeWithAggregatesFilter<"review"> | Date | string
   status?: Prisma.EnumReviewStatusWithAggregatesFilter<"review"> | $Enums.ReviewStatus
   is_completed?: Prisma.BoolWithAggregatesFilter<"review"> | boolean
   review_results?: Prisma.EnumreviewRememberStatusNullableWithAggregatesFilter<"review"> | $Enums.reviewRememberStatus | null
-  review_count?: Prisma.IntWithAggregatesFilter<"review"> | number
-  generation_count?: Prisma.IntWithAggregatesFilter<"review"> | number
-  strong_areas?: Prisma.StringNullableListFilter<"review">
-  weak_areas?: Prisma.StringNullableListFilter<"review">
-  is_revision_enough?: Prisma.BoolWithAggregatesFilter<"review"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"review"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"review"> | Date | string
+  is_revision_enough?: Prisma.BoolWithAggregatesFilter<"review"> | boolean
+  user_id?: Prisma.StringWithAggregatesFilter<"review"> | string
+  review_count?: Prisma.IntWithAggregatesFilter<"review"> | number
+  strong_areas?: Prisma.StringNullableListFilter<"review">
+  weak_areas?: Prisma.StringNullableListFilter<"review">
+  generation_count?: Prisma.IntWithAggregatesFilter<"review"> | number
 }
 
 export type reviewCreateInput = {
@@ -398,36 +398,36 @@ export type reviewCreateInput = {
   status?: $Enums.ReviewStatus
   is_completed?: boolean
   review_results?: $Enums.reviewRememberStatus | null
-  review_count?: number
-  generation_count?: number
-  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
-  is_revision_enough?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutReviewsInput
-  notes: Prisma.NoteCreateNestedOneWithoutReviewsInput
-  topic: Prisma.TopicCreateNestedOneWithoutReviewsInput
+  is_revision_enough?: boolean
+  review_count?: number
+  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
+  generation_count?: number
   questionHistories?: Prisma.QuestionHistoryCreateNestedManyWithoutReviewInput
   reviewAttempts?: Prisma.ReviewAttemptCreateNestedManyWithoutReviewInput
+  notes: Prisma.NoteCreateNestedOneWithoutReviewsInput
+  topic: Prisma.TopicCreateNestedOneWithoutReviewsInput
+  user: Prisma.UserCreateNestedOneWithoutReviewsInput
 }
 
 export type reviewUncheckedCreateInput = {
   id?: string
-  user_id: string
   notes_id: string
   topic_id: string
   scheduled_date: Date | string
   status?: $Enums.ReviewStatus
   is_completed?: boolean
   review_results?: $Enums.reviewRememberStatus | null
-  review_count?: number
-  generation_count?: number
-  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
-  is_revision_enough?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  is_revision_enough?: boolean
+  user_id: string
+  review_count?: number
+  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
+  generation_count?: number
   questionHistories?: Prisma.QuestionHistoryUncheckedCreateNestedManyWithoutReviewInput
   reviewAttempts?: Prisma.ReviewAttemptUncheckedCreateNestedManyWithoutReviewInput
 }
@@ -438,56 +438,56 @@ export type reviewUpdateInput = {
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   is_completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   review_results?: Prisma.NullableEnumreviewRememberStatusFieldUpdateOperationsInput | $Enums.reviewRememberStatus | null
-  review_count?: Prisma.IntFieldUpdateOperationsInput | number
-  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
-  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
-  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutReviewsNestedInput
-  notes?: Prisma.NoteUpdateOneRequiredWithoutReviewsNestedInput
-  topic?: Prisma.TopicUpdateOneRequiredWithoutReviewsNestedInput
+  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  review_count?: Prisma.IntFieldUpdateOperationsInput | number
+  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
   questionHistories?: Prisma.QuestionHistoryUpdateManyWithoutReviewNestedInput
   reviewAttempts?: Prisma.ReviewAttemptUpdateManyWithoutReviewNestedInput
+  notes?: Prisma.NoteUpdateOneRequiredWithoutReviewsNestedInput
+  topic?: Prisma.TopicUpdateOneRequiredWithoutReviewsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutReviewsNestedInput
 }
 
 export type reviewUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  user_id?: Prisma.StringFieldUpdateOperationsInput | string
   notes_id?: Prisma.StringFieldUpdateOperationsInput | string
   topic_id?: Prisma.StringFieldUpdateOperationsInput | string
   scheduled_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   is_completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   review_results?: Prisma.NullableEnumreviewRememberStatusFieldUpdateOperationsInput | $Enums.reviewRememberStatus | null
-  review_count?: Prisma.IntFieldUpdateOperationsInput | number
-  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
-  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
-  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user_id?: Prisma.StringFieldUpdateOperationsInput | string
+  review_count?: Prisma.IntFieldUpdateOperationsInput | number
+  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
   questionHistories?: Prisma.QuestionHistoryUncheckedUpdateManyWithoutReviewNestedInput
   reviewAttempts?: Prisma.ReviewAttemptUncheckedUpdateManyWithoutReviewNestedInput
 }
 
 export type reviewCreateManyInput = {
   id?: string
-  user_id: string
   notes_id: string
   topic_id: string
   scheduled_date: Date | string
   status?: $Enums.ReviewStatus
   is_completed?: boolean
   review_results?: $Enums.reviewRememberStatus | null
-  review_count?: number
-  generation_count?: number
-  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
-  is_revision_enough?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  is_revision_enough?: boolean
+  user_id: string
+  review_count?: number
+  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
+  generation_count?: number
 }
 
 export type reviewUpdateManyMutationInput = {
@@ -496,31 +496,31 @@ export type reviewUpdateManyMutationInput = {
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   is_completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   review_results?: Prisma.NullableEnumreviewRememberStatusFieldUpdateOperationsInput | $Enums.reviewRememberStatus | null
-  review_count?: Prisma.IntFieldUpdateOperationsInput | number
-  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
-  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
-  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  review_count?: Prisma.IntFieldUpdateOperationsInput | number
+  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type reviewUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  user_id?: Prisma.StringFieldUpdateOperationsInput | string
   notes_id?: Prisma.StringFieldUpdateOperationsInput | string
   topic_id?: Prisma.StringFieldUpdateOperationsInput | string
   scheduled_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   is_completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   review_results?: Prisma.NullableEnumreviewRememberStatusFieldUpdateOperationsInput | $Enums.reviewRememberStatus | null
-  review_count?: Prisma.IntFieldUpdateOperationsInput | number
-  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
-  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
-  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user_id?: Prisma.StringFieldUpdateOperationsInput | string
+  review_count?: Prisma.IntFieldUpdateOperationsInput | number
+  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ReviewListRelationFilter = {
@@ -543,20 +543,20 @@ export type StringNullableListFilter<$PrismaModel = never> = {
 
 export type reviewCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
   notes_id?: Prisma.SortOrder
   topic_id?: Prisma.SortOrder
   scheduled_date?: Prisma.SortOrder
   status?: Prisma.SortOrder
   is_completed?: Prisma.SortOrder
   review_results?: Prisma.SortOrder
-  review_count?: Prisma.SortOrder
-  generation_count?: Prisma.SortOrder
-  strong_areas?: Prisma.SortOrder
-  weak_areas?: Prisma.SortOrder
-  is_revision_enough?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  is_revision_enough?: Prisma.SortOrder
+  user_id?: Prisma.SortOrder
+  review_count?: Prisma.SortOrder
+  strong_areas?: Prisma.SortOrder
+  weak_areas?: Prisma.SortOrder
+  generation_count?: Prisma.SortOrder
 }
 
 export type reviewAvgOrderByAggregateInput = {
@@ -566,34 +566,34 @@ export type reviewAvgOrderByAggregateInput = {
 
 export type reviewMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
   notes_id?: Prisma.SortOrder
   topic_id?: Prisma.SortOrder
   scheduled_date?: Prisma.SortOrder
   status?: Prisma.SortOrder
   is_completed?: Prisma.SortOrder
   review_results?: Prisma.SortOrder
-  review_count?: Prisma.SortOrder
-  generation_count?: Prisma.SortOrder
-  is_revision_enough?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  is_revision_enough?: Prisma.SortOrder
+  user_id?: Prisma.SortOrder
+  review_count?: Prisma.SortOrder
+  generation_count?: Prisma.SortOrder
 }
 
 export type reviewMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
   notes_id?: Prisma.SortOrder
   topic_id?: Prisma.SortOrder
   scheduled_date?: Prisma.SortOrder
   status?: Prisma.SortOrder
   is_completed?: Prisma.SortOrder
   review_results?: Prisma.SortOrder
-  review_count?: Prisma.SortOrder
-  generation_count?: Prisma.SortOrder
-  is_revision_enough?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  is_revision_enough?: Prisma.SortOrder
+  user_id?: Prisma.SortOrder
+  review_count?: Prisma.SortOrder
+  generation_count?: Prisma.SortOrder
 }
 
 export type reviewSumOrderByAggregateInput = {
@@ -748,14 +748,6 @@ export type NullableEnumreviewRememberStatusFieldUpdateOperationsInput = {
   set?: $Enums.reviewRememberStatus | null
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type reviewUpdatestrong_areasInput = {
   set?: string[]
   push?: string | string[]
@@ -800,17 +792,17 @@ export type reviewCreateWithoutUserInput = {
   status?: $Enums.ReviewStatus
   is_completed?: boolean
   review_results?: $Enums.reviewRememberStatus | null
-  review_count?: number
-  generation_count?: number
-  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
-  is_revision_enough?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  notes: Prisma.NoteCreateNestedOneWithoutReviewsInput
-  topic: Prisma.TopicCreateNestedOneWithoutReviewsInput
+  is_revision_enough?: boolean
+  review_count?: number
+  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
+  generation_count?: number
   questionHistories?: Prisma.QuestionHistoryCreateNestedManyWithoutReviewInput
   reviewAttempts?: Prisma.ReviewAttemptCreateNestedManyWithoutReviewInput
+  notes: Prisma.NoteCreateNestedOneWithoutReviewsInput
+  topic: Prisma.TopicCreateNestedOneWithoutReviewsInput
 }
 
 export type reviewUncheckedCreateWithoutUserInput = {
@@ -821,13 +813,13 @@ export type reviewUncheckedCreateWithoutUserInput = {
   status?: $Enums.ReviewStatus
   is_completed?: boolean
   review_results?: $Enums.reviewRememberStatus | null
-  review_count?: number
-  generation_count?: number
-  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
-  is_revision_enough?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  is_revision_enough?: boolean
+  review_count?: number
+  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
+  generation_count?: number
   questionHistories?: Prisma.QuestionHistoryUncheckedCreateNestedManyWithoutReviewInput
   reviewAttempts?: Prisma.ReviewAttemptUncheckedCreateNestedManyWithoutReviewInput
 }
@@ -863,20 +855,20 @@ export type reviewScalarWhereInput = {
   OR?: Prisma.reviewScalarWhereInput[]
   NOT?: Prisma.reviewScalarWhereInput | Prisma.reviewScalarWhereInput[]
   id?: Prisma.StringFilter<"review"> | string
-  user_id?: Prisma.StringFilter<"review"> | string
   notes_id?: Prisma.StringFilter<"review"> | string
   topic_id?: Prisma.StringFilter<"review"> | string
   scheduled_date?: Prisma.DateTimeFilter<"review"> | Date | string
   status?: Prisma.EnumReviewStatusFilter<"review"> | $Enums.ReviewStatus
   is_completed?: Prisma.BoolFilter<"review"> | boolean
   review_results?: Prisma.EnumreviewRememberStatusNullableFilter<"review"> | $Enums.reviewRememberStatus | null
-  review_count?: Prisma.IntFilter<"review"> | number
-  generation_count?: Prisma.IntFilter<"review"> | number
-  strong_areas?: Prisma.StringNullableListFilter<"review">
-  weak_areas?: Prisma.StringNullableListFilter<"review">
-  is_revision_enough?: Prisma.BoolFilter<"review"> | boolean
   createdAt?: Prisma.DateTimeFilter<"review"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"review"> | Date | string
+  is_revision_enough?: Prisma.BoolFilter<"review"> | boolean
+  user_id?: Prisma.StringFilter<"review"> | string
+  review_count?: Prisma.IntFilter<"review"> | number
+  strong_areas?: Prisma.StringNullableListFilter<"review">
+  weak_areas?: Prisma.StringNullableListFilter<"review">
+  generation_count?: Prisma.IntFilter<"review"> | number
 }
 
 export type reviewCreateWithoutTopicInput = {
@@ -885,34 +877,34 @@ export type reviewCreateWithoutTopicInput = {
   status?: $Enums.ReviewStatus
   is_completed?: boolean
   review_results?: $Enums.reviewRememberStatus | null
-  review_count?: number
-  generation_count?: number
-  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
-  is_revision_enough?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutReviewsInput
-  notes: Prisma.NoteCreateNestedOneWithoutReviewsInput
+  is_revision_enough?: boolean
+  review_count?: number
+  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
+  generation_count?: number
   questionHistories?: Prisma.QuestionHistoryCreateNestedManyWithoutReviewInput
   reviewAttempts?: Prisma.ReviewAttemptCreateNestedManyWithoutReviewInput
+  notes: Prisma.NoteCreateNestedOneWithoutReviewsInput
+  user: Prisma.UserCreateNestedOneWithoutReviewsInput
 }
 
 export type reviewUncheckedCreateWithoutTopicInput = {
   id?: string
-  user_id: string
   notes_id: string
   scheduled_date: Date | string
   status?: $Enums.ReviewStatus
   is_completed?: boolean
   review_results?: $Enums.reviewRememberStatus | null
-  review_count?: number
-  generation_count?: number
-  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
-  is_revision_enough?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  is_revision_enough?: boolean
+  user_id: string
+  review_count?: number
+  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
+  generation_count?: number
   questionHistories?: Prisma.QuestionHistoryUncheckedCreateNestedManyWithoutReviewInput
   reviewAttempts?: Prisma.ReviewAttemptUncheckedCreateNestedManyWithoutReviewInput
 }
@@ -949,34 +941,34 @@ export type reviewCreateWithoutNotesInput = {
   status?: $Enums.ReviewStatus
   is_completed?: boolean
   review_results?: $Enums.reviewRememberStatus | null
-  review_count?: number
-  generation_count?: number
-  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
-  is_revision_enough?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutReviewsInput
-  topic: Prisma.TopicCreateNestedOneWithoutReviewsInput
+  is_revision_enough?: boolean
+  review_count?: number
+  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
+  generation_count?: number
   questionHistories?: Prisma.QuestionHistoryCreateNestedManyWithoutReviewInput
   reviewAttempts?: Prisma.ReviewAttemptCreateNestedManyWithoutReviewInput
+  topic: Prisma.TopicCreateNestedOneWithoutReviewsInput
+  user: Prisma.UserCreateNestedOneWithoutReviewsInput
 }
 
 export type reviewUncheckedCreateWithoutNotesInput = {
   id?: string
-  user_id: string
   topic_id: string
   scheduled_date: Date | string
   status?: $Enums.ReviewStatus
   is_completed?: boolean
   review_results?: $Enums.reviewRememberStatus | null
-  review_count?: number
-  generation_count?: number
-  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
-  is_revision_enough?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  is_revision_enough?: boolean
+  user_id: string
+  review_count?: number
+  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
+  generation_count?: number
   questionHistories?: Prisma.QuestionHistoryUncheckedCreateNestedManyWithoutReviewInput
   reviewAttempts?: Prisma.ReviewAttemptUncheckedCreateNestedManyWithoutReviewInput
 }
@@ -1013,35 +1005,35 @@ export type reviewCreateWithoutQuestionHistoriesInput = {
   status?: $Enums.ReviewStatus
   is_completed?: boolean
   review_results?: $Enums.reviewRememberStatus | null
-  review_count?: number
-  generation_count?: number
-  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
-  is_revision_enough?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutReviewsInput
+  is_revision_enough?: boolean
+  review_count?: number
+  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
+  generation_count?: number
+  reviewAttempts?: Prisma.ReviewAttemptCreateNestedManyWithoutReviewInput
   notes: Prisma.NoteCreateNestedOneWithoutReviewsInput
   topic: Prisma.TopicCreateNestedOneWithoutReviewsInput
-  reviewAttempts?: Prisma.ReviewAttemptCreateNestedManyWithoutReviewInput
+  user: Prisma.UserCreateNestedOneWithoutReviewsInput
 }
 
 export type reviewUncheckedCreateWithoutQuestionHistoriesInput = {
   id?: string
-  user_id: string
   notes_id: string
   topic_id: string
   scheduled_date: Date | string
   status?: $Enums.ReviewStatus
   is_completed?: boolean
   review_results?: $Enums.reviewRememberStatus | null
-  review_count?: number
-  generation_count?: number
-  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
-  is_revision_enough?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  is_revision_enough?: boolean
+  user_id: string
+  review_count?: number
+  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
+  generation_count?: number
   reviewAttempts?: Prisma.ReviewAttemptUncheckedCreateNestedManyWithoutReviewInput
 }
 
@@ -1067,35 +1059,35 @@ export type reviewUpdateWithoutQuestionHistoriesInput = {
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   is_completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   review_results?: Prisma.NullableEnumreviewRememberStatusFieldUpdateOperationsInput | $Enums.reviewRememberStatus | null
-  review_count?: Prisma.IntFieldUpdateOperationsInput | number
-  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
-  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
-  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutReviewsNestedInput
+  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  review_count?: Prisma.IntFieldUpdateOperationsInput | number
+  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
+  reviewAttempts?: Prisma.ReviewAttemptUpdateManyWithoutReviewNestedInput
   notes?: Prisma.NoteUpdateOneRequiredWithoutReviewsNestedInput
   topic?: Prisma.TopicUpdateOneRequiredWithoutReviewsNestedInput
-  reviewAttempts?: Prisma.ReviewAttemptUpdateManyWithoutReviewNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutReviewsNestedInput
 }
 
 export type reviewUncheckedUpdateWithoutQuestionHistoriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  user_id?: Prisma.StringFieldUpdateOperationsInput | string
   notes_id?: Prisma.StringFieldUpdateOperationsInput | string
   topic_id?: Prisma.StringFieldUpdateOperationsInput | string
   scheduled_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   is_completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   review_results?: Prisma.NullableEnumreviewRememberStatusFieldUpdateOperationsInput | $Enums.reviewRememberStatus | null
-  review_count?: Prisma.IntFieldUpdateOperationsInput | number
-  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
-  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
-  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user_id?: Prisma.StringFieldUpdateOperationsInput | string
+  review_count?: Prisma.IntFieldUpdateOperationsInput | number
+  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
   reviewAttempts?: Prisma.ReviewAttemptUncheckedUpdateManyWithoutReviewNestedInput
 }
 
@@ -1105,35 +1097,35 @@ export type reviewCreateWithoutReviewAttemptsInput = {
   status?: $Enums.ReviewStatus
   is_completed?: boolean
   review_results?: $Enums.reviewRememberStatus | null
-  review_count?: number
-  generation_count?: number
-  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
-  is_revision_enough?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutReviewsInput
+  is_revision_enough?: boolean
+  review_count?: number
+  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
+  generation_count?: number
+  questionHistories?: Prisma.QuestionHistoryCreateNestedManyWithoutReviewInput
   notes: Prisma.NoteCreateNestedOneWithoutReviewsInput
   topic: Prisma.TopicCreateNestedOneWithoutReviewsInput
-  questionHistories?: Prisma.QuestionHistoryCreateNestedManyWithoutReviewInput
+  user: Prisma.UserCreateNestedOneWithoutReviewsInput
 }
 
 export type reviewUncheckedCreateWithoutReviewAttemptsInput = {
   id?: string
-  user_id: string
   notes_id: string
   topic_id: string
   scheduled_date: Date | string
   status?: $Enums.ReviewStatus
   is_completed?: boolean
   review_results?: $Enums.reviewRememberStatus | null
-  review_count?: number
-  generation_count?: number
-  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
-  is_revision_enough?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  is_revision_enough?: boolean
+  user_id: string
+  review_count?: number
+  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
+  generation_count?: number
   questionHistories?: Prisma.QuestionHistoryUncheckedCreateNestedManyWithoutReviewInput
 }
 
@@ -1159,35 +1151,35 @@ export type reviewUpdateWithoutReviewAttemptsInput = {
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   is_completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   review_results?: Prisma.NullableEnumreviewRememberStatusFieldUpdateOperationsInput | $Enums.reviewRememberStatus | null
-  review_count?: Prisma.IntFieldUpdateOperationsInput | number
-  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
-  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
-  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutReviewsNestedInput
+  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  review_count?: Prisma.IntFieldUpdateOperationsInput | number
+  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
+  questionHistories?: Prisma.QuestionHistoryUpdateManyWithoutReviewNestedInput
   notes?: Prisma.NoteUpdateOneRequiredWithoutReviewsNestedInput
   topic?: Prisma.TopicUpdateOneRequiredWithoutReviewsNestedInput
-  questionHistories?: Prisma.QuestionHistoryUpdateManyWithoutReviewNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutReviewsNestedInput
 }
 
 export type reviewUncheckedUpdateWithoutReviewAttemptsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  user_id?: Prisma.StringFieldUpdateOperationsInput | string
   notes_id?: Prisma.StringFieldUpdateOperationsInput | string
   topic_id?: Prisma.StringFieldUpdateOperationsInput | string
   scheduled_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   is_completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   review_results?: Prisma.NullableEnumreviewRememberStatusFieldUpdateOperationsInput | $Enums.reviewRememberStatus | null
-  review_count?: Prisma.IntFieldUpdateOperationsInput | number
-  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
-  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
-  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user_id?: Prisma.StringFieldUpdateOperationsInput | string
+  review_count?: Prisma.IntFieldUpdateOperationsInput | number
+  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
   questionHistories?: Prisma.QuestionHistoryUncheckedUpdateManyWithoutReviewNestedInput
 }
 
@@ -1199,13 +1191,13 @@ export type reviewCreateManyUserInput = {
   status?: $Enums.ReviewStatus
   is_completed?: boolean
   review_results?: $Enums.reviewRememberStatus | null
-  review_count?: number
-  generation_count?: number
-  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
-  is_revision_enough?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  is_revision_enough?: boolean
+  review_count?: number
+  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
+  generation_count?: number
 }
 
 export type reviewUpdateWithoutUserInput = {
@@ -1214,17 +1206,17 @@ export type reviewUpdateWithoutUserInput = {
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   is_completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   review_results?: Prisma.NullableEnumreviewRememberStatusFieldUpdateOperationsInput | $Enums.reviewRememberStatus | null
-  review_count?: Prisma.IntFieldUpdateOperationsInput | number
-  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
-  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
-  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  notes?: Prisma.NoteUpdateOneRequiredWithoutReviewsNestedInput
-  topic?: Prisma.TopicUpdateOneRequiredWithoutReviewsNestedInput
+  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  review_count?: Prisma.IntFieldUpdateOperationsInput | number
+  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
   questionHistories?: Prisma.QuestionHistoryUpdateManyWithoutReviewNestedInput
   reviewAttempts?: Prisma.ReviewAttemptUpdateManyWithoutReviewNestedInput
+  notes?: Prisma.NoteUpdateOneRequiredWithoutReviewsNestedInput
+  topic?: Prisma.TopicUpdateOneRequiredWithoutReviewsNestedInput
 }
 
 export type reviewUncheckedUpdateWithoutUserInput = {
@@ -1235,13 +1227,13 @@ export type reviewUncheckedUpdateWithoutUserInput = {
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   is_completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   review_results?: Prisma.NullableEnumreviewRememberStatusFieldUpdateOperationsInput | $Enums.reviewRememberStatus | null
-  review_count?: Prisma.IntFieldUpdateOperationsInput | number
-  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
-  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
-  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  review_count?: Prisma.IntFieldUpdateOperationsInput | number
+  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
   questionHistories?: Prisma.QuestionHistoryUncheckedUpdateManyWithoutReviewNestedInput
   reviewAttempts?: Prisma.ReviewAttemptUncheckedUpdateManyWithoutReviewNestedInput
 }
@@ -1254,30 +1246,30 @@ export type reviewUncheckedUpdateManyWithoutUserInput = {
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   is_completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   review_results?: Prisma.NullableEnumreviewRememberStatusFieldUpdateOperationsInput | $Enums.reviewRememberStatus | null
-  review_count?: Prisma.IntFieldUpdateOperationsInput | number
-  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
-  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
-  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  review_count?: Prisma.IntFieldUpdateOperationsInput | number
+  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type reviewCreateManyTopicInput = {
   id?: string
-  user_id: string
   notes_id: string
   scheduled_date: Date | string
   status?: $Enums.ReviewStatus
   is_completed?: boolean
   review_results?: $Enums.reviewRememberStatus | null
-  review_count?: number
-  generation_count?: number
-  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
-  is_revision_enough?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  is_revision_enough?: boolean
+  user_id: string
+  review_count?: number
+  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
+  generation_count?: number
 }
 
 export type reviewUpdateWithoutTopicInput = {
@@ -1286,70 +1278,70 @@ export type reviewUpdateWithoutTopicInput = {
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   is_completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   review_results?: Prisma.NullableEnumreviewRememberStatusFieldUpdateOperationsInput | $Enums.reviewRememberStatus | null
-  review_count?: Prisma.IntFieldUpdateOperationsInput | number
-  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
-  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
-  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutReviewsNestedInput
-  notes?: Prisma.NoteUpdateOneRequiredWithoutReviewsNestedInput
+  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  review_count?: Prisma.IntFieldUpdateOperationsInput | number
+  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
   questionHistories?: Prisma.QuestionHistoryUpdateManyWithoutReviewNestedInput
   reviewAttempts?: Prisma.ReviewAttemptUpdateManyWithoutReviewNestedInput
+  notes?: Prisma.NoteUpdateOneRequiredWithoutReviewsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutReviewsNestedInput
 }
 
 export type reviewUncheckedUpdateWithoutTopicInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  user_id?: Prisma.StringFieldUpdateOperationsInput | string
   notes_id?: Prisma.StringFieldUpdateOperationsInput | string
   scheduled_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   is_completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   review_results?: Prisma.NullableEnumreviewRememberStatusFieldUpdateOperationsInput | $Enums.reviewRememberStatus | null
-  review_count?: Prisma.IntFieldUpdateOperationsInput | number
-  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
-  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
-  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user_id?: Prisma.StringFieldUpdateOperationsInput | string
+  review_count?: Prisma.IntFieldUpdateOperationsInput | number
+  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
   questionHistories?: Prisma.QuestionHistoryUncheckedUpdateManyWithoutReviewNestedInput
   reviewAttempts?: Prisma.ReviewAttemptUncheckedUpdateManyWithoutReviewNestedInput
 }
 
 export type reviewUncheckedUpdateManyWithoutTopicInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  user_id?: Prisma.StringFieldUpdateOperationsInput | string
   notes_id?: Prisma.StringFieldUpdateOperationsInput | string
   scheduled_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   is_completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   review_results?: Prisma.NullableEnumreviewRememberStatusFieldUpdateOperationsInput | $Enums.reviewRememberStatus | null
-  review_count?: Prisma.IntFieldUpdateOperationsInput | number
-  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
-  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
-  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user_id?: Prisma.StringFieldUpdateOperationsInput | string
+  review_count?: Prisma.IntFieldUpdateOperationsInput | number
+  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type reviewCreateManyNotesInput = {
   id?: string
-  user_id: string
   topic_id: string
   scheduled_date: Date | string
   status?: $Enums.ReviewStatus
   is_completed?: boolean
   review_results?: $Enums.reviewRememberStatus | null
-  review_count?: number
-  generation_count?: number
-  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
-  is_revision_enough?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  is_revision_enough?: boolean
+  user_id: string
+  review_count?: number
+  strong_areas?: Prisma.reviewCreatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewCreateweak_areasInput | string[]
+  generation_count?: number
 }
 
 export type reviewUpdateWithoutNotesInput = {
@@ -1358,53 +1350,53 @@ export type reviewUpdateWithoutNotesInput = {
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   is_completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   review_results?: Prisma.NullableEnumreviewRememberStatusFieldUpdateOperationsInput | $Enums.reviewRememberStatus | null
-  review_count?: Prisma.IntFieldUpdateOperationsInput | number
-  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
-  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
-  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutReviewsNestedInput
-  topic?: Prisma.TopicUpdateOneRequiredWithoutReviewsNestedInput
+  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  review_count?: Prisma.IntFieldUpdateOperationsInput | number
+  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
   questionHistories?: Prisma.QuestionHistoryUpdateManyWithoutReviewNestedInput
   reviewAttempts?: Prisma.ReviewAttemptUpdateManyWithoutReviewNestedInput
+  topic?: Prisma.TopicUpdateOneRequiredWithoutReviewsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutReviewsNestedInput
 }
 
 export type reviewUncheckedUpdateWithoutNotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  user_id?: Prisma.StringFieldUpdateOperationsInput | string
   topic_id?: Prisma.StringFieldUpdateOperationsInput | string
   scheduled_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   is_completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   review_results?: Prisma.NullableEnumreviewRememberStatusFieldUpdateOperationsInput | $Enums.reviewRememberStatus | null
-  review_count?: Prisma.IntFieldUpdateOperationsInput | number
-  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
-  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
-  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user_id?: Prisma.StringFieldUpdateOperationsInput | string
+  review_count?: Prisma.IntFieldUpdateOperationsInput | number
+  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
   questionHistories?: Prisma.QuestionHistoryUncheckedUpdateManyWithoutReviewNestedInput
   reviewAttempts?: Prisma.ReviewAttemptUncheckedUpdateManyWithoutReviewNestedInput
 }
 
 export type reviewUncheckedUpdateManyWithoutNotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  user_id?: Prisma.StringFieldUpdateOperationsInput | string
   topic_id?: Prisma.StringFieldUpdateOperationsInput | string
   scheduled_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   is_completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   review_results?: Prisma.NullableEnumreviewRememberStatusFieldUpdateOperationsInput | $Enums.reviewRememberStatus | null
-  review_count?: Prisma.IntFieldUpdateOperationsInput | number
-  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
-  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
-  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
-  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  is_revision_enough?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user_id?: Prisma.StringFieldUpdateOperationsInput | string
+  review_count?: Prisma.IntFieldUpdateOperationsInput | number
+  strong_areas?: Prisma.reviewUpdatestrong_areasInput | string[]
+  weak_areas?: Prisma.reviewUpdateweak_areasInput | string[]
+  generation_count?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -1449,133 +1441,133 @@ export type ReviewCountOutputTypeCountReviewAttemptsArgs<ExtArgs extends runtime
 
 export type reviewSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  user_id?: boolean
   notes_id?: boolean
   topic_id?: boolean
   scheduled_date?: boolean
   status?: boolean
   is_completed?: boolean
   review_results?: boolean
-  review_count?: boolean
-  generation_count?: boolean
-  strong_areas?: boolean
-  weak_areas?: boolean
-  is_revision_enough?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  notes?: boolean | Prisma.NoteDefaultArgs<ExtArgs>
-  topic?: boolean | Prisma.TopicDefaultArgs<ExtArgs>
+  is_revision_enough?: boolean
+  user_id?: boolean
+  review_count?: boolean
+  strong_areas?: boolean
+  weak_areas?: boolean
+  generation_count?: boolean
   questionHistories?: boolean | Prisma.review$questionHistoriesArgs<ExtArgs>
   reviewAttempts?: boolean | Prisma.review$reviewAttemptsArgs<ExtArgs>
+  notes?: boolean | Prisma.NoteDefaultArgs<ExtArgs>
+  topic?: boolean | Prisma.TopicDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.ReviewCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["review"]>
 
 export type reviewSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  user_id?: boolean
   notes_id?: boolean
   topic_id?: boolean
   scheduled_date?: boolean
   status?: boolean
   is_completed?: boolean
   review_results?: boolean
-  review_count?: boolean
-  generation_count?: boolean
-  strong_areas?: boolean
-  weak_areas?: boolean
-  is_revision_enough?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  is_revision_enough?: boolean
+  user_id?: boolean
+  review_count?: boolean
+  strong_areas?: boolean
+  weak_areas?: boolean
+  generation_count?: boolean
   notes?: boolean | Prisma.NoteDefaultArgs<ExtArgs>
   topic?: boolean | Prisma.TopicDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["review"]>
 
 export type reviewSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  user_id?: boolean
   notes_id?: boolean
   topic_id?: boolean
   scheduled_date?: boolean
   status?: boolean
   is_completed?: boolean
   review_results?: boolean
-  review_count?: boolean
-  generation_count?: boolean
-  strong_areas?: boolean
-  weak_areas?: boolean
-  is_revision_enough?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  is_revision_enough?: boolean
+  user_id?: boolean
+  review_count?: boolean
+  strong_areas?: boolean
+  weak_areas?: boolean
+  generation_count?: boolean
   notes?: boolean | Prisma.NoteDefaultArgs<ExtArgs>
   topic?: boolean | Prisma.TopicDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["review"]>
 
 export type reviewSelectScalar = {
   id?: boolean
-  user_id?: boolean
   notes_id?: boolean
   topic_id?: boolean
   scheduled_date?: boolean
   status?: boolean
   is_completed?: boolean
   review_results?: boolean
-  review_count?: boolean
-  generation_count?: boolean
-  strong_areas?: boolean
-  weak_areas?: boolean
-  is_revision_enough?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  is_revision_enough?: boolean
+  user_id?: boolean
+  review_count?: boolean
+  strong_areas?: boolean
+  weak_areas?: boolean
+  generation_count?: boolean
 }
 
-export type reviewOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "notes_id" | "topic_id" | "scheduled_date" | "status" | "is_completed" | "review_results" | "review_count" | "generation_count" | "strong_areas" | "weak_areas" | "is_revision_enough" | "createdAt" | "updatedAt", ExtArgs["result"]["review"]>
+export type reviewOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "notes_id" | "topic_id" | "scheduled_date" | "status" | "is_completed" | "review_results" | "createdAt" | "updatedAt" | "is_revision_enough" | "user_id" | "review_count" | "strong_areas" | "weak_areas" | "generation_count", ExtArgs["result"]["review"]>
 export type reviewInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  notes?: boolean | Prisma.NoteDefaultArgs<ExtArgs>
-  topic?: boolean | Prisma.TopicDefaultArgs<ExtArgs>
   questionHistories?: boolean | Prisma.review$questionHistoriesArgs<ExtArgs>
   reviewAttempts?: boolean | Prisma.review$reviewAttemptsArgs<ExtArgs>
+  notes?: boolean | Prisma.NoteDefaultArgs<ExtArgs>
+  topic?: boolean | Prisma.TopicDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.ReviewCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type reviewIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   notes?: boolean | Prisma.NoteDefaultArgs<ExtArgs>
   topic?: boolean | Prisma.TopicDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type reviewIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   notes?: boolean | Prisma.NoteDefaultArgs<ExtArgs>
   topic?: boolean | Prisma.TopicDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $reviewPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "review"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
-    notes: Prisma.$NotePayload<ExtArgs>
-    topic: Prisma.$TopicPayload<ExtArgs>
     questionHistories: Prisma.$QuestionHistoryPayload<ExtArgs>[]
     reviewAttempts: Prisma.$ReviewAttemptPayload<ExtArgs>[]
+    notes: Prisma.$NotePayload<ExtArgs>
+    topic: Prisma.$TopicPayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    user_id: string
     notes_id: string
     topic_id: string
     scheduled_date: Date
     status: $Enums.ReviewStatus
     is_completed: boolean
     review_results: $Enums.reviewRememberStatus | null
-    review_count: number
-    generation_count: number
-    strong_areas: string[]
-    weak_areas: string[]
-    is_revision_enough: boolean
     createdAt: Date
     updatedAt: Date
+    is_revision_enough: boolean
+    user_id: string
+    review_count: number
+    strong_areas: string[]
+    weak_areas: string[]
+    generation_count: number
   }, ExtArgs["result"]["review"]>
   composites: {}
 }
@@ -1970,11 +1962,11 @@ readonly fields: reviewFieldRefs;
  */
 export interface Prisma__reviewClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  notes<T extends Prisma.NoteDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.NoteDefaultArgs<ExtArgs>>): Prisma.Prisma__NoteClient<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  topic<T extends Prisma.TopicDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TopicDefaultArgs<ExtArgs>>): Prisma.Prisma__TopicClient<runtime.Types.Result.GetResult<Prisma.$TopicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   questionHistories<T extends Prisma.review$questionHistoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.review$questionHistoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuestionHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviewAttempts<T extends Prisma.review$reviewAttemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.review$reviewAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notes<T extends Prisma.NoteDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.NoteDefaultArgs<ExtArgs>>): Prisma.Prisma__NoteClient<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  topic<T extends Prisma.TopicDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TopicDefaultArgs<ExtArgs>>): Prisma.Prisma__TopicClient<runtime.Types.Result.GetResult<Prisma.$TopicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2005,20 +1997,20 @@ export interface Prisma__reviewClient<T, Null = never, ExtArgs extends runtime.T
  */
 export interface reviewFieldRefs {
   readonly id: Prisma.FieldRef<"review", 'String'>
-  readonly user_id: Prisma.FieldRef<"review", 'String'>
   readonly notes_id: Prisma.FieldRef<"review", 'String'>
   readonly topic_id: Prisma.FieldRef<"review", 'String'>
   readonly scheduled_date: Prisma.FieldRef<"review", 'DateTime'>
   readonly status: Prisma.FieldRef<"review", 'ReviewStatus'>
   readonly is_completed: Prisma.FieldRef<"review", 'Boolean'>
   readonly review_results: Prisma.FieldRef<"review", 'reviewRememberStatus'>
-  readonly review_count: Prisma.FieldRef<"review", 'Int'>
-  readonly generation_count: Prisma.FieldRef<"review", 'Int'>
-  readonly strong_areas: Prisma.FieldRef<"review", 'String[]'>
-  readonly weak_areas: Prisma.FieldRef<"review", 'String[]'>
-  readonly is_revision_enough: Prisma.FieldRef<"review", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"review", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"review", 'DateTime'>
+  readonly is_revision_enough: Prisma.FieldRef<"review", 'Boolean'>
+  readonly user_id: Prisma.FieldRef<"review", 'String'>
+  readonly review_count: Prisma.FieldRef<"review", 'Int'>
+  readonly strong_areas: Prisma.FieldRef<"review", 'String[]'>
+  readonly weak_areas: Prisma.FieldRef<"review", 'String[]'>
+  readonly generation_count: Prisma.FieldRef<"review", 'Int'>
 }
     
 

@@ -22,6 +22,7 @@ export const Memetype = {
   image: 'image',
   video: 'video',
   audio: 'audio',
+  other: 'other',
   pdf: 'pdf',
   document: 'document',
   spreadsheet: 'spreadsheet',
@@ -31,8 +32,7 @@ export const Memetype = {
   code: 'code',
   font: 'font',
   executable: 'executable',
-  model: 'model',
-  other: 'other'
+  model: 'model'
 } as const
 
 export type Memetype = (typeof Memetype)[keyof typeof Memetype]

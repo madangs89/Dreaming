@@ -57,7 +57,8 @@ export const ModelName = {
   Document: 'Document',
   review: 'review',
   QuestionHistory: 'QuestionHistory',
-  ReviewAttempt: 'ReviewAttempt'
+  ReviewAttempt: 'ReviewAttempt',
+  rag_chunks: 'rag_chunks'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -80,11 +81,11 @@ export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   name: 'name',
-  password: 'password',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  provider: 'provider',
+  password: 'password',
   profile_url: 'profile_url',
+  provider: 'provider',
+  updatedAt: 'updatedAt',
   public_id: 'public_id'
 } as const
 
@@ -96,9 +97,9 @@ export const TopicScalarFieldEnum = {
   title: 'title',
   user_id: 'user_id',
   source_url: 'source_url',
-  public_id: 'public_id',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  public_id: 'public_id'
 } as const
 
 export type TopicScalarFieldEnum = (typeof TopicScalarFieldEnum)[keyof typeof TopicScalarFieldEnum]
@@ -106,13 +107,15 @@ export type TopicScalarFieldEnum = (typeof TopicScalarFieldEnum)[keyof typeof To
 
 export const NoteScalarFieldEnum = {
   id: 'id',
-  title: 'title',
   content: 'content',
   topic_id: 'topic_id',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  titleTimeStamp: 'titleTimeStamp',
-  contentTimeStamp: 'contentTimeStamp'
+  title: 'title',
+  note_version: 'note_version',
+  index_version: 'index_version',
+  contentTimeStamp: 'contentTimeStamp',
+  titleTimeStamp: 'titleTimeStamp'
 } as const
 
 export type NoteScalarFieldEnum = (typeof NoteScalarFieldEnum)[keyof typeof NoteScalarFieldEnum]
@@ -123,11 +126,11 @@ export const DocumentScalarFieldEnum = {
   notes_id: 'notes_id',
   url: 'url',
   memetype: 'memetype',
-  title: 'title',
-  public_id: 'public_id',
-  is_indexed: 'is_indexed',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  public_id: 'public_id',
+  title: 'title',
+  is_indexed: 'is_indexed'
 } as const
 
 export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
@@ -135,20 +138,20 @@ export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typ
 
 export const ReviewScalarFieldEnum = {
   id: 'id',
-  user_id: 'user_id',
   notes_id: 'notes_id',
   topic_id: 'topic_id',
   scheduled_date: 'scheduled_date',
   status: 'status',
   is_completed: 'is_completed',
   review_results: 'review_results',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  is_revision_enough: 'is_revision_enough',
+  user_id: 'user_id',
   review_count: 'review_count',
-  generation_count: 'generation_count',
   strong_areas: 'strong_areas',
   weak_areas: 'weak_areas',
-  is_revision_enough: 'is_revision_enough',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  generation_count: 'generation_count'
 } as const
 
 export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
@@ -156,15 +159,15 @@ export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof 
 
 export const QuestionHistoryScalarFieldEnum = {
   id: 'id',
-  generation_count: 'generation_count',
   notes_id: 'notes_id',
   review_id: 'review_id',
   expectedAnswer: 'expectedAnswer',
   question_type: 'question_type',
-  difficulty: 'difficulty',
   question: 'question',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  difficulty: 'difficulty',
+  generation_count: 'generation_count'
 } as const
 
 export type QuestionHistoryScalarFieldEnum = (typeof QuestionHistoryScalarFieldEnum)[keyof typeof QuestionHistoryScalarFieldEnum]
@@ -184,12 +187,29 @@ export const ReviewAttemptScalarFieldEnum = {
 export type ReviewAttemptScalarFieldEnum = (typeof ReviewAttemptScalarFieldEnum)[keyof typeof ReviewAttemptScalarFieldEnum]
 
 
+export const Rag_chunksScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  metadata: 'metadata'
+} as const
+
+export type Rag_chunksScalarFieldEnum = (typeof Rag_chunksScalarFieldEnum)[keyof typeof Rag_chunksScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -206,4 +226,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

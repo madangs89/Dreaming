@@ -7,6 +7,121 @@ datasource db {
   provider = "postgresql"
 }
 
+model User {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  name        String
+  createdAt   DateTime @default(now())
+  password    String?
+  profile_url String?
+  provider    Provider @default(email)
+  updatedAt   DateTime @updatedAt
+  public_id   String?
+  topics      Topic[]
+  reviews     review[]
+}
+
+model Topic {
+  id         String   @id @default(uuid())
+  title      String
+  user_id    String
+  source_url String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  public_id  String?
+  notes      Note[]
+  user       User     @relation(fields: [user_id], references: [id])
+  reviews    review[]
+}
+
+model Note {
+  id                String            @id @default(uuid())
+  content           String?
+  topic_id          String
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  title             String
+  note_version      Int               @default(1)
+  index_version     Int               @default(1)
+  contentTimeStamp  DateTime          @default(now())
+  titleTimeStamp    DateTime          @default(now())
+  documents         Document[]
+  topic             Topic             @relation(fields: [topic_id], references: [id])
+  questionHistories QuestionHistory[]
+  reviews           review[]
+}
+
+model Document {
+  id         String   @id @default(uuid())
+  notes_id   String
+  url        String
+  memetype   Memetype
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  public_id  String
+  title      String
+  is_indexed Boolean  @default(false)
+  notes      Note     @relation(fields: [notes_id], references: [id])
+}
+
+model review {
+  id                 String                @id @default(uuid())
+  notes_id           String                @unique
+  topic_id           String
+  scheduled_date     DateTime
+  status             ReviewStatus          @default(scheduled)
+  is_completed       Boolean               @default(false)
+  review_results     reviewRememberStatus?
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
+  is_revision_enough Boolean               @default(false)
+  user_id            String
+  review_count       Int                   @default(1)
+  strong_areas       String[]              @default([])
+  weak_areas         String[]              @default([])
+  generation_count   Int                   @default(1)
+  questionHistories  QuestionHistory[]
+  reviewAttempts     ReviewAttempt[]
+  notes              Note                  @relation(fields: [notes_id], references: [id])
+  topic              Topic                 @relation(fields: [topic_id], references: [id])
+  user               User                  @relation(fields: [user_id], references: [id])
+}
+
+model QuestionHistory {
+  id               String        @id @default(uuid())
+  notes_id         String
+  review_id        String
+  expectedAnswer   String
+  question_type    question_type @default(text)
+  question         String
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  difficulty       difficulty    @default(easy)
+  generation_count Int           @default(1)
+  notes            Note          @relation(fields: [notes_id], references: [id])
+  review           review        @relation(fields: [review_id], references: [id])
+}
+
+model ReviewAttempt {
+  id             String                @id @default(uuid())
+  review_id      String
+  status         AttemptStatus         @default(processing)
+  score          Int?
+  rememberStatus reviewRememberStatus?
+  strong_areas   String[]
+  weak_areas     String[]
+  createdAt      DateTime              @default(now())
+  review         review                @relation(fields: [review_id], references: [id])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model rag_chunks {
+  id        BigInt                 @id @default(autoincrement())
+  content   String?
+  metadata  Json?
+  embedding Unsupported("vector")?
+}
+
 enum Provider {
   email
   google
@@ -17,6 +132,7 @@ enum Memetype {
   image
   video
   audio
+  other
   pdf
   document
   spreadsheet
@@ -27,7 +143,6 @@ enum Memetype {
   font
   executable
   model
-  other
 }
 
 enum ReviewStatus {
@@ -54,113 +169,8 @@ enum difficulty {
   hard
 }
 
-model User {
-  id          String   @id @default(uuid())
-  email       String   @unique
-  name        String
-  password    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  provider    Provider @default(email)
-  profile_url String?
-  public_id   String?
-  topics      Topic[]
-  reviews     review[]
-}
-
-model Topic {
-  id         String   @id @default(uuid())
-  title      String
-  user_id    String
-  user       User     @relation(fields: [user_id], references: [id])
-  source_url String?
-  public_id  String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  notes      Note[]
-  reviews    review[]
-}
-
-model Note {
-  id                String            @id @default(uuid())
-  title             String
-  content           String?
-  topic_id          String
-  topic             Topic             @relation(fields: [topic_id], references: [id])
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-  titleTimeStamp    DateTime          @default(now())
-  contentTimeStamp  DateTime          @default(now())
-  documents         Document[]
-  reviews           review[]
-  questionHistories QuestionHistory[]
-}
-
-model Document {
-  id         String   @id @default(uuid())
-  notes_id   String
-  notes      Note     @relation(fields: [notes_id], references: [id])
-  url        String
-  memetype   Memetype
-  title      String
-  public_id  String
-  is_indexed Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
-
-model review {
-  id                 String                @id @default(uuid())
-  user_id            String
-  user               User                  @relation(fields: [user_id], references: [id])
-  notes_id           String                @unique
-  topic_id           String
-  scheduled_date     DateTime
-  status             ReviewStatus          @default(scheduled)
-  is_completed       Boolean               @default(false)
-  review_results     reviewRememberStatus?
-  review_count       Int                   @default(1)
-  generation_count   Int                   @default(1)
-  strong_areas       String[]              @default([])
-  weak_areas         String[]              @default([])
-  is_revision_enough Boolean               @default(false)
-  notes              Note                  @relation(fields: [notes_id], references: [id])
-  topic              Topic                 @relation(fields: [topic_id], references: [id])
-  createdAt          DateTime              @default(now())
-  updatedAt          DateTime              @updatedAt
-  questionHistories  QuestionHistory[]
-  reviewAttempts     ReviewAttempt[]
-}
-
-model QuestionHistory {
-  id               String        @id @default(uuid())
-  generation_count Int           @default(1)
-  notes_id         String
-  notes            Note          @relation(fields: [notes_id], references: [id])
-  review_id        String
-  review           review        @relation(fields: [review_id], references: [id])
-  expectedAnswer   String
-  question_type    question_type @default(text)
-  difficulty       difficulty    @default(easy)
-  question         String
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
-}
-
 enum AttemptStatus {
   processing
   completed
   failed
-}
-
-model ReviewAttempt {
-  id             String                @id @default(uuid())
-  review_id      String
-  review         review                @relation(fields: [review_id], references: [id])
-  status         AttemptStatus         @default(processing)
-  score          Int?
-  rememberStatus reviewRememberStatus?
-  strong_areas   String[]
-  weak_areas     String[]
-  createdAt      DateTime              @default(now())
 }

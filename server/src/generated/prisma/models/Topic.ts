@@ -29,9 +29,9 @@ export type TopicMinAggregateOutputType = {
   title: string | null
   user_id: string | null
   source_url: string | null
-  public_id: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  public_id: string | null
 }
 
 export type TopicMaxAggregateOutputType = {
@@ -39,9 +39,9 @@ export type TopicMaxAggregateOutputType = {
   title: string | null
   user_id: string | null
   source_url: string | null
-  public_id: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  public_id: string | null
 }
 
 export type TopicCountAggregateOutputType = {
@@ -49,9 +49,9 @@ export type TopicCountAggregateOutputType = {
   title: number
   user_id: number
   source_url: number
-  public_id: number
   createdAt: number
   updatedAt: number
+  public_id: number
   _all: number
 }
 
@@ -61,9 +61,9 @@ export type TopicMinAggregateInputType = {
   title?: true
   user_id?: true
   source_url?: true
-  public_id?: true
   createdAt?: true
   updatedAt?: true
+  public_id?: true
 }
 
 export type TopicMaxAggregateInputType = {
@@ -71,9 +71,9 @@ export type TopicMaxAggregateInputType = {
   title?: true
   user_id?: true
   source_url?: true
-  public_id?: true
   createdAt?: true
   updatedAt?: true
+  public_id?: true
 }
 
 export type TopicCountAggregateInputType = {
@@ -81,9 +81,9 @@ export type TopicCountAggregateInputType = {
   title?: true
   user_id?: true
   source_url?: true
-  public_id?: true
   createdAt?: true
   updatedAt?: true
+  public_id?: true
   _all?: true
 }
 
@@ -164,9 +164,9 @@ export type TopicGroupByOutputType = {
   title: string
   user_id: string
   source_url: string | null
-  public_id: string | null
   createdAt: Date
   updatedAt: Date
+  public_id: string | null
   _count: TopicCountAggregateOutputType | null
   _min: TopicMinAggregateOutputType | null
   _max: TopicMaxAggregateOutputType | null
@@ -195,11 +195,11 @@ export type TopicWhereInput = {
   title?: Prisma.StringFilter<"Topic"> | string
   user_id?: Prisma.StringFilter<"Topic"> | string
   source_url?: Prisma.StringNullableFilter<"Topic"> | string | null
-  public_id?: Prisma.StringNullableFilter<"Topic"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Topic"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Topic"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  public_id?: Prisma.StringNullableFilter<"Topic"> | string | null
   notes?: Prisma.NoteListRelationFilter
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   reviews?: Prisma.ReviewListRelationFilter
 }
 
@@ -208,11 +208,11 @@ export type TopicOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
   source_url?: Prisma.SortOrderInput | Prisma.SortOrder
-  public_id?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
+  public_id?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.NoteOrderByRelationAggregateInput
+  user?: Prisma.UserOrderByWithRelationInput
   reviews?: Prisma.reviewOrderByRelationAggregateInput
 }
 
@@ -224,11 +224,11 @@ export type TopicWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"Topic"> | string
   user_id?: Prisma.StringFilter<"Topic"> | string
   source_url?: Prisma.StringNullableFilter<"Topic"> | string | null
-  public_id?: Prisma.StringNullableFilter<"Topic"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Topic"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Topic"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  public_id?: Prisma.StringNullableFilter<"Topic"> | string | null
   notes?: Prisma.NoteListRelationFilter
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   reviews?: Prisma.ReviewListRelationFilter
 }, "id">
 
@@ -237,9 +237,9 @@ export type TopicOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
   source_url?: Prisma.SortOrderInput | Prisma.SortOrder
-  public_id?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  public_id?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.TopicCountOrderByAggregateInput
   _max?: Prisma.TopicMaxOrderByAggregateInput
   _min?: Prisma.TopicMinOrderByAggregateInput
@@ -253,20 +253,20 @@ export type TopicScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"Topic"> | string
   user_id?: Prisma.StringWithAggregatesFilter<"Topic"> | string
   source_url?: Prisma.StringNullableWithAggregatesFilter<"Topic"> | string | null
-  public_id?: Prisma.StringNullableWithAggregatesFilter<"Topic"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Topic"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Topic"> | Date | string
+  public_id?: Prisma.StringNullableWithAggregatesFilter<"Topic"> | string | null
 }
 
 export type TopicCreateInput = {
   id?: string
   title: string
   source_url?: string | null
-  public_id?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutTopicsInput
+  public_id?: string | null
   notes?: Prisma.NoteCreateNestedManyWithoutTopicInput
+  user: Prisma.UserCreateNestedOneWithoutTopicsInput
   reviews?: Prisma.reviewCreateNestedManyWithoutTopicInput
 }
 
@@ -275,9 +275,9 @@ export type TopicUncheckedCreateInput = {
   title: string
   user_id: string
   source_url?: string | null
-  public_id?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  public_id?: string | null
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutTopicInput
   reviews?: Prisma.reviewUncheckedCreateNestedManyWithoutTopicInput
 }
@@ -286,11 +286,11 @@ export type TopicUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   source_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutTopicsNestedInput
+  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NoteUpdateManyWithoutTopicNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutTopicsNestedInput
   reviews?: Prisma.reviewUpdateManyWithoutTopicNestedInput
 }
 
@@ -299,9 +299,9 @@ export type TopicUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
   source_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NoteUncheckedUpdateManyWithoutTopicNestedInput
   reviews?: Prisma.reviewUncheckedUpdateManyWithoutTopicNestedInput
 }
@@ -311,18 +311,18 @@ export type TopicCreateManyInput = {
   title: string
   user_id: string
   source_url?: string | null
-  public_id?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  public_id?: string | null
 }
 
 export type TopicUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   source_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type TopicUncheckedUpdateManyInput = {
@@ -330,9 +330,9 @@ export type TopicUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
   source_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type TopicListRelationFilter = {
@@ -350,9 +350,9 @@ export type TopicCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
   source_url?: Prisma.SortOrder
-  public_id?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  public_id?: Prisma.SortOrder
 }
 
 export type TopicMaxOrderByAggregateInput = {
@@ -360,9 +360,9 @@ export type TopicMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
   source_url?: Prisma.SortOrder
-  public_id?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  public_id?: Prisma.SortOrder
 }
 
 export type TopicMinOrderByAggregateInput = {
@@ -370,9 +370,9 @@ export type TopicMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
   source_url?: Prisma.SortOrder
-  public_id?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  public_id?: Prisma.SortOrder
 }
 
 export type TopicScalarRelationFilter = {
@@ -454,9 +454,9 @@ export type TopicCreateWithoutUserInput = {
   id?: string
   title: string
   source_url?: string | null
-  public_id?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  public_id?: string | null
   notes?: Prisma.NoteCreateNestedManyWithoutTopicInput
   reviews?: Prisma.reviewCreateNestedManyWithoutTopicInput
 }
@@ -465,9 +465,9 @@ export type TopicUncheckedCreateWithoutUserInput = {
   id?: string
   title: string
   source_url?: string | null
-  public_id?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  public_id?: string | null
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutTopicInput
   reviews?: Prisma.reviewUncheckedCreateNestedManyWithoutTopicInput
 }
@@ -506,18 +506,18 @@ export type TopicScalarWhereInput = {
   title?: Prisma.StringFilter<"Topic"> | string
   user_id?: Prisma.StringFilter<"Topic"> | string
   source_url?: Prisma.StringNullableFilter<"Topic"> | string | null
-  public_id?: Prisma.StringNullableFilter<"Topic"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Topic"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Topic"> | Date | string
+  public_id?: Prisma.StringNullableFilter<"Topic"> | string | null
 }
 
 export type TopicCreateWithoutNotesInput = {
   id?: string
   title: string
   source_url?: string | null
-  public_id?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  public_id?: string | null
   user: Prisma.UserCreateNestedOneWithoutTopicsInput
   reviews?: Prisma.reviewCreateNestedManyWithoutTopicInput
 }
@@ -527,9 +527,9 @@ export type TopicUncheckedCreateWithoutNotesInput = {
   title: string
   user_id: string
   source_url?: string | null
-  public_id?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  public_id?: string | null
   reviews?: Prisma.reviewUncheckedCreateNestedManyWithoutTopicInput
 }
 
@@ -553,9 +553,9 @@ export type TopicUpdateWithoutNotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   source_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutTopicsNestedInput
   reviews?: Prisma.reviewUpdateManyWithoutTopicNestedInput
 }
@@ -565,9 +565,9 @@ export type TopicUncheckedUpdateWithoutNotesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
   source_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviews?: Prisma.reviewUncheckedUpdateManyWithoutTopicNestedInput
 }
 
@@ -575,11 +575,11 @@ export type TopicCreateWithoutReviewsInput = {
   id?: string
   title: string
   source_url?: string | null
-  public_id?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutTopicsInput
+  public_id?: string | null
   notes?: Prisma.NoteCreateNestedManyWithoutTopicInput
+  user: Prisma.UserCreateNestedOneWithoutTopicsInput
 }
 
 export type TopicUncheckedCreateWithoutReviewsInput = {
@@ -587,9 +587,9 @@ export type TopicUncheckedCreateWithoutReviewsInput = {
   title: string
   user_id: string
   source_url?: string | null
-  public_id?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  public_id?: string | null
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutTopicInput
 }
 
@@ -613,11 +613,11 @@ export type TopicUpdateWithoutReviewsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   source_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutTopicsNestedInput
+  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NoteUpdateManyWithoutTopicNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutTopicsNestedInput
 }
 
 export type TopicUncheckedUpdateWithoutReviewsInput = {
@@ -625,9 +625,9 @@ export type TopicUncheckedUpdateWithoutReviewsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
   source_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NoteUncheckedUpdateManyWithoutTopicNestedInput
 }
 
@@ -635,18 +635,18 @@ export type TopicCreateManyUserInput = {
   id?: string
   title: string
   source_url?: string | null
-  public_id?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  public_id?: string | null
 }
 
 export type TopicUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   source_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NoteUpdateManyWithoutTopicNestedInput
   reviews?: Prisma.reviewUpdateManyWithoutTopicNestedInput
 }
@@ -655,9 +655,9 @@ export type TopicUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   source_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NoteUncheckedUpdateManyWithoutTopicNestedInput
   reviews?: Prisma.reviewUncheckedUpdateManyWithoutTopicNestedInput
 }
@@ -666,9 +666,9 @@ export type TopicUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   source_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -716,11 +716,11 @@ export type TopicSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   title?: boolean
   user_id?: boolean
   source_url?: boolean
-  public_id?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  public_id?: boolean
   notes?: boolean | Prisma.Topic$notesArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviews?: boolean | Prisma.Topic$reviewsArgs<ExtArgs>
   _count?: boolean | Prisma.TopicCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["topic"]>
@@ -730,9 +730,9 @@ export type TopicSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   title?: boolean
   user_id?: boolean
   source_url?: boolean
-  public_id?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  public_id?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["topic"]>
 
@@ -741,9 +741,9 @@ export type TopicSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   title?: boolean
   user_id?: boolean
   source_url?: boolean
-  public_id?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  public_id?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["topic"]>
 
@@ -752,15 +752,15 @@ export type TopicSelectScalar = {
   title?: boolean
   user_id?: boolean
   source_url?: boolean
-  public_id?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  public_id?: boolean
 }
 
-export type TopicOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "user_id" | "source_url" | "public_id" | "createdAt" | "updatedAt", ExtArgs["result"]["topic"]>
+export type TopicOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "user_id" | "source_url" | "createdAt" | "updatedAt" | "public_id", ExtArgs["result"]["topic"]>
 export type TopicInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   notes?: boolean | Prisma.Topic$notesArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviews?: boolean | Prisma.Topic$reviewsArgs<ExtArgs>
   _count?: boolean | Prisma.TopicCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -774,8 +774,8 @@ export type TopicIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 export type $TopicPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Topic"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
     notes: Prisma.$NotePayload<ExtArgs>[]
+    user: Prisma.$UserPayload<ExtArgs>
     reviews: Prisma.$reviewPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -783,9 +783,9 @@ export type $TopicPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     title: string
     user_id: string
     source_url: string | null
-    public_id: string | null
     createdAt: Date
     updatedAt: Date
+    public_id: string | null
   }, ExtArgs["result"]["topic"]>
   composites: {}
 }
@@ -1180,8 +1180,8 @@ readonly fields: TopicFieldRefs;
  */
 export interface Prisma__TopicClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   notes<T extends Prisma.Topic$notesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Topic$notesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   reviews<T extends Prisma.Topic$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Topic$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$reviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1216,9 +1216,9 @@ export interface TopicFieldRefs {
   readonly title: Prisma.FieldRef<"Topic", 'String'>
   readonly user_id: Prisma.FieldRef<"Topic", 'String'>
   readonly source_url: Prisma.FieldRef<"Topic", 'String'>
-  readonly public_id: Prisma.FieldRef<"Topic", 'String'>
   readonly createdAt: Prisma.FieldRef<"Topic", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Topic", 'DateTime'>
+  readonly public_id: Prisma.FieldRef<"Topic", 'String'>
 }
     
 

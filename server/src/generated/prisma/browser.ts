@@ -52,3 +52,8 @@ export type QuestionHistory = Prisma.QuestionHistoryModel
  * 
  */
 export type ReviewAttempt = Prisma.ReviewAttemptModel
+/**
+ * Model rag_chunks
+ * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+ */
+export type rag_chunks = Prisma.rag_chunksModel

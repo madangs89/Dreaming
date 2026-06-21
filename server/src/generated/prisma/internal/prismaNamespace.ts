@@ -390,7 +390,8 @@ export const ModelName = {
   Document: 'Document',
   review: 'review',
   QuestionHistory: 'QuestionHistory',
-  ReviewAttempt: 'ReviewAttempt'
+  ReviewAttempt: 'ReviewAttempt',
+  rag_chunks: 'rag_chunks'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -406,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "topic" | "note" | "document" | "review" | "questionHistory" | "reviewAttempt"
+    modelProps: "user" | "topic" | "note" | "document" | "review" | "questionHistory" | "reviewAttempt" | "rag_chunks"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -928,6 +929,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    rag_chunks: {
+      payload: Prisma.$rag_chunksPayload<ExtArgs>
+      fields: Prisma.rag_chunksFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.rag_chunksFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$rag_chunksPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.rag_chunksFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$rag_chunksPayload>
+        }
+        findFirst: {
+          args: Prisma.rag_chunksFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$rag_chunksPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.rag_chunksFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$rag_chunksPayload>
+        }
+        findMany: {
+          args: Prisma.rag_chunksFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$rag_chunksPayload>[]
+        }
+        create: {
+          args: Prisma.rag_chunksCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$rag_chunksPayload>
+        }
+        createMany: {
+          args: Prisma.rag_chunksCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.rag_chunksCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$rag_chunksPayload>[]
+        }
+        delete: {
+          args: Prisma.rag_chunksDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$rag_chunksPayload>
+        }
+        update: {
+          args: Prisma.rag_chunksUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$rag_chunksPayload>
+        }
+        deleteMany: {
+          args: Prisma.rag_chunksDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.rag_chunksUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.rag_chunksUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$rag_chunksPayload>[]
+        }
+        upsert: {
+          args: Prisma.rag_chunksUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$rag_chunksPayload>
+        }
+        aggregate: {
+          args: Prisma.Rag_chunksAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRag_chunks>
+        }
+        groupBy: {
+          args: Prisma.rag_chunksGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Rag_chunksGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.rag_chunksCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Rag_chunksCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -971,11 +1046,11 @@ export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   name: 'name',
-  password: 'password',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  provider: 'provider',
+  password: 'password',
   profile_url: 'profile_url',
+  provider: 'provider',
+  updatedAt: 'updatedAt',
   public_id: 'public_id'
 } as const
 
@@ -987,9 +1062,9 @@ export const TopicScalarFieldEnum = {
   title: 'title',
   user_id: 'user_id',
   source_url: 'source_url',
-  public_id: 'public_id',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  public_id: 'public_id'
 } as const
 
 export type TopicScalarFieldEnum = (typeof TopicScalarFieldEnum)[keyof typeof TopicScalarFieldEnum]
@@ -997,13 +1072,15 @@ export type TopicScalarFieldEnum = (typeof TopicScalarFieldEnum)[keyof typeof To
 
 export const NoteScalarFieldEnum = {
   id: 'id',
-  title: 'title',
   content: 'content',
   topic_id: 'topic_id',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  titleTimeStamp: 'titleTimeStamp',
-  contentTimeStamp: 'contentTimeStamp'
+  title: 'title',
+  note_version: 'note_version',
+  index_version: 'index_version',
+  contentTimeStamp: 'contentTimeStamp',
+  titleTimeStamp: 'titleTimeStamp'
 } as const
 
 export type NoteScalarFieldEnum = (typeof NoteScalarFieldEnum)[keyof typeof NoteScalarFieldEnum]
@@ -1014,11 +1091,11 @@ export const DocumentScalarFieldEnum = {
   notes_id: 'notes_id',
   url: 'url',
   memetype: 'memetype',
-  title: 'title',
-  public_id: 'public_id',
-  is_indexed: 'is_indexed',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  public_id: 'public_id',
+  title: 'title',
+  is_indexed: 'is_indexed'
 } as const
 
 export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
@@ -1026,20 +1103,20 @@ export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typ
 
 export const ReviewScalarFieldEnum = {
   id: 'id',
-  user_id: 'user_id',
   notes_id: 'notes_id',
   topic_id: 'topic_id',
   scheduled_date: 'scheduled_date',
   status: 'status',
   is_completed: 'is_completed',
   review_results: 'review_results',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  is_revision_enough: 'is_revision_enough',
+  user_id: 'user_id',
   review_count: 'review_count',
-  generation_count: 'generation_count',
   strong_areas: 'strong_areas',
   weak_areas: 'weak_areas',
-  is_revision_enough: 'is_revision_enough',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  generation_count: 'generation_count'
 } as const
 
 export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
@@ -1047,15 +1124,15 @@ export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof 
 
 export const QuestionHistoryScalarFieldEnum = {
   id: 'id',
-  generation_count: 'generation_count',
   notes_id: 'notes_id',
   review_id: 'review_id',
   expectedAnswer: 'expectedAnswer',
   question_type: 'question_type',
-  difficulty: 'difficulty',
   question: 'question',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  difficulty: 'difficulty',
+  generation_count: 'generation_count'
 } as const
 
 export type QuestionHistoryScalarFieldEnum = (typeof QuestionHistoryScalarFieldEnum)[keyof typeof QuestionHistoryScalarFieldEnum]
@@ -1075,12 +1152,29 @@ export const ReviewAttemptScalarFieldEnum = {
 export type ReviewAttemptScalarFieldEnum = (typeof ReviewAttemptScalarFieldEnum)[keyof typeof ReviewAttemptScalarFieldEnum]
 
 
+export const Rag_chunksScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  metadata: 'metadata'
+} as const
+
+export type Rag_chunksScalarFieldEnum = (typeof Rag_chunksScalarFieldEnum)[keyof typeof Rag_chunksScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -1097,6 +1191,15 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
 
@@ -1144,6 +1247,20 @@ export type EnumProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
  * Reference to a field of type 'Provider[]'
  */
 export type ListEnumProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Provider[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -1197,20 +1314,6 @@ export type ListEnumreviewRememberStatusFieldRefInput<$PrismaModel> = FieldRefIn
 
 
 /**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-/**
  * Reference to a field of type 'question_type'
  */
 export type Enumquestion_typeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'question_type'>
@@ -1249,6 +1352,34 @@ export type EnumAttemptStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
  * Reference to a field of type 'AttemptStatus[]'
  */
 export type ListEnumAttemptStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AttemptStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'BigInt'
+ */
+export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
+    
+
+
+/**
+ * Reference to a field of type 'BigInt[]'
+ */
+export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -1382,6 +1513,7 @@ export type GlobalOmitConfig = {
   review?: Prisma.reviewOmit
   questionHistory?: Prisma.QuestionHistoryOmit
   reviewAttempt?: Prisma.ReviewAttemptOmit
+  rag_chunks?: Prisma.rag_chunksOmit
 }
 
 /* Types for Logging */

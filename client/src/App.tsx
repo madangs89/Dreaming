@@ -24,9 +24,6 @@ const App = () => {
     queryKey: ["auth"],
     queryFn: me,
     retry: 3,
-    refetchOnWindowFocus: true,
-    refetchOnMount: true,
-    refetchOnReconnect: true,
   });
 
   useEffect(() => {

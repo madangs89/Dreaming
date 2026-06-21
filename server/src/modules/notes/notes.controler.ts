@@ -336,6 +336,9 @@ export const updateNoteContent = async (
       data: {
         content,
         contentTimeStamp: timeStamp,
+        note_version: {
+          increment: 1,
+        },
       },
       include: { documents: true, reviews: true },
     });
