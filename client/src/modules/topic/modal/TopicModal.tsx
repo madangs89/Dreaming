@@ -4,6 +4,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createTopic } from "../topic.api";
 import toast from "react-hot-toast";
 import type { AxiosError } from "axios";
+import { useTheme } from "../../../hooks/useTheme";
+import { useAppSelector } from "../../../app/hook";
 
 type TopicModalProps = {
   open: boolean;
@@ -13,6 +15,20 @@ type TopicModalProps = {
 const TopicModal = memo(({ open = false, onClose }: TopicModalProps) => {
   const [title, setTitle] = useState("");
   const [image, setImage] = useState<File | null>(null);
+
+  const theme = useAppSelector((state) => state.theme.theme);
+
+  const {
+    bg,
+    cardBorder,
+    subtleText,
+    titleColor,
+    primaryBtnBg,
+    primaryBtnText,
+    primaryBtnHover,
+    backdropBg,
+    menuBtnBgHover,
+  } = useTheme(theme);
 
   const queryClient = useQueryClient();
 
@@ -58,11 +74,11 @@ const TopicModal = memo(({ open = false, onClose }: TopicModalProps) => {
 
   return (
     <div
+      style={{ backgroundColor: backdropBg }}
       className="
         fixed
         inset-0
         z-[100]
-        bg-black/20
         backdrop-blur-sm
         flex
         items-center
@@ -73,11 +89,11 @@ const TopicModal = memo(({ open = false, onClose }: TopicModalProps) => {
     >
       <div
         onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
+        style={{ backgroundColor: bg }}
         className="
           relative
           w-full
           max-w-lg
-          bg-white
           rounded-3xl
           shadow-2xl
           p-6
@@ -87,12 +103,13 @@ const TopicModal = memo(({ open = false, onClose }: TopicModalProps) => {
         {/* Close */}
         <button
           onClick={handleClose}
+          style={{ color: subtleText }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = titleColor)}
+          onMouseLeave={(e) => (e.currentTarget.style.color = subtleText)}
           className="
             absolute
             top-5
             right-5
-            text-gray-400
-            hover:text-black
             transition
           "
         >
@@ -101,16 +118,23 @@ const TopicModal = memo(({ open = false, onClose }: TopicModalProps) => {
 
         {/* Header */}
         <div className="mb-8">
-          <h2 className="text-3xl font-semibold">Create Topic</h2>
+          <h2 style={{ color: titleColor }} className="text-3xl font-semibold">
+            Create Topic
+          </h2>
 
-          <p className="text-gray-500 mt-2">
+          <p style={{ color: subtleText }} className="mt-2">
             Create a topic and start organizing your notes.
           </p>
         </div>
 
         {/* Topic Name */}
         <div>
-          <label className="block text-sm font-medium mb-2">Topic Name</label>
+          <label
+            style={{ color: titleColor }}
+            className="block text-sm font-medium mb-2"
+          >
+            Topic Name
+          </label>
 
           <input
             type="text"
@@ -119,30 +143,40 @@ const TopicModal = memo(({ open = false, onClose }: TopicModalProps) => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setTitle(e.target.value)
             }
+            style={{ borderColor: cardBorder, color: titleColor }}
+            onFocus={(e) => (e.currentTarget.style.borderColor = titleColor)}
+            onBlur={(e) => (e.currentTarget.style.borderColor = cardBorder)}
             className="
               w-full
               h-12
               px-4
               rounded-xl
               border
-              border-gray-300
               outline-none
-              focus:border-black
             "
           />
         </div>
 
         {/* Image Upload */}
         <div className="mt-5">
-          <label className="block text-sm font-medium mb-2">
+          <label
+            style={{ color: titleColor }}
+            className="block text-sm font-medium mb-2"
+          >
             Cover Image (Optional)
           </label>
 
           <label
+            style={{ borderColor: cardBorder }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.borderColor = titleColor)
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.borderColor = cardBorder)
+            }
             className="
               border-2
               border-dashed
-              border-gray-300
               rounded-2xl
               h-40
               flex
@@ -150,7 +184,6 @@ const TopicModal = memo(({ open = false, onClose }: TopicModalProps) => {
               items-center
               justify-center
               cursor-pointer
-              hover:border-black
               transition
             "
           >
@@ -166,14 +199,22 @@ const TopicModal = memo(({ open = false, onClose }: TopicModalProps) => {
 
             {image ? (
               <>
-                <p className="font-medium">{image.name}</p>
-                <p className="text-sm text-gray-500">Click to change</p>
+                <p style={{ color: titleColor }} className="font-medium">
+                  {image.name}
+                </p>
+                <p style={{ color: subtleText }} className="text-sm">
+                  Click to change
+                </p>
               </>
             ) : (
               <>
                 <span className="text-4xl">📷</span>
-                <p className="mt-2 font-medium">Upload Cover Image</p>
-                <p className="text-sm text-gray-500">PNG, JPG, WEBP</p>
+                <p style={{ color: titleColor }} className="mt-2 font-medium">
+                  Upload Cover Image
+                </p>
+                <p style={{ color: subtleText }} className="text-sm">
+                  PNG, JPG, WEBP
+                </p>
               </>
             )}
           </label>
@@ -183,14 +224,19 @@ const TopicModal = memo(({ open = false, onClose }: TopicModalProps) => {
         <div className="flex gap-3 mt-8">
           <button
             onClick={handleClose}
+            style={{ borderColor: cardBorder, color: titleColor }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = menuBtnBgHover)
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = "transparent")
+            }
             className="
               flex-1
               h-12
               rounded-xl
               border
-              border-gray-300
               font-medium
-              hover:bg-gray-50
             "
           >
             Cancel
@@ -199,17 +245,23 @@ const TopicModal = memo(({ open = false, onClose }: TopicModalProps) => {
           <button
             disabled={topicMutation.isPending || !title.trim()}
             onClick={handleSubmit}
+            style={{ backgroundColor: primaryBtnBg, color: primaryBtnText }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = primaryBtnHover)
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = primaryBtnBg)
+            }
             className="
               flex-1
               h-12
               rounded-xl
-              bg-black
-              text-white
               font-medium
-              hover:opacity-90
               flex
               items-center
               justify-center
+              transition-colors
+              duration-200
             "
           >
             {topicMutation.isPending ? <Spinner /> : "Create Topic"}

@@ -9,15 +9,22 @@ import { useQuery } from "@tanstack/react-query";
 import { me } from "./modules/auth/auth.api";
 import toast from "react-hot-toast";
 import type { User } from "./modules/user/user.types";
-import { useAppDispatch } from "./app/hook";
+import { useAppDispatch, useAppSelector } from "./app/hook";
 import { clearAuthenticated, setAuthenticated } from "./app/slice/authSlice";
 import Spinner from "./components/Spinner";
 import Notes from "./modules/notes/Notes";
 import RevisionPage from "./modules/revision/RevisionPage";
 import RevisionAttempt from "./modules/revision/Revisionattempt";
+import { useTheme } from "./hooks/useTheme";
 
 const App = () => {
   const navigate = useNavigate();
+
+  const theme = useAppSelector((state) => state.theme.theme);
+
+  const {
+    bg,
+  } = useTheme(theme);
 
   const dispatch = useAppDispatch();
   const authQuery = useQuery({
@@ -47,7 +54,10 @@ const App = () => {
   }
 
   return (
-    <div className="bg-white h-screen w-screen overflow-hidden">
+    <div
+      style={{ backgroundColor: bg }}
+      className=" h-screen w-screen overflow-hidden"
+    >
       <Suspense
         fallback={
           <div className="flex items-center justify-center h-screen">

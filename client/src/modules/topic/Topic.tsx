@@ -7,11 +7,25 @@ import toast from "react-hot-toast";
 import { TopicSkeleton } from "./Components/TopicSkeleton";
 import TopicModal from "./modal/TopicModal";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../../hooks/useTheme";
 
 const Topic = () => {
   const [open, setOpen] = useState<boolean>(false);
 
   const navigate = useNavigate();
+
+  const theme = useAppSelector((state) => state.theme.theme);
+
+  const {
+    bg,
+    cardBg,
+    cardBorder,
+    titleColor,
+    subtleText,
+    primaryBtnBg,
+    primaryBtnText,
+    primaryBtnHover,
+  } = useTheme(theme);
 
   const authSliceDetails = useAppSelector((state) => state.auth);
   const topicQuery = useQuery({
@@ -36,19 +50,28 @@ const Topic = () => {
   }, [topicQuery.isError]);
 
   return (
-    <div className="lg:px-12 p-4 w-full h-[calc(100vh-90px)] overflow-y-auto">
+    <div
+      style={{ backgroundColor: bg }}
+      className="lg:px-12 p-4 w-full h-[calc(100vh-90px)] overflow-y-auto"
+    >
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Start Learning</h1>
+        <h1 style={{ color: titleColor }} className="text-2xl font-bold">
+          Start Learning
+        </h1>
 
         <button
+          style={{ backgroundColor: primaryBtnBg, color: primaryBtnText }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.backgroundColor = primaryBtnHover)
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.backgroundColor = primaryBtnBg)
+          }
           className="
             px-5 py-2
-            bg-black
-            text-white
             rounded-lg
             text-sm
             font-medium
-            hover:bg-zinc-800
             transition
           "
           onClick={() => setOpen(true)}
@@ -65,11 +88,10 @@ const Topic = () => {
           {topicData.map((topic) => (
             <div
               key={topic.id}
+              style={{ backgroundColor: cardBg, borderColor: cardBorder }}
               className="
-          bg-white
           rounded-2xl
           border
-          border-[#DFE2E9]
           p-3
           hover:shadow-lg
           transition-all
@@ -85,24 +107,36 @@ const Topic = () => {
               />
 
               <div className="mt-4">
-                <h3 className="text-xl font-semibold">{topic.title}</h3>
+                <h3
+                  style={{ color: titleColor }}
+                  className="text-xl font-semibold"
+                >
+                  {topic.title}
+                </h3>
 
-                <p className="text-sm text-gray-500 mt-1">
+                <p style={{ color: subtleText }} className="text-sm mt-1">
                   {topic._count?.notes || 0} Notes
                 </p>
 
                 <button
                   onClick={() => navigate(`/notes/${topic?.id}`)}
+                  style={{
+                    backgroundColor: primaryBtnBg,
+                    color: primaryBtnText,
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor = primaryBtnHover)
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor = primaryBtnBg)
+                  }
                   className="
               mt-4
               w-full
               py-2.5
               rounded-lg
-              bg-[#313131]
-              text-white
               text-sm
               font-medium
-              hover:bg-[#424242]
               transition
             "
                 >
@@ -114,7 +148,7 @@ const Topic = () => {
         </div>
       ) : (
         <div className="flex items-center justify-center min-h-[300px]">
-          <h2 className="text-center text-gray-500 text-lg">
+          <h2 style={{ color: subtleText }} className="text-center text-lg">
             No topics found! Please create a new topic to start learning.
           </h2>
         </div>

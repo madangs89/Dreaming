@@ -1,43 +1,81 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import ThemeSwitch from "./ThemeSwitch";
+import { useTheme } from "../hooks/useTheme";
+import { useAppSelector } from "../app/hook";
+
+const navItems: { label: string; path: string }[] = [
+  { label: "Reviews", path: "/revision" },
+];
 
 const MainNavbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isDashboard = location.pathname === "/dashboard";
+
+  const theme = useAppSelector((state) => state.theme.theme);
+
+  const {
+    bg,
+    titleColor,
+    subtleText,
+    primaryBtnBg,
+    primaryBtnText,
+    primaryBtnHover,
+  } = useTheme(theme);
+
   return (
-    <nav className="w-screen bg-white h-fit flex flex-col overflow-hidden  fixed top-0  right-0">
+    <nav
+      style={{ backgroundColor: bg }}
+      className="w-screen h-fit flex flex-col overflow-hidden fixed top-0 right-0"
+    >
       <div className="w-full flex items-center justify-between lg:py-3 px-2 lg:px-12">
         <div className="flex items-center justify-center gap-3">
-          <h3 className="font-bold text-black text-2xl">BOTIKA</h3>
+          <h3 style={{ color: titleColor }} className="font-bold text-2xl">
+            OVERTHINK
+          </h3>
 
-          {["Topics", "Reviews"].map((item) => (
-            <span
-              key={item}
-              onClick={() => {
-                if (item == "Reviews") {
-                  navigate("/revision");
-                }
-              }}
-              className="ml-8 lg:block hidden text-semibold text-[17px] text-[#0c0c0c] hover:text-[#666] transition-colors duration-300 cursor-pointer"
-            >
-              {item}
-            </span>
-          ))}
+          {navItems.map(({ label, path }) => {
+            const isActive = location.pathname === path;
+            return (
+              <span
+                key={label}
+                onClick={() => navigate(path)}
+                style={{
+                  color: isActive ? titleColor : subtleText,
+                  borderBottom: isActive
+                    ? `2px solid ${titleColor}`
+                    : "2px solid transparent",
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) e.currentTarget.style.color = titleColor;
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) e.currentTarget.style.color = subtleText;
+                }}
+                className="ml-8 lg:block hidden text-semibold text-[17px] transition-colors duration-300 cursor-pointer pb-1"
+              >
+                {label}
+              </span>
+            );
+          })}
         </div>
 
-        <div
-        
-        onClick={()=>navigate("/revision")}
-        className="flex items-center gap-4">
+        <div className="flex items-center gap-4">
+          <ThemeSwitch />
+
           <button
+            style={{ backgroundColor: primaryBtnBg, color: primaryBtnText }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = primaryBtnHover)
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = primaryBtnBg)
+            }
             className="
         w-11 h-11
         rounded-full
-        bg-[#313131]
-        text-white
         font-semibold
-        hover:bg-[#424242]
         transition-colors duration-300
       "
           >
@@ -45,15 +83,6 @@ const MainNavbar = () => {
           </button>
         </div>
       </div>
-
-      {isDashboard && (
-        <div className="bg-[#F3EBFF] w-full h-9 flex items-center justify-center">
-          <p className="text-[16px] text-[#0c0c0c] font-medium">
-            Welcome Back, Madana! Explore new topics and enhance your skills
-            with our personalized learning platform.
-          </p>
-        </div>
-      )}
     </nav>
   );
 };

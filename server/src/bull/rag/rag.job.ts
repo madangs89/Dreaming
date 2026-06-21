@@ -14,5 +14,5 @@ export const scheduleRagContentJob = async ({
   notesId,
 }: RagContentJobData) => {
   const delay = addHalfHourToDate();
-  await ragQueue.add("rag_content", { index_version, notesId }, { delay: 0 });
+  await ragQueue.add("rag_content", { index_version, notesId }, { delay });
 };

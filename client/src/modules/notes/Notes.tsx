@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import Switch from "react-switch";
 import { format } from "date-fns";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
@@ -35,7 +34,9 @@ import FilePreviewModal from "./components/Filepreviewmodal";
 
 import { useTheme } from "../../hooks/useTheme";
 import ChatbotModal from "./components/ChatbotModal";
-
+import { useAppDispatch, useAppSelector } from "../../app/hook";
+import { toggleTheme } from "../../app/slice/themeSlice";
+import ThemeSwitch from "../../components/ThemeSwitch";
 
 const fileIcon = (type: string, isDark: boolean) => {
   const color = isDark ? "#a1a1aa" : "#71717a";
@@ -136,20 +137,11 @@ const Notes = () => {
   const [isFilesOpen, setIsFilesOpen] = useState(false);
   // NEW: controls the AI chatbot modal
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark">(() => {
-    const storedTheme = localStorage.getItem("theme");
-    return storedTheme === "dark" ? "dark" : "light";
-  });
+
+  const theme = useAppSelector((state) => state.theme.theme);
+  const dispatch = useAppDispatch();
 
   const isDark = theme === "dark";
-
-  const toggleTheme = () => {
-    setTheme((prev) => {
-      const newTheme = prev === "light" ? "dark" : "light";
-      localStorage.setItem("theme", newTheme);
-      return newTheme;
-    });
-  };
 
   const debounceTimerRef = useRef<number | null>(null);
   const debounceContentTimerRef = useRef<number | null>(null);
@@ -892,19 +884,7 @@ const Notes = () => {
                     className="font-bold text-5xl border-none outline-none"
                   />
                   <div className="flex items-center justify-center gap-3">
-                    <Switch
-                      checked={theme === "dark"}
-                      onChange={toggleTheme}
-                      height={15}
-                      width={42}
-                      handleDiameter={8}
-                      offColor="#e4e4e7"
-                      onColor="#27272a"
-                      offHandleColor="#ffffff"
-                      onHandleColor="#ffffff"
-                      uncheckedIcon={false}
-                      checkedIcon={false}
-                    />
+                    <ThemeSwitch />
                     <button
                       disabled={
                         currentNoteId === "new" || deleteNoteMutation.isPending

@@ -96,6 +96,8 @@ export const conversation = async (
     const prompt = `
     User Query: ${query}
 
+    Note Title: ${notedData.title}
+
     Note content: ${content.map((c) => c.pageContent).join("\n")}
 
     Document content: ${documentText.map((d) => d.pageContent).join("\n")}
