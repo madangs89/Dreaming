@@ -15,12 +15,6 @@ import {
 } from "./revision.api";
 import type { RevisionAttemptBody } from "./revision.types";
 
-// Mock result — TODO: replace with real AI evaluation response
-const MOCK_RESULT = {
-  score: 75,
-  strongAreas: ["useEffect", "Props"],
-  weakAreas: ["useMemo", "useCallback"],
-};
 
 type Stage = "questions" | "results";
 
