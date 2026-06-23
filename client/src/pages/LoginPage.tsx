@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { login, register } from "../modules/auth/auth.api";
+import { googleAuth, login, register } from "../modules/auth/auth.api";
 import type { User } from "../modules/user/user.types";
 import { useAppDispatch } from "../app/hook";
 import { setAuthenticated } from "../app/slice/authSlice";
@@ -8,7 +8,11 @@ import { useNavigate } from "react-router-dom";
 import type { AxiosError } from "axios";
 import Spinner from "../components/Spinner";
 import toast from "react-hot-toast";
-
+import {
+  useGoogleLogin,
+  type CodeResponse,
+  type TokenResponse,
+} from "@react-oauth/google";
 type LoginPageProps = {
   open: boolean;
   onClose: () => void;
@@ -85,6 +89,32 @@ const LoginPage = ({ open = false, onClose = () => {} }: LoginPageProps) => {
     dispatch(setAuthenticated(data));
     navigate("/dashboard");
   };
+
+  const googleLoginMutation = useMutation({
+    mutationFn: googleAuth,
+    onSuccess: (data) => {
+      console.log("Google login successful:", data);
+      handleLoginSuccessState(data);
+      toast.success("Google login successful!");
+    },
+    onError: (error: AxiosError<{ message: string }>) => {
+      toast.error(
+        error.response?.data?.message ||
+          "Google login failed. Please try again.",
+      );
+    },
+  });
+
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: async (data: CodeResponse) => {
+      googleLoginMutation.mutate(data.code);
+    },
+    onError: (error) => {
+      console.error("Google login failed", error);
+    },
+    flow: "auth-code",
+  });
+
   if (!open) return null;
 
   return (
@@ -199,15 +229,25 @@ const LoginPage = ({ open = false, onClose = () => {} }: LoginPageProps) => {
         </div>
 
         {/* Google */}
-        <button className="w-full h-12 border border-gray-300 rounded-xl flex items-center justify-center gap-3 hover:bg-gray-50 transition">
-          <img
-            src="https://www.google.com/favicon.ico"
-            alt="google"
-            className="w-5 h-5"
-          />
-          <span>
-            {isSignup ? "Sign up with Google" : "Sign in with Google"}
-          </span>
+        <button
+          onClick={handleGoogleLogin}
+          disabled={googleLoginMutation.isPending}
+          className="w-full h-12 border border-gray-300 rounded-xl flex items-center justify-center gap-3 hover:bg-gray-50 transition"
+        >
+          {googleLoginMutation.isPending ? (
+            <Spinner />
+          ) : (
+            <>
+              <img
+                src="https://www.google.com/favicon.ico"
+                alt="google"
+                className="w-5 h-5"
+              />
+              <span>
+                {isSignup ? "Sign up with Google" : "Sign in with Google"}
+              </span>
+            </>
+          )}
         </button>
 
         {/* Terms */}

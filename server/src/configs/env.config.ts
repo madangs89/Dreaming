@@ -14,6 +14,16 @@ const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY;
 const REDIS_URL = process.env.REDIS_URL;
 const SUPABASE_URL = process.env.SUPABASE_URL;
 
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+
+if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
+  console.error(
+    "Error: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET environment variable is not set",
+  );
+  process.exit(1);
+}
+
 if (!FRONTEND_URL) {
   console.error("Error: FRONTEND_URL environment variable is not set");
   process.exit(1);
@@ -75,4 +85,6 @@ export {
   FRONTEND_URL,
   SUPABASE_SECRET_KEY,
   SUPABASE_URL,
+  GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET,
 };

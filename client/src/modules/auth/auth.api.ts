@@ -1,5 +1,9 @@
 import type { User } from "../user/user.types";
-import type { LoginPayload, RegisterPayload } from "./auth.types";
+import type {
+  AuthSuccessResponse,
+  LoginPayload,
+  RegisterPayload,
+} from "./auth.types";
 
 import axios from "axios";
 
@@ -37,4 +41,17 @@ export const logout = async (): Promise<void> => {
     withCredentials: true,
   });
   console.log("Logout response:", response.data);
+};
+
+export const googleAuth = async (code: string): Promise<User> => {
+  const response = await axios.post<AuthSuccessResponse<User>>(
+    `${API_URL}/api/v1/auth/google-auth`,
+    {
+      code,
+    },
+    {
+      withCredentials: true,
+    },
+  );
+  return response.data.data;
 };

@@ -6,44 +6,47 @@ import { store } from "./app/store.ts";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
-    <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
-        <App />
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <App />
 
-        <Toaster
-          position="top-center"
-          toastOptions={{
-            duration: 3000,
-            style: {
-              background: "#ffffff",
-              color: "#111827",
-              border: "1px solid #e5e7eb",
-              borderRadius: "12px",
-              padding: "12px 16px",
-              boxShadow: "0 10px 25px rgba(0, 0, 0, 0.08)",
-            },
-
-            success: {
-              iconTheme: {
-                primary: "#111827",
-                secondary: "#ffffff",
+          <Toaster
+            position="top-center"
+            toastOptions={{
+              duration: 3000,
+              style: {
+                background: "#ffffff",
+                color: "#111827",
+                border: "1px solid #e5e7eb",
+                borderRadius: "12px",
+                padding: "12px 16px",
+                boxShadow: "0 10px 25px rgba(0, 0, 0, 0.08)",
               },
-            },
 
-            error: {
-              iconTheme: {
-                primary: "#111827",
-                secondary: "#ffffff",
+              success: {
+                iconTheme: {
+                  primary: "#111827",
+                  secondary: "#ffffff",
+                },
               },
-            },
-          }}
-        />
-      </Provider>
-    </QueryClientProvider>
+
+              error: {
+                iconTheme: {
+                  primary: "#111827",
+                  secondary: "#ffffff",
+                },
+              },
+            }}
+          />
+        </Provider>
+      </QueryClientProvider>
+    </GoogleOAuthProvider>
   </BrowserRouter>,
 );

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
+import { google } from "googleapis";
 import jwt from "jsonwebtoken";
 import {
   AuthResponseFailure,
@@ -17,6 +18,8 @@ import {
 import { prisma, prismaErrorHandler } from "../../configs/prisma.js";
 import { JWT_SECRET, NODE_ENV } from "../../configs/env.config.js";
 import { Prisma } from "../../generated/prisma/client.js";
+import { googleOAuth2Client } from "../../configs/google.js";
+import axios from "axios";
 
 const createJwtToken = (user: JwtPayload): string => {
   return jwt.sign(
@@ -267,6 +270,92 @@ export const me = async (
       prismaErrorHandler(req, res, error);
       return;
     }
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      errors: error,
+    });
+  }
+};
+
+export const googleAuth = async (
+  req: Request<{}, {}, { code: string }>,
+  res: Response<AuthResponseSuccess<AuthUser> | AuthResponseFailure>,
+) => {
+  try {
+    const { code } = req.body;
+
+    if (!code) {
+      return res.status(400).json({
+        success: false,
+        message: "Authorization code is required",
+      });
+    }
+
+    const { tokens } = await googleOAuth2Client.getToken(code);
+
+    if (!tokens.access_token) {
+      return res.status(400).json({
+        success: false,
+        message: "Failed to get access token",
+      });
+    }
+
+    googleOAuth2Client.setCredentials(tokens);
+
+    const oauth2 = google.oauth2({
+      auth: googleOAuth2Client,
+      version: "v2",
+    });
+
+    const { data } = await oauth2.userinfo.get();
+
+    if (!data.email) {
+      return res.status(400).json({
+        success: false,
+
+        message: "Google account email not found",
+      });
+    }
+
+    const { email, name, picture } = data;
+    console.log("Google user info:", data);
+
+    let user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          email,
+          name: name || email.split("@")[0],
+          profile_url: picture || null,
+          provider: "google",
+        },
+      });
+    }
+
+    const token = createJwtToken({
+      id: user.id,
+      email: user.email,
+    });
+    addCookiesToResponse(res, token);
+    return res.status(201).json({
+      success: true,
+      message: "User created successfully",
+      data: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        profile_url: user.profile_url ?? null,
+      },
+    });
+  } catch (error) {
+    console.error("Google auth error:", error);
+
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
